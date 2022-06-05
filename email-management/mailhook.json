@@ -1,0 +1,15 @@
+[{
+	"Date":"2022-02-04T01:35:39.423Z",
+	"Sender":{"Name":"YOUR_NAME","Email address":"YOUR_EMAIL"},
+	"Content":"Message\n\nBody",
+	"Subject":"Subject",
+	"Recipients":[{"address":"YOUR_MAILHOOK@hook.integromat.com","name":""}],
+	"Attachments":[
+		{"contentType":"image/png","fileName":"ew-logo04.png","fileSize":127038,"contentId":"f_kz7qjpb70","data":"iVBOR...."},
+		{"contentType":"image/png","fileName":"ew-logo05.png","fileSize":124949,"contentId":"f_kz7qjpby1","data":"iVBOR...."}
+	],
+	"Copy recipients":[
+		{"address":"CC_ADDRESS","name":"Ain Soph"},
+		{"address":"CC_ADDRESS","name":"Ethical Works"}
+	]
+}]
