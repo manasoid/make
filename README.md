@@ -3,7 +3,7 @@ Share the automation scenarios we made with Make/Integromat
 
 ## project info
 
-this is the open-sourse project based on donation and sponsorship. for more details, please visit our [OpenCollective](https://opencollective.com/automation) page.
+this is the open-sourse project based on donations and sponsorships. for more details, please visit our [OpenCollective](https://opencollective.com/automation) page.
 
 ## steps to import the scenarios
 
