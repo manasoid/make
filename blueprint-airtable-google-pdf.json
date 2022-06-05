@@ -1,0 +1,1542 @@
+{
+    "name": "業務委託契約書のPDF発行（パスワード付き）",
+    "flow": [
+        {
+            "id": 1,
+            "module": "airtable:TriggerWatchRecords",
+            "version": 3,
+            "parameters": {
+                "base": "",
+                "view": "",
+                "table": "Issues",
+                "config": {
+                    "labelField": "Email",
+                    "triggerField": "Created"
+                },
+                "formula": "",
+                "maxRecords": 10,
+                "__IMTCONN__": 1305361
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "情報の取得"
+                },
+                "restore": {
+                    "base": {
+                        "label": "Contract"
+                    },
+                    "view": {
+                        "label": "業務委託契約書の発行"
+                    },
+                    "table": {
+                        "label": "Issues"
+                    },
+                    "config": {
+                        "nested": {
+                            "labelField": {
+                                "label": "Email"
+                            },
+                            "triggerField": {
+                                "label": "Created"
+                            }
+                        }
+                    },
+                    "__IMTCONN__": {
+                        "label": "Airtable"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "config",
+                        "spec": [
+                            {
+                                "name": "triggerField",
+                                "type": "select",
+                                "label": "Trigger field",
+                                "required": true
+                            },
+                            {
+                                "name": "triggerField",
+                                "type": "hidden"
+                            },
+                            {
+                                "name": "labelField",
+                                "type": "select",
+                                "label": "Label field",
+                                "required": true
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Trigger configuration",
+                        "required": false
+                    },
+                    {
+                        "name": "maxRecords",
+                        "type": "integer",
+                        "label": "Limit",
+                        "required": true
+                    },
+                    {
+                        "name": "view",
+                        "type": "select",
+                        "label": "View"
+                    },
+                    {
+                        "name": "formula",
+                        "type": "text",
+                        "label": "Formula"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created Time"
+                    },
+                    {
+                        "name": "Email",
+                        "type": "text",
+                        "label": "Email"
+                    },
+                    {
+                        "name": "Provider",
+                        "type": "text",
+                        "label": "Provider"
+                    },
+                    {
+                        "name": "Provider_Name",
+                        "type": "text",
+                        "label": "Provider_Name"
+                    },
+                    {
+                        "name": "Provider_Address",
+                        "type": "text",
+                        "label": "Provider_Address"
+                    },
+                    {
+                        "name": "Customer",
+                        "type": "text",
+                        "label": "Customer"
+                    },
+                    {
+                        "name": "Customer_Name",
+                        "type": "text",
+                        "label": "Customer_Name"
+                    },
+                    {
+                        "name": "Customer_Address",
+                        "type": "text",
+                        "label": "Customer_Address"
+                    },
+                    {
+                        "name": "Issue_Date",
+                        "time": false,
+                        "type": "date",
+                        "label": "Issue_Date"
+                    },
+                    {
+                        "name": "Password",
+                        "type": "text",
+                        "label": "Password"
+                    },
+                    {
+                        "name": "Created",
+                        "type": "date",
+                        "label": "Created"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "google-docs:createADocumentFromTemplate",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 1120045
+            },
+            "mapper": {
+                "from": "drive",
+                "name": "業務委託契約書_{{1.Customer}}_{{1.Provider}}_{{formatDate(1.Created; \"YYYYMMDD\")}}",
+                "select": "dropdown",
+                "document": "",
+                "folderId": "",
+                "requests": {
+                    "customer": "{{1.Customer}}",
+                    "provider": "{{1.Provider}}",
+                    "issue_date": "{{formatDate(1.Issue_Date; \"YYYY年MM月DD日\")}}",
+                    "customer_name": "{{1.Customer_Name}}",
+                    "provider_name": "{{1.Provider_Name}}",
+                    "customer_address": "{{1.Customer_Address}}",
+                    "provider_address": "{{1.Provider_Address}}"
+                },
+                "destination": "drive"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "書類の作成"
+                },
+                "restore": {
+                    "from": {
+                        "label": "My Drive"
+                    },
+                    "select": {
+                        "label": "By Dropdown"
+                    },
+                    "document": {
+                        "path": [
+                            "Public",
+                            "Integromat",
+                            "業務委託契約書テンプレート"
+                        ]
+                    },
+                    "folderId": {
+                        "mode": "chose",
+                        "path": [
+                            "Integromat"
+                        ]
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    },
+                    "destination": {
+                        "label": "My Drive"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Create a Document from a Template",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "dropdown"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Title",
+                        "required": true
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "New Drive Location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "type": "select",
+                        "label": "Choose a Drive",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "New Document's Location",
+                        "required": true
+                    },
+                    {
+                        "name": "document",
+                        "type": "file",
+                        "label": "Document ID",
+                        "required": true
+                    },
+                    {
+                        "name": "requests",
+                        "spec": [
+                            {
+                                "name": "customer",
+                                "type": "any"
+                            },
+                            {
+                                "name": "provider",
+                                "type": "any"
+                            },
+                            {
+                                "name": "issue_date",
+                                "type": "any"
+                            },
+                            {
+                                "name": "customer_name",
+                                "type": "any"
+                            },
+                            {
+                                "name": "customer_address",
+                                "type": "any"
+                            },
+                            {
+                                "name": "provider_name",
+                                "type": "any"
+                            },
+                            {
+                                "name": "provider_address",
+                                "type": "any"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Values"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 10,
+            "module": "google-docs:exportADocument",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 1120045
+            },
+            "mapper": {
+                "document": "{{2.id}}",
+                "mimeType": "application/pdf",
+                "destination": "drive"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0,
+                    "name": "PDF取得"
+                },
+                "restore": {
+                    "document": {
+                        "mode": "edit",
+                        "path": []
+                    },
+                    "mimeType": {
+                        "mode": "chose",
+                        "label": "PDF Document (.pdf)"
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    },
+                    "destination": {
+                        "label": "My Drive"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "Choose a Drive",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "mimeType",
+                        "type": "select",
+                        "label": "Type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                                "application/vnd.oasis.opendocument.text",
+                                "application/rtf",
+                                "application/pdf",
+                                "text/plain",
+                                "text/html",
+                                "application/epub+zip"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "document",
+                        "type": "file",
+                        "label": "Document ID",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "pdf-co:AddSecurityToPDF",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2973242
+            },
+            "mapper": {
+                "async": 15000,
+                "export": {
+                    "exportType": "downloadFile"
+                },
+                "import": {
+                    "data": "{{10.data}}",
+                    "name": "{{10.filename}}",
+                    "importType": "upload"
+                },
+                "printQuality": "HighResolution",
+                "userPassword": "{{1.Password}}",
+                "ownerPassword": "{{1.Password}}",
+                "allowFillForms": true,
+                "allowPrintDocument": true,
+                "allowModifyDocument": true,
+                "encryptionAlgorithm": "AES_128bit",
+                "allowAssemblyDocument": true,
+                "allowContentExtraction": true,
+                "allowModifyAnnotations": true,
+                "allowAccessibilitySupport": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0,
+                    "name": "パスワード付与"
+                },
+                "restore": {
+                    "async": {
+                        "mode": "chose",
+                        "label": "15 sec"
+                    },
+                    "export": {
+                        "nested": {
+                            "exportType": {
+                                "label": "Download a File"
+                            }
+                        }
+                    },
+                    "import": {
+                        "nested": {
+                            "importType": {
+                                "label": "Upload a File"
+                            }
+                        }
+                    },
+                    "__IMTCONN__": {
+                        "label": "PDF.co"
+                    },
+                    "printQuality": {
+                        "mode": "chose",
+                        "label": "High Resolution"
+                    },
+                    "allowFillForms": {
+                        "mode": "chose"
+                    },
+                    "allowPrintDocument": {
+                        "mode": "chose"
+                    },
+                    "allowModifyDocument": {
+                        "mode": "chose"
+                    },
+                    "encryptionAlgorithm": {
+                        "mode": "chose",
+                        "label": "AES 128bit"
+                    },
+                    "allowAssemblyDocument": {
+                        "mode": "chose"
+                    },
+                    "allowContentExtraction": {
+                        "mode": "chose"
+                    },
+                    "allowModifyAnnotations": {
+                        "mode": "chose"
+                    },
+                    "allowAccessibilitySupport": {
+                        "mode": "chose"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "import",
+                        "spec": [
+                            {
+                                "name": "importType",
+                                "type": "select",
+                                "label": "Input File",
+                                "required": true,
+                                "validate": {
+                                    "enum": [
+                                        "upload",
+                                        "url"
+                                    ]
+                                }
+                            },
+                            {
+                                "mean": "data",
+                                "name": "data",
+                                "type": "buffer",
+                                "label": "Data",
+                                "required": true
+                            },
+                            {
+                                "mean": "name",
+                                "name": "name",
+                                "type": "text",
+                                "label": "Output File Name"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Import Options",
+                        "required": true
+                    },
+                    {
+                        "name": "ownerPassword",
+                        "type": "text",
+                        "label": "Owner Password"
+                    },
+                    {
+                        "name": "userPassword",
+                        "type": "text",
+                        "label": "User Password"
+                    },
+                    {
+                        "name": "encryptionAlgorithm",
+                        "type": "select",
+                        "label": "Encryption Algorithm",
+                        "validate": {
+                            "enum": [
+                                "AES_128bit",
+                                "AES_256bit",
+                                "RC4_40bit",
+                                "RC4_128bit"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "allowPrintDocument",
+                        "type": "boolean",
+                        "label": "Print Document"
+                    },
+                    {
+                        "name": "printQuality",
+                        "type": "select",
+                        "label": "Print Quality",
+                        "validate": {
+                            "enum": [
+                                "HighResolution",
+                                "LowResolution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "allowAssemblyDocument",
+                        "type": "boolean",
+                        "label": "Assembly Document"
+                    },
+                    {
+                        "name": "allowContentExtraction",
+                        "type": "boolean",
+                        "label": "Content Extraction"
+                    },
+                    {
+                        "name": "allowAccessibilitySupport",
+                        "type": "boolean",
+                        "label": "Accessibility Support"
+                    },
+                    {
+                        "name": "allowModifyDocument",
+                        "type": "boolean",
+                        "label": "Modify Document"
+                    },
+                    {
+                        "name": "allowFillForms",
+                        "type": "boolean",
+                        "label": "Fill Forms"
+                    },
+                    {
+                        "name": "allowModifyAnnotations",
+                        "type": "boolean",
+                        "label": "Modify Annotations"
+                    },
+                    {
+                        "name": "async",
+                        "type": "select",
+                        "label": "Async",
+                        "validate": {
+                            "enum": [
+                                15000,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "profiles",
+                        "type": "text",
+                        "label": "Profiles"
+                    },
+                    {
+                        "name": "export",
+                        "spec": [
+                            {
+                                "name": "exportType",
+                                "type": "select",
+                                "label": "Export Type",
+                                "required": true,
+                                "validate": {
+                                    "enum": [
+                                        "downloadFile",
+                                        "inline"
+                                    ]
+                                }
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Export options",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "google-drive:uploadAFile",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 1763449
+            },
+            "mapper": {
+                "data": "{{7.data}}",
+                "title": "{{2.name}}",
+                "select": "value",
+                "convert": false,
+                "filename": "{{7.name}}",
+                "folderId": "",
+                "destination": "drive"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0,
+                    "name": "ファイルの登録"
+                },
+                "restore": {
+                    "select": {
+                        "label": "Select from the list"
+                    },
+                    "folderId": {
+                        "mode": "chose",
+                        "path": [
+                            "Integromat"
+                        ]
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    },
+                    "destination": {
+                        "label": "My Drive"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Enter a Folder ID",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "value"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "type": "text",
+                        "label": "New File Name"
+                    },
+                    {
+                        "mean": "name",
+                        "name": "filename",
+                        "type": "filename",
+                        "label": "File Name",
+                        "required": true
+                    },
+                    {
+                        "mean": "data",
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Data",
+                        "required": true
+                    },
+                    {
+                        "name": "convert",
+                        "type": "boolean",
+                        "label": "Convert a File",
+                        "required": true
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "New Drive Location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "New Folder Location",
+                        "required": true
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 11,
+            "module": "google-drive:shareAFileFolder",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 1763449
+            },
+            "mapper": {
+                "file": "{{5.id}}",
+                "role": "reader",
+                "type": "anyone",
+                "select": "file",
+                "destination": "drive",
+                "allowFileDiscovery": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1500,
+                    "y": 0,
+                    "name": "権限の変更"
+                },
+                "restore": {
+                    "file": {
+                        "mode": "edit",
+                        "path": []
+                    },
+                    "role": {
+                        "mode": "chose",
+                        "label": "Reader"
+                    },
+                    "type": {
+                        "mode": "chose",
+                        "label": "Anyone"
+                    },
+                    "select": {
+                        "label": "File"
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    },
+                    "destination": {
+                        "label": "My Drive"
+                    },
+                    "allowFileDiscovery": {
+                        "mode": "chose"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "Choose a Drive",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Select",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "file",
+                                "folder"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "role",
+                        "type": "select",
+                        "label": "Role",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "owner",
+                                "writer",
+                                "reader"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "type": "select",
+                        "label": "Type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "user",
+                                "group",
+                                "domain",
+                                "anyone"
+                            ]
+                        }
+                    },
+                    {
+                        "mode": "edit",
+                        "name": "file",
+                        "type": "file",
+                        "label": "File ID",
+                        "required": true
+                    },
+                    {
+                        "name": "allowFileDiscovery",
+                        "type": "boolean",
+                        "label": "Allow File Discovery",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "kind",
+                        "type": "text",
+                        "label": "Kind"
+                    },
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "File ID"
+                    },
+                    {
+                        "name": "type",
+                        "type": "text",
+                        "label": "Type"
+                    },
+                    {
+                        "name": "shareLink",
+                        "type": "url",
+                        "label": "Share Link"
+                    },
+                    {
+                        "name": "emailAddress",
+                        "type": "text",
+                        "label": "Email Address"
+                    },
+                    {
+                        "name": "domain",
+                        "type": "text",
+                        "label": "Domain"
+                    },
+                    {
+                        "name": "role",
+                        "type": "text",
+                        "label": "Role"
+                    },
+                    {
+                        "name": "allowFileDiscovery",
+                        "type": "boolean",
+                        "label": "Allow File Discovery"
+                    },
+                    {
+                        "name": "displayName",
+                        "type": "text",
+                        "label": "Display Name"
+                    },
+                    {
+                        "name": "photoLink",
+                        "type": "text",
+                        "label": "Photo Link"
+                    },
+                    {
+                        "name": "expirationTime",
+                        "type": "date",
+                        "label": "Expiration Time"
+                    },
+                    {
+                        "name": "teamDrivePermissionDetails",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "teamDrivePermissionType",
+                                    "type": "text",
+                                    "label": "Team Drive Permission Type"
+                                },
+                                {
+                                    "name": "role",
+                                    "type": "text",
+                                    "label": "Role"
+                                },
+                                {
+                                    "name": "inheritedFrom",
+                                    "type": "text",
+                                    "label": "Inherited From"
+                                },
+                                {
+                                    "name": "inherited",
+                                    "type": "boolean",
+                                    "label": "Inherited"
+                                }
+                            ],
+                            "type": "collection"
+                        },
+                        "type": "array",
+                        "label": "Team Drive Permission Details"
+                    },
+                    {
+                        "name": "permissionDetails",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "permissionType",
+                                    "type": "text",
+                                    "label": "Permission Type"
+                                },
+                                {
+                                    "name": "role",
+                                    "type": "text",
+                                    "label": "Role"
+                                },
+                                {
+                                    "name": "inheritedFrom",
+                                    "type": "text",
+                                    "label": "Inherited From"
+                                },
+                                {
+                                    "name": "inherited",
+                                    "type": "boolean",
+                                    "label": "Inherited"
+                                }
+                            ],
+                            "type": "collection"
+                        },
+                        "type": "array",
+                        "label": "Permission Details"
+                    },
+                    {
+                        "name": "deleted",
+                        "type": "boolean",
+                        "label": "Deleted"
+                    },
+                    {
+                        "name": "webContentLink",
+                        "type": "url",
+                        "label": "Web Content Link"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "email:ActionSendEmail",
+            "version": 7,
+            "parameters": {
+                "account": 1763439,
+                "saveAfterSent": false
+            },
+            "mapper": {
+                "cc": [],
+                "to": "{{1.Email}}",
+                "bcc": [],
+                "from": "",
+                "text": "{{1.Provider}}\n{{1.Provider_Name}}さま、\n\n業務委託契約書がPDF化されました。\n以下のリンクからダウンロードいただけます。\n\n{{10.filename}}\n{{11.shareLink}}\n\nPDFのパスワードは、フォームにご入力されたものです。\nシステムは把握しておりませんので、ご注意ください。\n\nリンクの有効期限は今から12時間となっております。\nお早めに取得いただけますよう、よろしくお願いいたします。\n\nエシカルワークス\n自動化ロボット\nsupport@ethical.works",
+                "sender": "",
+                "headers": [],
+                "replyTo": "",
+                "subject": "業務委託契約書PDFファイルの送付",
+                "priority": "normal",
+                "inReplyTo": "",
+                "references": [],
+                "attachments": [],
+                "contentType": "text"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1800,
+                    "y": 0,
+                    "name": "メールの送信"
+                },
+                "restore": {
+                    "cc": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "to": {
+                        "mode": "edit"
+                    },
+                    "bcc": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "folder": {
+                        "label": "INBOX"
+                    },
+                    "account": {
+                        "label": ""
+                    },
+                    "headers": {
+                        "items": []
+                    },
+                    "priority": {
+                        "label": "Normal"
+                    },
+                    "references": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "attachments": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "contentType": {
+                        "label": "Plaintext"
+                    },
+                    "saveAfterSent": {
+                        "label": "No"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "account",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "saveAfterSent",
+                        "type": "select",
+                        "label": "Save message after sending",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "to",
+                        "spec": {
+                            "name": "email",
+                            "type": "email",
+                            "label": "Email address",
+                            "required": true
+                        },
+                        "type": "array",
+                        "label": "To",
+                        "labels": {
+                            "add": "Add a recipient",
+                            "edit": "Edit a recipient"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject"
+                    },
+                    {
+                        "name": "contentType",
+                        "type": "select",
+                        "label": "Content Type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "html",
+                                "text"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "attachments",
+                        "spec": [
+                            {
+                                "name": "fileName",
+                                "type": "filename",
+                                "label": "File name",
+                                "required": true,
+                                "semantic": "file:name"
+                            },
+                            {
+                                "name": "data",
+                                "type": "buffer",
+                                "label": "Data",
+                                "required": true,
+                                "semantic": "file:data"
+                            },
+                            {
+                                "name": "cid",
+                                "type": "text",
+                                "label": "Content-ID"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Attachments",
+                        "labels": {
+                            "add": "Add an attachment",
+                            "edit": "Edit an attachment"
+                        }
+                    },
+                    {
+                        "name": "cc",
+                        "spec": {
+                            "name": "email",
+                            "type": "email",
+                            "label": "Email address"
+                        },
+                        "type": "array",
+                        "label": "Copy recipient",
+                        "labels": {
+                            "add": "Add a copy recipient",
+                            "edit": "Edit a copy recipient"
+                        }
+                    },
+                    {
+                        "name": "bcc",
+                        "spec": {
+                            "name": "email",
+                            "type": "email",
+                            "label": "Email address"
+                        },
+                        "type": "array",
+                        "label": "Blind copy recipient",
+                        "labels": {
+                            "add": "Add a blind copy recipient",
+                            "edit": "Edit a blind copy recipient"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "type": "text",
+                        "label": "From"
+                    },
+                    {
+                        "name": "sender",
+                        "type": "text",
+                        "label": "Sender"
+                    },
+                    {
+                        "name": "replyTo",
+                        "type": "text",
+                        "label": "Reply-To"
+                    },
+                    {
+                        "name": "inReplyTo",
+                        "type": "text",
+                        "label": "In-Reply-To"
+                    },
+                    {
+                        "name": "references",
+                        "spec": {
+                            "type": "text",
+                            "label": "Reference",
+                            "required": true
+                        },
+                        "type": "array",
+                        "label": "References"
+                    },
+                    {
+                        "name": "priority",
+                        "type": "select",
+                        "label": "Priority",
+                        "validate": {
+                            "enum": [
+                                "high",
+                                "normal",
+                                "low"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Headers"
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Content"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 8,
+            "module": "airtable:ActionUpdateRecords",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 1305361
+            },
+            "mapper": {
+                "id": "{{1.id}}",
+                "base": "",
+                "table": "Issues",
+                "record": {
+                    "fldkLorHs6txaM2Yz": "{{substring(sha256(timestamp); 0; 11)}}"
+                },
+                "typecast": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 2100,
+                    "y": 0,
+                    "name": "パスワードの消去"
+                },
+                "restore": {
+                    "base": {
+                        "label": "Contract"
+                    },
+                    "table": {
+                        "label": "Issues"
+                    },
+                    "typecast": {
+                        "mode": "chose"
+                    },
+                    "__IMTCONN__": {
+                        "label": "Airtable"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "required": true
+                    },
+                    {
+                        "name": "typecast",
+                        "type": "boolean",
+                        "label": "Smart links",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "Record ID",
+                        "required": true
+                    },
+                    {
+                        "name": "record",
+                        "spec": [
+                            {
+                                "name": "fldNJ3c8AY2Epnds4",
+                                "type": "text",
+                                "label": "Email"
+                            },
+                            {
+                                "name": "fldth0N95BrdkXxwJ",
+                                "type": "text",
+                                "label": "Provider"
+                            },
+                            {
+                                "name": "fld66SaLGkmiFzc09",
+                                "type": "text",
+                                "label": "Provider_Name"
+                            },
+                            {
+                                "name": "fldYvOlDngHG2pDyP",
+                                "type": "text",
+                                "label": "Provider_Address"
+                            },
+                            {
+                                "name": "flddI1mjoOEa4of75",
+                                "type": "text",
+                                "label": "Customer"
+                            },
+                            {
+                                "name": "fldpQwpfiWPPLrfQv",
+                                "type": "text",
+                                "label": "Customer_Name"
+                            },
+                            {
+                                "name": "fldqWGKygBHLWE3xr",
+                                "type": "text",
+                                "label": "Customer_Address"
+                            },
+                            {
+                                "name": "fldwnf0AwceDPq1E5",
+                                "time": false,
+                                "type": "date",
+                                "label": "Issue_Date"
+                            },
+                            {
+                                "name": "fldkLorHs6txaM2Yz",
+                                "type": "text",
+                                "label": "Password"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Record"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created Time"
+                    },
+                    {
+                        "name": "Email",
+                        "type": "text",
+                        "label": "Email"
+                    },
+                    {
+                        "name": "Provider",
+                        "type": "text",
+                        "label": "Provider"
+                    },
+                    {
+                        "name": "Provider_Name",
+                        "type": "text",
+                        "label": "Provider_Name"
+                    },
+                    {
+                        "name": "Provider_Address",
+                        "type": "text",
+                        "label": "Provider_Address"
+                    },
+                    {
+                        "name": "Customer",
+                        "type": "text",
+                        "label": "Customer"
+                    },
+                    {
+                        "name": "Customer_Name",
+                        "type": "text",
+                        "label": "Customer_Name"
+                    },
+                    {
+                        "name": "Customer_Address",
+                        "type": "text",
+                        "label": "Customer_Address"
+                    },
+                    {
+                        "name": "Issue_Date",
+                        "time": false,
+                        "type": "date",
+                        "label": "Issue_Date"
+                    },
+                    {
+                        "name": "Password",
+                        "type": "text",
+                        "label": "Password"
+                    },
+                    {
+                        "name": "Created",
+                        "type": "date",
+                        "label": "Created"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 9,
+            "module": "google-drive:deleteAFile",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 1763449
+            },
+            "mapper": {
+                "file": "{{2.id}}",
+                "select": "map",
+                "select1": "file"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 2400,
+                    "y": 0,
+                    "name": "元ファイルの削除"
+                },
+                "restore": {
+                    "select": {
+                        "label": "Enter manually"
+                    },
+                    "select1": {
+                        "label": "File"
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Enter a File/Folder ID",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "value"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "select1",
+                        "type": "select",
+                        "label": "Select File/Folder",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "file",
+                                "folder"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "file",
+                        "type": "text",
+                        "label": "File ID",
+                        "required": true
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "shatter": false,
+            "maxErrors": 3,
+            "autoCommit": false,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.integromat.com"
+    }
+}

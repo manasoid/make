@@ -1,0 +1,945 @@
+{
+    "name": "サポートフォームに人工知能を実装する",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 1245845,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "フォーム受信"
+                },
+                "restore": {
+                    "hook": {
+                        "label": "UMSO"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "Domain",
+                        "type": "text"
+                    },
+                    {
+                        "name": "Site ID",
+                        "type": "text"
+                    },
+                    {
+                        "name": "Submitted At",
+                        "type": "text"
+                    },
+                    {
+                        "name": "エシカルワークスからメールを受け取る",
+                        "type": "text"
+                    },
+                    {
+                        "name": "メッセージ",
+                        "type": "text"
+                    },
+                    {
+                        "name": "メール",
+                        "type": "text"
+                    },
+                    {
+                        "name": "名前",
+                        "type": "text"
+                    },
+                    {
+                        "name": "名字",
+                        "type": "text"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                    {
+                        "name": "first_name",
+                        "value": "{{stripHTML(1.`名前`)}}"
+                    },
+                    {
+                        "name": "last_name",
+                        "value": "{{stripHTML(1.`名字`)}}"
+                    },
+                    {
+                        "name": "email",
+                        "value": "{{stripHTML(1.`メール`)}}"
+                    },
+                    {
+                        "name": "message",
+                        "value": "{{stripHTML(1.`メッセージ`)}}"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "タグの除去"
+                },
+                "restore": {
+                    "scope": {
+                        "label": "One cycle"
+                    },
+                    "variables": {
+                        "items": [
+                            "undefined",
+                            "undefined",
+                            "undefined",
+                            "undefined"
+                        ]
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Variable name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Variable value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Variables"
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "first_name",
+                        "type": "any",
+                        "label": "first_name"
+                    },
+                    {
+                        "name": "last_name",
+                        "type": "any",
+                        "label": "last_name"
+                    },
+                    {
+                        "name": "email",
+                        "type": "any",
+                        "label": "email"
+                    },
+                    {
+                        "name": "message",
+                        "type": "any",
+                        "label": "message"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 15,
+            "module": "deepl:translateText",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 3322936
+            },
+            "mapper": {
+                "text": "{{7.message}}",
+                "source_lang": "JA",
+                "target_lang": "EN-GB"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0,
+                    "name": "英語に翻訳"
+                },
+                "restore": {
+                    "__IMTCONN__": {
+                        "label": "DeepL Free"
+                    },
+                    "glossary_id": {
+                        "mode": "chose",
+                        "label": ""
+                    },
+                    "source_lang": {
+                        "mode": "chose",
+                        "label": "Japanese"
+                    },
+                    "target_lang": {
+                        "mode": "chose",
+                        "label": "English (British)"
+                    },
+                    "tag_handling": {
+                        "mode": "chose",
+                        "label": ""
+                    },
+                    "split_sentences": {
+                        "mode": "chose",
+                        "label": ""
+                    },
+                    "outline_detection": {
+                        "mode": "chose"
+                    },
+                    "preserve_formatting": {
+                        "mode": "chose"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    },
+                    {
+                        "name": "target_lang",
+                        "type": "select",
+                        "label": "Target Language",
+                        "required": true
+                    },
+                    {
+                        "name": "source_lang",
+                        "type": "select",
+                        "label": "Source Language"
+                    },
+                    {
+                        "name": "split_sentences",
+                        "type": "select",
+                        "label": "Split Sentences",
+                        "validate": {
+                            "enum": [
+                                "0",
+                                "1",
+                                "nonewlines"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "preserve_formatting",
+                        "type": "boolean",
+                        "label": "Preserve Formatting"
+                    },
+                    {
+                        "name": "glossary_id",
+                        "type": "select",
+                        "label": "Glossary ID"
+                    },
+                    {
+                        "name": "tag_handling",
+                        "type": "select",
+                        "label": "Tag Handling",
+                        "validate": {
+                            "enum": [
+                                "xml"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "non_splitting_tags",
+                        "type": "text",
+                        "label": "Non Splitting Tags"
+                    },
+                    {
+                        "name": "outline_detection",
+                        "type": "boolean",
+                        "label": "Outline Detection"
+                    },
+                    {
+                        "name": "splitting_tags",
+                        "type": "text",
+                        "label": "Splitting Tags"
+                    },
+                    {
+                        "name": "ignore_tags",
+                        "type": "text",
+                        "label": "Ignored Tags"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 9,
+            "module": "onesaas:stimmungserkennung",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 3198912
+            },
+            "mapper": {
+                "text": "{{15.translations[].text}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0,
+                    "name": "自然言語処理（AI）"
+                },
+                "restore": {
+                    "__IMTCONN__": {
+                        "label": "1saas"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 10,
+            "module": "util:Switcher",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "input": "{{9.sentiment}}",
+                "casesTable": [
+                    {
+                        "output": "{{add(emptyarray; 2; )}}LOW",
+                        "pattern": "^positive$"
+                    },
+                    {
+                        "output": "{{add(emptyarray; 3; \"MEDIUM\")}}",
+                        "pattern": "^neutral$"
+                    },
+                    {
+                        "output": "{{add(emptyarray; 4; \"HIGH\")}}",
+                        "pattern": "^negative$"
+                    }
+                ],
+                "elseOutput": "2",
+                "useRegExpMatch": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 558,
+                    "y": 315,
+                    "name": "優先度を決定"
+                },
+                "restore": {
+                    "casesTable": {
+                        "mode": "chose",
+                        "items": [
+                            "undefined",
+                            "undefined",
+                            "undefined"
+                        ]
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "input",
+                        "type": "text",
+                        "label": "Input"
+                    },
+                    {
+                        "name": "useRegExpMatch",
+                        "type": "boolean",
+                        "label": "Use regular expressions to match",
+                        "required": true
+                    },
+                    {
+                        "name": "casesTable",
+                        "spec": [
+                            {
+                                "name": "pattern",
+                                "type": "text",
+                                "label": "Pattern"
+                            },
+                            {
+                                "name": "output",
+                                "type": "any",
+                                "label": "Output"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Cases",
+                        "required": true
+                    },
+                    {
+                        "name": "elseOutput",
+                        "type": "any",
+                        "label": "Else"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 11,
+            "module": "todoist:CreateItem",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 2062394
+            },
+            "mapper": {
+                "due": {
+                    "date": "{{addDays(now; 1)}}",
+                    "type": "date"
+                },
+                "content": "{{7.last_name}}：{{substring(7.message; 0; 10)}}…",
+                "priority": "{{get(10.output; 1)}}",
+                "project_id": 000,
+                "section_id": 000,
+                "description": "{{7.email}}\n{{7.message}}",
+                "auto_reminder": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 901,
+                    "y": 312,
+                    "name": "タスクの作成"
+                },
+                "restore": {
+                    "due": {
+                        "nested": {
+                            "type": {
+                                "mode": "chose",
+                                "label": "Only date"
+                            },
+                            "is_recurring": {
+                                "mode": "chose"
+                            }
+                        }
+                    },
+                    "labels": {
+                        "mode": "chose"
+                    },
+                    "priority": {
+                        "mode": "edit"
+                    },
+                    "project_id": {
+                        "mode": "chose",
+                        "label": "Integromat"
+                    },
+                    "section_id": {
+                        "mode": "chose",
+                        "label": "Service"
+                    },
+                    "__IMTCONN__": {
+                        "label": "Todoist"
+                    },
+                    "auto_reminder": {
+                        "mode": "chose"
+                    },
+                    "assigned_by_uid": {
+                        "mode": "chose",
+                        "label": ""
+                    },
+                    "responsible_uid": {
+                        "mode": "chose",
+                        "label": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "content",
+                        "type": "text",
+                        "label": "Content",
+                        "required": true
+                    },
+                    {
+                        "name": "description",
+                        "type": "text",
+                        "label": "Description"
+                    },
+                    {
+                        "name": "project_id",
+                        "type": "select",
+                        "label": "Project"
+                    },
+                    {
+                        "name": "labels",
+                        "type": "select",
+                        "label": "Labels",
+                        "multiple": true
+                    },
+                    {
+                        "name": "due",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "select",
+                                "label": "Format",
+                                "validate": {
+                                    "enum": [
+                                        "date",
+                                        "datetime"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "string",
+                                "type": "text",
+                                "label": "Human-readable representation of due date"
+                            },
+                            {
+                                "name": "is_recurring",
+                                "type": "boolean",
+                                "label": "Is recurring"
+                            },
+                            {
+                                "name": "date",
+                                "type": "date",
+                                "label": "Date"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Due date",
+                        "required": false
+                    },
+                    {
+                        "name": "priority",
+                        "type": "select",
+                        "label": "Priority",
+                        "validate": {
+                            "enum": [
+                                4,
+                                3,
+                                2,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "parent_id",
+                        "type": "text",
+                        "label": "Parent ID"
+                    },
+                    {
+                        "name": "responsible_uid",
+                        "type": "select",
+                        "label": "Responsible"
+                    },
+                    {
+                        "name": "assigned_by_uid",
+                        "type": "select",
+                        "label": "Assigned by"
+                    },
+                    {
+                        "name": "auto_reminder",
+                        "type": "boolean",
+                        "label": "Auto reminder"
+                    },
+                    {
+                        "name": "section_id",
+                        "type": "select",
+                        "label": "Section"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 17,
+            "module": "hubspotcrm:CreateTicket",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 1217582
+            },
+            "mapper": {
+                "stageId": "1",
+                "pipelineId": "0",
+                "properties": {
+                    "content": "{{7.message}}",
+                    "subject": "{{7.last_name}}：{{substring(7.message; 0; 10)}}",
+                    "createdate": "{{now}}",
+                    "closed_date": "",
+                    "source_type": "FORM",
+                    "hs_resolution": "",
+                    "hs_file_upload": "",
+                    "hubspot_owner_id": 00000000,
+                    "hs_ticket_category": "PRODUCT_ISSUE",
+                    "hs_ticket_priority": "{{get(10.output; 2)}}"
+                },
+                "propsEditMode": "choose_mode"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1207,
+                    "y": 311,
+                    "name": "チケットの発行"
+                },
+                "restore": {
+                    "stageId": {
+                        "label": "New"
+                    },
+                    "pipelineId": {
+                        "label": "Support Pipeline"
+                    },
+                    "properties": {
+                        "nested": {
+                            "source_type": {
+                                "mode": "chose",
+                                "label": "Form"
+                            },
+                            "hs_resolution": {
+                                "mode": "chose",
+                                "label": ""
+                            },
+                            "hubspot_owner_id": {
+                                "mode": "chose",
+                                "label": "HubSpot"
+                            },
+                            "hs_ticket_category": {
+                                "mode": "chose",
+                                "label": "Product issue"
+                            },
+                            "hs_ticket_priority": {
+                                "mode": "edit"
+                            }
+                        }
+                    },
+                    "__IMTCONN__": {
+                        "label": "My HubSpot CRM"
+                    },
+                    "propsEditMode": {
+                        "label": "Choosing Mode"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "propsEditMode",
+                        "type": "select",
+                        "label": "Properties Edit Mode",
+                        "required": true,
+                        "validate": false
+                    },
+                    {
+                        "name": "pipelineId",
+                        "type": "select",
+                        "label": "Pipeline",
+                        "required": true
+                    },
+                    {
+                        "name": "properties",
+                        "spec": [
+                            {
+                                "name": "hs_ticket_category",
+                                "type": "select",
+                                "label": "Category",
+                                "validate": false,
+                                "readOnlyDefinition": false
+                            },
+                            {
+                                "name": "closed_date",
+                                "type": "date",
+                                "label": "Close date",
+                                "readOnlyDefinition": true
+                            },
+                            {
+                                "name": "createdate",
+                                "type": "date",
+                                "label": "Create date",
+                                "readOnlyDefinition": true
+                            },
+                            {
+                                "name": "hs_file_upload",
+                                "type": "text",
+                                "label": "File upload",
+                                "readOnlyDefinition": true
+                            },
+                            {
+                                "name": "hs_ticket_priority",
+                                "type": "select",
+                                "label": "Priority",
+                                "validate": false,
+                                "readOnlyDefinition": true
+                            },
+                            {
+                                "name": "hs_resolution",
+                                "type": "select",
+                                "label": "Resolution",
+                                "validate": false,
+                                "readOnlyDefinition": true
+                            },
+                            {
+                                "name": "source_type",
+                                "type": "select",
+                                "label": "Source",
+                                "validate": false,
+                                "readOnlyDefinition": true
+                            },
+                            {
+                                "name": "content",
+                                "type": "text",
+                                "label": "Ticket description",
+                                "readOnlyDefinition": true
+                            },
+                            {
+                                "name": "subject",
+                                "type": "text",
+                                "label": "Ticket name",
+                                "readOnlyDefinition": true
+                            },
+                            {
+                                "name": "hubspot_owner_id",
+                                "type": "select",
+                                "label": "Ticket owner",
+                                "validate": false,
+                                "readOnlyDefinition": true
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Properties",
+                        "required": false
+                    },
+                    {
+                        "name": "stageId",
+                        "type": "select",
+                        "label": "Stage",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "2",
+                                "3",
+                                "1",
+                                "4"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "objectType",
+                        "type": "text",
+                        "label": "Object Type"
+                    },
+                    {
+                        "name": "portalId",
+                        "type": "number",
+                        "label": "Portal ID"
+                    },
+                    {
+                        "name": "objectId",
+                        "type": "number",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "properties",
+                        "spec": [
+                            {
+                                "name": "hs_ticket_category",
+                                "type": "text",
+                                "label": "Category"
+                            },
+                            {
+                                "name": "closed_date",
+                                "type": "date",
+                                "label": "Close date"
+                            },
+                            {
+                                "name": "createdate",
+                                "type": "date",
+                                "label": "Create date"
+                            },
+                            {
+                                "name": "hs_file_upload",
+                                "type": "text",
+                                "label": "File upload"
+                            },
+                            {
+                                "name": "first_agent_reply_date",
+                                "type": "date",
+                                "label": "First agent email response date"
+                            },
+                            {
+                                "name": "hubspot_team_id",
+                                "type": "text",
+                                "label": "HubSpot team"
+                            },
+                            {
+                                "name": "hs_lastactivitydate",
+                                "type": "date",
+                                "label": "Last activity date"
+                            },
+                            {
+                                "name": "hs_lastcontacted",
+                                "type": "date",
+                                "label": "Last contacted date"
+                            },
+                            {
+                                "name": "last_reply_date",
+                                "type": "date",
+                                "label": "Last customer reply date"
+                            },
+                            {
+                                "name": "hs_lastmodifieddate",
+                                "type": "date",
+                                "label": "Last modified date"
+                            },
+                            {
+                                "name": "hs_nextactivitydate",
+                                "type": "date",
+                                "label": "Next activity date"
+                            },
+                            {
+                                "name": "hs_num_associated_companies",
+                                "type": "number",
+                                "label": "Number of Associated Companies"
+                            },
+                            {
+                                "name": "num_notes",
+                                "type": "number",
+                                "label": "Number of Sales Activities"
+                            },
+                            {
+                                "name": "hs_num_times_contacted",
+                                "type": "number",
+                                "label": "Number of times contacted"
+                            },
+                            {
+                                "name": "hubspot_owner_assigneddate",
+                                "type": "date",
+                                "label": "Owner assigned date"
+                            },
+                            {
+                                "name": "hs_pipeline",
+                                "type": "text",
+                                "label": "Pipeline"
+                            },
+                            {
+                                "name": "hs_ticket_priority",
+                                "type": "text",
+                                "label": "Priority"
+                            },
+                            {
+                                "name": "hs_resolution",
+                                "type": "text",
+                                "label": "Resolution"
+                            },
+                            {
+                                "name": "source_type",
+                                "type": "text",
+                                "label": "Source"
+                            },
+                            {
+                                "name": "content",
+                                "type": "text",
+                                "label": "Ticket description"
+                            },
+                            {
+                                "name": "hs_ticket_id",
+                                "type": "number",
+                                "label": "Ticket ID"
+                            },
+                            {
+                                "name": "subject",
+                                "type": "text",
+                                "label": "Ticket name"
+                            },
+                            {
+                                "name": "hubspot_owner_id",
+                                "type": "text",
+                                "label": "Ticket owner"
+                            },
+                            {
+                                "name": "hs_pipeline_stage",
+                                "type": "text",
+                                "label": "Ticket status"
+                            },
+                            {
+                                "name": "time_to_close",
+                                "type": "number",
+                                "label": "Time to close"
+                            },
+                            {
+                                "name": "time_to_first_agent_reply",
+                                "type": "number",
+                                "label": "Time to first agent email reply"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Properties"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "shatter": false,
+            "maxErrors": 3,
+            "autoCommit": false,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.integromat.com"
+    }
+}

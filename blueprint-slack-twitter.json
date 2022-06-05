@@ -1,0 +1,533 @@
+{
+    "name": "Tweet from Slack",
+    "flow": [
+        {
+            "id": 1,
+            "module": "slack:WatchImMessages",
+            "version": 3,
+            "parameters": {
+                "limit": 5,
+                "channel": "",
+                "__IMTCONN__": 2295164
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "channel": {
+                        "label": "slackbot"
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "channel",
+                        "type": "select",
+                        "label": "Channel",
+                        "required": true
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "slack:DownloadFile",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 1120039
+            },
+            "filter": {
+                "name": "Post",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{1.text}}",
+                            "b": "投稿！",
+                            "o": "text:startwith"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "url": "{{1.files[].url_private_download}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "__IMTCONN__": {
+                        "label": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "url",
+                        "type": "url",
+                        "label": "Url private download",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "mime:GetExtension",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "type": "{{1.files[].mimetype}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "expect": [
+                    {
+                        "name": "type",
+                        "type": "text",
+                        "label": "MIME type",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "twitter:createTweet",
+            "version": 5,
+            "parameters": {
+                "__IMTCONN__": 2243903
+            },
+            "mapper": {
+                "select": "image",
+                "status": "{{replace(1.text; \"投稿！\"; emptystring)}}",
+                "attachments": [
+                    {
+                        "data": "{{5.data}}",
+                        "filename": "image.{{6.extension}}",
+                        "media_category": "tweet_image"
+                    }
+                ],
+                "possibly_sensitive": false,
+                "display_coordinates": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {
+                    "select": {
+                        "label": "Image or GIF"
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    },
+                    "attachments": {
+                        "mode": "chose",
+                        "items": [
+                            {
+                                "media_category": {
+                                    "mode": "chose",
+                                    "label": "Tweet Image"
+                                }
+                            }
+                        ]
+                    },
+                    "display_coordinates": {
+                        "mode": "chose"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "status",
+                        "type": "text",
+                        "label": "Status",
+                        "required": true
+                    },
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Upload",
+                        "validate": {
+                            "enum": [
+                                "image",
+                                "video"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "possibly_sensitive",
+                        "type": "boolean",
+                        "label": "Attached images contain sensitive content (nudity, violence, etc).",
+                        "required": true
+                    },
+                    {
+                        "name": "lat",
+                        "type": "number",
+                        "label": "Geographic Latitude",
+                        "validate": {
+                            "max": 90,
+                            "min": -90
+                        }
+                    },
+                    {
+                        "name": "long",
+                        "type": "number",
+                        "label": "Geographic Longitude",
+                        "validate": {
+                            "max": 180,
+                            "min": -180
+                        }
+                    },
+                    {
+                        "name": "display_coordinates",
+                        "type": "boolean",
+                        "label": "Display tweets coordinates",
+                        "required": true
+                    },
+                    {
+                        "name": "attachments",
+                        "spec": [
+                            {
+                                "name": "filename",
+                                "type": "filename",
+                                "label": "File Name",
+                                "semantic": "file:name"
+                            },
+                            {
+                                "name": "data",
+                                "type": "buffer",
+                                "label": "Data",
+                                "semantic": "file:data"
+                            },
+                            {
+                                "name": "media_category",
+                                "type": "select",
+                                "label": "Media Category",
+                                "options": [
+                                    {
+                                        "label": "Tweet Gif",
+                                        "value": "tweet_gif"
+                                    },
+                                    {
+                                        "label": "Tweet Image",
+                                        "value": "tweet_image"
+                                    }
+                                ]
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Attachments",
+                        "validate": {
+                            "maxItems": 4
+                        }
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 3,
+            "module": "slack:CreateMessage",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 1120039
+            },
+            "mapper": {
+                "text": "Tweeted!\nhttps://twitter.com/アカウント名/status/{{2.id_str}}",
+                "parse": false,
+                "mrkdwn": true,
+                "channel": "{{1.user}}",
+                "thread_ts": "{{1.ts}}",
+                "channelWType": "manualy"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0
+                },
+                "restore": {
+                    "parse": {
+                        "mode": "chose"
+                    },
+                    "mrkdwn": {
+                        "mode": "chose"
+                    },
+                    "as_user": {
+                        "mode": "chose"
+                    },
+                    "link_names": {
+                        "mode": "chose"
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    },
+                    "attachments": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "channelWType": {
+                        "label": "Enter manually"
+                    },
+                    "unfurl_links": {
+                        "mode": "chose"
+                    },
+                    "unfurl_media": {
+                        "mode": "chose"
+                    },
+                    "reply_broadcast": {
+                        "mode": "chose"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "channelWType",
+                        "type": "select",
+                        "label": "Enter a channel ID or name",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "manualy",
+                                "list"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true,
+                        "multiline": true
+                    },
+                    {
+                        "name": "as_user",
+                        "type": "boolean",
+                        "label": "As user"
+                    },
+                    {
+                        "name": "thread_ts",
+                        "type": "text",
+                        "label": "Thread message ID (time stamp)"
+                    },
+                    {
+                        "name": "reply_broadcast",
+                        "type": "boolean",
+                        "label": "Reply broadcast"
+                    },
+                    {
+                        "name": "attachments",
+                        "spec": [
+                            {
+                                "name": "fallback",
+                                "type": "text",
+                                "label": "Fallback",
+                                "required": true
+                            },
+                            {
+                                "name": "color",
+                                "type": "text",
+                                "label": "Color"
+                            },
+                            {
+                                "name": "pretext",
+                                "type": "text",
+                                "label": "Pretext"
+                            },
+                            {
+                                "name": "author_name",
+                                "type": "text",
+                                "label": "Author name"
+                            },
+                            {
+                                "name": "author_link",
+                                "type": "url",
+                                "label": "Author link"
+                            },
+                            {
+                                "name": "author_icon",
+                                "type": "url",
+                                "label": "Author icon (URL)"
+                            },
+                            {
+                                "name": "title",
+                                "type": "text",
+                                "label": "Title"
+                            },
+                            {
+                                "name": "title_link",
+                                "type": "url",
+                                "label": "Title link"
+                            },
+                            {
+                                "name": "text",
+                                "type": "text",
+                                "label": "Text"
+                            },
+                            {
+                                "name": "image_url",
+                                "type": "text",
+                                "label": "Image (URL)"
+                            },
+                            {
+                                "name": "thumb_url",
+                                "type": "url",
+                                "label": "Thumbnail (URL)"
+                            },
+                            {
+                                "name": "footer",
+                                "type": "text",
+                                "label": "Footer"
+                            },
+                            {
+                                "name": "footer_icon",
+                                "type": "url",
+                                "label": "Footer icon (URL)"
+                            },
+                            {
+                                "name": "ts",
+                                "type": "number",
+                                "label": "Time stamp"
+                            },
+                            {
+                                "name": "fields",
+                                "spec": [
+                                    {
+                                        "name": "title",
+                                        "type": "text",
+                                        "label": "Title",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "short",
+                                        "type": "boolean",
+                                        "label": "Display side-by-side with other values",
+                                        "required": true
+                                    }
+                                ],
+                                "type": "array",
+                                "label": "Fields inside message attachments"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Attachments"
+                    },
+                    {
+                        "name": "icon_emoji",
+                        "type": "text",
+                        "label": "Icon emoji"
+                    },
+                    {
+                        "name": "icon_url",
+                        "type": "url",
+                        "label": "Icon url"
+                    },
+                    {
+                        "name": "link_names",
+                        "type": "boolean",
+                        "label": "Link names"
+                    },
+                    {
+                        "name": "parse",
+                        "type": "boolean",
+                        "label": "Parse message text"
+                    },
+                    {
+                        "name": "mrkdwn",
+                        "type": "boolean",
+                        "label": "Use markdown"
+                    },
+                    {
+                        "name": "unfurl_links",
+                        "type": "boolean",
+                        "label": "Unfurl primarily text-based content"
+                    },
+                    {
+                        "name": "unfurl_media",
+                        "type": "boolean",
+                        "label": "Unfurl media content"
+                    },
+                    {
+                        "name": "username",
+                        "type": "text",
+                        "label": "User name"
+                    },
+                    {
+                        "name": "channel",
+                        "type": "text",
+                        "label": "Channel ID or name",
+                        "required": true
+                    }
+                ],
+                "advanced": true
+            }
+        }
+    ],
+    "metadata": {
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "shatter": false,
+            "maxErrors": 3,
+            "autoCommit": false,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.integromat.com"
+    }
+}

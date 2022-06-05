@@ -1,0 +1,868 @@
+{
+    "name": "Zoom Automation",
+    "flow": [
+        {
+            "id": 1,
+            "module": "google-calendar:watchEvents",
+            "version": 5,
+            "parameters": {
+                "q": "",
+                "limit": 10,
+                "select": "create",
+                "calendar": "ENTER@YOUR.EMAIL",
+                "__IMTCONN__": 1120045,
+                "showDeleted": false
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "select": {
+                        "label": "By Created Date"
+                    },
+                    "calendar": {
+                        "label": "Primary Calendar"
+                    },
+                    "__IMTCONN__": {
+                        "label": "ENTER@YOUR.EMAIL"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "calendar",
+                        "type": "select",
+                        "label": "Calendar",
+                        "required": true
+                    },
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Watch Events",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "create",
+                                "update",
+                                "start",
+                                "end"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "showDeleted",
+                        "type": "boolean",
+                        "label": "Show deleted events",
+                        "required": true
+                    },
+                    {
+                        "name": "q",
+                        "type": "text",
+                        "label": "Query"
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "zoom:createMeeting",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2108777
+            },
+            "filter": {
+                "name": "Calendly",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{1.description}}",
+                            "b": "Powered by Calendly.com",
+                            "o": "text:contain"
+                        },
+                        {
+                            "a": "{{1.organizer.email}}",
+                            "b": "ENTER@YOUR.EMAIL",
+                            "o": "text:equal"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "type": 2,
+                "topic": "{{1.summary}}",
+                "agenda": "{{1.description}}",
+                "user_id": "BK13tcSzSYud2bzxag5owQ",
+                "duration": "30",
+                "password": "{{substring(base64(1.id); 0; 10)}}",
+                "settings": {
+                    "audio": "",
+                    "use_pmi": false,
+                    "watermark": false,
+                    "cn_meeting": false,
+                    "host_video": false,
+                    "in_meeting": false,
+                    "approval_type": "",
+                    "enforce_login": false,
+                    "auto_recording": "",
+                    "mute_upon_entry": false,
+                    "join_before_host": false,
+                    "alternative_hosts": "",
+                    "participant_video": false,
+                    "registration_type": "",
+                    "enforce_login_domains": ""
+                },
+                "start_time": "{{1.start}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "type": {
+                        "mode": "chose",
+                        "label": "Scheduled meeting"
+                    },
+                    "user_id": {
+                        "mode": "chose",
+                        "label": "YOUR_NAME"
+                    },
+                    "settings": {
+                        "nested": {
+                            "audio": {
+                                "label": ""
+                            },
+                            "approval_type": {
+                                "label": ""
+                            },
+                            "auto_recording": {
+                                "label": ""
+                            },
+                            "registration_type": {
+                                "label": ""
+                            }
+                        }
+                    },
+                    "__IMTCONN__": {
+                        "label": "Zoom"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "user_id",
+                        "type": "select",
+                        "label": "User",
+                        "required": true
+                    },
+                    {
+                        "name": "topic",
+                        "type": "text",
+                        "label": "Topic"
+                    },
+                    {
+                        "name": "type",
+                        "type": "select",
+                        "label": "Meeting type",
+                        "validate": {
+                            "enum": [
+                                1,
+                                2,
+                                3,
+                                8
+                            ]
+                        }
+                    },
+                    {
+                        "name": "start_time",
+                        "type": "date",
+                        "label": "Start time"
+                    },
+                    {
+                        "name": "duration",
+                        "type": "number",
+                        "label": "Duration"
+                    },
+                    {
+                        "name": "password",
+                        "type": "text",
+                        "label": "Password"
+                    },
+                    {
+                        "name": "agenda",
+                        "type": "text",
+                        "label": "Agenda"
+                    },
+                    {
+                        "name": "settings",
+                        "spec": [
+                            {
+                                "name": "host_video",
+                                "type": "boolean",
+                                "label": "Host video",
+                                "required": true
+                            },
+                            {
+                                "name": "participant_video",
+                                "type": "boolean",
+                                "label": "Participant video",
+                                "required": true
+                            },
+                            {
+                                "name": "cn_meeting",
+                                "type": "boolean",
+                                "label": "Host in China",
+                                "required": true
+                            },
+                            {
+                                "name": "in_meeting",
+                                "type": "boolean",
+                                "label": "Host in India",
+                                "required": true
+                            },
+                            {
+                                "name": "join_before_host",
+                                "type": "boolean",
+                                "label": "Join before host",
+                                "required": true
+                            },
+                            {
+                                "name": "mute_upon_entry",
+                                "type": "boolean",
+                                "label": "Mute upon entry",
+                                "required": true
+                            },
+                            {
+                                "name": "watermark",
+                                "type": "boolean",
+                                "label": "Watermark",
+                                "required": true
+                            },
+                            {
+                                "name": "use_pmi",
+                                "type": "boolean",
+                                "label": "Use PMI",
+                                "required": true
+                            },
+                            {
+                                "name": "approval_type",
+                                "type": "select",
+                                "label": "Approval type",
+                                "validate": {
+                                    "enum": [
+                                        0,
+                                        1,
+                                        2
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "registration_type",
+                                "type": "select",
+                                "label": "Registration type",
+                                "validate": {
+                                    "enum": [
+                                        1,
+                                        2,
+                                        3
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "audio",
+                                "type": "select",
+                                "label": "Audio",
+                                "validate": {
+                                    "enum": [
+                                        "both",
+                                        "telephony",
+                                        "voip"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "auto_recording",
+                                "type": "select",
+                                "label": "Auto recording",
+                                "validate": {
+                                    "enum": [
+                                        "local",
+                                        "cloud",
+                                        "none"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "enforce_login",
+                                "type": "boolean",
+                                "label": "Enforce login",
+                                "required": true
+                            },
+                            {
+                                "name": "enforce_login_domains",
+                                "type": "text",
+                                "label": "Enforce login domains"
+                            },
+                            {
+                                "name": "alternative_hosts",
+                                "type": "text",
+                                "label": "Alternative hosts"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Settings"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "google-calendar:updateAnEvent",
+            "version": 5,
+            "parameters": {
+                "__IMTCONN__": 1120045
+            },
+            "mapper": {
+                "event": "{{1.id}}",
+                "append": false,
+                "calendar": "ENTER@YOUR.EMAIL",
+                "allDayEvent": false,
+                "description": "Zoom URL:\n{{5.join_url}}\n\nPassword:\n{{5.password}}\n\n------\n{{1.description}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "event": {
+                        "mode": "edit"
+                    },
+                    "colorId": {
+                        "mode": "chose",
+                        "label": ""
+                    },
+                    "calendar": {
+                        "mode": "chose",
+                        "label": "Primary Calendar"
+                    },
+                    "attendees": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "overrides": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "recurrence": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "visibility": {
+                        "mode": "chose",
+                        "label": ""
+                    },
+                    "__IMTCONN__": {
+                        "label": "ENTER@YOUR.EMAIL"
+                    },
+                    "sendUpdates": {
+                        "mode": "chose",
+                        "label": ""
+                    },
+                    "transparency": {
+                        "mode": "chose",
+                        "label": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "calendar",
+                        "type": "select",
+                        "label": "Calendar ID",
+                        "required": true
+                    },
+                    {
+                        "name": "colorId",
+                        "type": "select",
+                        "label": "Color"
+                    },
+                    {
+                        "name": "summary",
+                        "type": "text",
+                        "label": "Event Name"
+                    },
+                    {
+                        "name": "start",
+                        "time": true,
+                        "type": "date",
+                        "label": "Start Date"
+                    },
+                    {
+                        "name": "end",
+                        "time": true,
+                        "type": "date",
+                        "label": "End Date"
+                    },
+                    {
+                        "name": "allDayEvent",
+                        "type": "boolean",
+                        "label": "All Day Event",
+                        "required": true
+                    },
+                    {
+                        "name": "description",
+                        "type": "text",
+                        "label": "Description"
+                    },
+                    {
+                        "name": "location",
+                        "type": "text",
+                        "label": "Location"
+                    },
+                    {
+                        "name": "useDefault",
+                        "type": "boolean",
+                        "label": "Use the default reminder settings for this event"
+                    },
+                    {
+                        "name": "overrides",
+                        "spec": [
+                            {
+                                "name": "method",
+                                "type": "select",
+                                "label": "Method",
+                                "options": [
+                                    {
+                                        "label": "Email",
+                                        "value": "email"
+                                    },
+                                    {
+                                        "label": "Pop-up",
+                                        "value": "popup"
+                                    }
+                                ],
+                                "required": true
+                            },
+                            {
+                                "name": "minutes",
+                                "type": "uinteger",
+                                "label": "Minutes",
+                                "required": true,
+                                "validate": {
+                                    "max": 40320
+                                }
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Reminders",
+                        "validate": {
+                            "maxItems": 5
+                        }
+                    },
+                    {
+                        "name": "attendees",
+                        "spec": [
+                            {
+                                "name": "displayName",
+                                "type": "text",
+                                "label": "Name"
+                            },
+                            {
+                                "name": "email",
+                                "type": "email",
+                                "label": "Email",
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Attendees"
+                    },
+                    {
+                        "name": "append",
+                        "type": "boolean",
+                        "label": "Append the Attendees",
+                        "required": true
+                    },
+                    {
+                        "name": "transparency",
+                        "type": "select",
+                        "label": "Show me as",
+                        "validate": {
+                            "enum": [
+                                "opaque",
+                                "transparent"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "visibility",
+                        "type": "select",
+                        "label": "Visibility",
+                        "validate": {
+                            "enum": [
+                                "default",
+                                "public",
+                                "private"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sendUpdates",
+                        "type": "select",
+                        "label": "Send notifications about the event creation",
+                        "validate": {
+                            "enum": [
+                                "all",
+                                "externalOnly",
+                                "none"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "guestsCanModify",
+                        "type": "boolean",
+                        "label": "Guests can modify the event"
+                    },
+                    {
+                        "name": "recurrence",
+                        "spec": {
+                            "type": "text",
+                            "label": "Value"
+                        },
+                        "type": "array",
+                        "label": "Recurrence"
+                    },
+                    {
+                        "name": "event",
+                        "type": "select",
+                        "label": "Event ID",
+                        "required": true
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 8,
+            "module": "builtin:BasicFeeder",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "array": "{{6.attendees}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {
+                    "array": {
+                        "mode": "edit"
+                    }
+                },
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "array",
+                        "spec": [],
+                        "type": "array",
+                        "label": "Array"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "email:ActionSendEmail",
+            "version": 7,
+            "parameters": {
+                "account": 1763449,
+                "saveAfterSent": false
+            },
+            "mapper": {
+                "cc": "",
+                "to": "{{8.email}}",
+                "bcc": [],
+                "from": "",
+                "text": "(English below)\n\nミーティング予約、ありがとうございます。\nエシカルワークスのマナです。\n\nカレンダー予定：{{6.summary}}\n開始時刻：{{formatDate(6.start; \"YYYY年MM月DD日HH:mm\")}}\n\nZoomのリンク情報をお送りします。\n\nURL: {{5.join_url}}\nPassword: {{5.password}}\n\nそれでは、当日よろしくお願いいたします！\nマナ\nmana@ethical.works\n\n-----\n\nThank you so much for the appointment and hope all is well!\n\nHere’s the meeting info.\n\nSummary: {{6.summary}}\nStart: {{formatDate(6.start; \"YYYY-MM-DD hh:mm A\")}}\nURL: {{5.join_url}}\nPassword: {{5.password}}\n\nLooking forward to meeting you soon!\n\nMany Thanks,\nMana\nmana@ethical.works",
+                "sender": "",
+                "headers": [],
+                "replyTo": "",
+                "subject": "Meeting URL（ミーティング・リンクの送付）",
+                "priority": "normal",
+                "inReplyTo": "",
+                "references": [],
+                "attachments": [],
+                "contentType": "text"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0
+                },
+                "restore": {
+                    "cc": {
+                        "mode": "edit"
+                    },
+                    "to": {
+                        "mode": "edit"
+                    },
+                    "bcc": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "account": {
+                        "label": ""
+                    },
+                    "headers": {
+                        "items": []
+                    },
+                    "priority": {
+                        "label": "Normal"
+                    },
+                    "references": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "attachments": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "contentType": {
+                        "label": "Plaintext"
+                    },
+                    "saveAfterSent": {
+                        "label": "No"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "account",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "saveAfterSent",
+                        "type": "select",
+                        "label": "Save message after sending",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "to",
+                        "spec": {
+                            "name": "email",
+                            "type": "email",
+                            "label": "Email address",
+                            "required": true
+                        },
+                        "type": "array",
+                        "label": "To",
+                        "labels": {
+                            "add": "Add a recipient",
+                            "edit": "Edit a recipient"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject"
+                    },
+                    {
+                        "name": "contentType",
+                        "type": "select",
+                        "label": "Content Type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "html",
+                                "text"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "attachments",
+                        "spec": [
+                            {
+                                "name": "fileName",
+                                "type": "filename",
+                                "label": "File name",
+                                "required": true,
+                                "semantic": "file:name"
+                            },
+                            {
+                                "name": "data",
+                                "type": "buffer",
+                                "label": "Data",
+                                "required": true,
+                                "semantic": "file:data"
+                            },
+                            {
+                                "name": "cid",
+                                "type": "text",
+                                "label": "Content-ID"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Attachments",
+                        "labels": {
+                            "add": "Add an attachment",
+                            "edit": "Edit an attachment"
+                        }
+                    },
+                    {
+                        "name": "cc",
+                        "spec": {
+                            "name": "email",
+                            "type": "email",
+                            "label": "Email address"
+                        },
+                        "type": "array",
+                        "label": "Copy recipient",
+                        "labels": {
+                            "add": "Add a copy recipient",
+                            "edit": "Edit a copy recipient"
+                        }
+                    },
+                    {
+                        "name": "bcc",
+                        "spec": {
+                            "name": "email",
+                            "type": "email",
+                            "label": "Email address"
+                        },
+                        "type": "array",
+                        "label": "Blind copy recipient",
+                        "labels": {
+                            "add": "Add a blind copy recipient",
+                            "edit": "Edit a blind copy recipient"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "type": "text",
+                        "label": "From"
+                    },
+                    {
+                        "name": "sender",
+                        "type": "text",
+                        "label": "Sender"
+                    },
+                    {
+                        "name": "replyTo",
+                        "type": "text",
+                        "label": "Reply-To"
+                    },
+                    {
+                        "name": "inReplyTo",
+                        "type": "text",
+                        "label": "In-Reply-To"
+                    },
+                    {
+                        "name": "references",
+                        "spec": {
+                            "type": "text",
+                            "label": "Reference",
+                            "required": true
+                        },
+                        "type": "array",
+                        "label": "References"
+                    },
+                    {
+                        "name": "priority",
+                        "type": "select",
+                        "label": "Priority",
+                        "validate": {
+                            "enum": [
+                                "high",
+                                "normal",
+                                "low"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Headers"
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Content"
+                    }
+                ],
+                "advanced": true
+            }
+        }
+    ],
+    "metadata": {
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "shatter": false,
+            "maxErrors": 3,
+            "autoCommit": false,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.integromat.com"
+    }
+}

@@ -1,0 +1,668 @@
+{
+    "name": "Remove Image Background",
+    "flow": [
+        {
+            "id": 1,
+            "module": "slack:WatchImMessages",
+            "version": 3,
+            "parameters": {
+                "limit": 1,
+                "channel": "",
+                "__IMTCONN__": 2295164
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "channel": {
+                        "label": "slackbot"
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "channel",
+                        "type": "select",
+                        "label": "Channel",
+                        "required": true
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "builtin:BasicFeeder",
+            "version": 1,
+            "parameters": {},
+            "filter": {
+                "name": "Remove",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{1.text}}",
+                            "b": "切り抜き！",
+                            "o": "text:equal"
+                        },
+                        {
+                            "a": "{{1.files[].url_private_download}}",
+                            "b": "",
+                            "o": "exist"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "array": "{{1.files}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "array": {
+                        "mode": "edit"
+                    }
+                },
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "array",
+                        "spec": [],
+                        "type": "array",
+                        "label": "Array"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "slack:DownloadFile",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 1120039
+            },
+            "mapper": {
+                "url": "{{3.url_private_download}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "__IMTCONN__": {
+                        "label": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "url",
+                        "type": "url",
+                        "label": "Url private download",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "removebg:removebg",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2313004
+            },
+            "mapper": {
+                "size": "preview",
+                "format": "jpg",
+                "background": "transparent",
+                "image_data": "{{4.data}}",
+                "image_source": "data"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {
+                    "size": {
+                        "mode": "chose",
+                        "label": "Preview (up to 0.25 megapixels)"
+                    },
+                    "format": {
+                        "mode": "chose",
+                        "label": "JPG"
+                    },
+                    "background": {
+                        "mode": "chose",
+                        "label": "Transparent"
+                    },
+                    "__IMTCONN__": {
+                        "label": "Remove.bg"
+                    },
+                    "image_source": {
+                        "mode": "chose",
+                        "label": "Data"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "image_source",
+                        "type": "select",
+                        "label": "Data/URL",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "data",
+                                "url"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "type": "select",
+                        "label": "Size",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "auto",
+                                "preview",
+                                "full"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "background",
+                        "type": "select",
+                        "label": "New Background",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "transparent",
+                                "color",
+                                "image_data",
+                                "image_url"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "type": "select",
+                        "label": "Output Format",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "png",
+                                "jpg"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "image_data",
+                        "type": "buffer",
+                        "label": "Image Data",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 9,
+            "module": "image:Convert",
+            "version": 2,
+            "parameters": {},
+            "mapper": {
+                "data": "{{2.image_data}}",
+                "format": "jpg",
+                "fileName": ""
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0
+                },
+                "restore": {
+                    "format": {
+                        "label": "JPG"
+                    }
+                },
+                "expect": [
+                    {
+                        "mean": "data",
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Data",
+                        "codepage": "binary",
+                        "required": true
+                    },
+                    {
+                        "mean": "name",
+                        "name": "fileName",
+                        "type": "filename",
+                        "label": "File name"
+                    },
+                    {
+                        "name": "format",
+                        "type": "select",
+                        "label": "Output format",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "png",
+                                "jpg",
+                                "gif",
+                                "bmp"
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8,
+            "module": "google-drive:uploadAFile",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 1763449
+            },
+            "mapper": {
+                "data": "{{9.data}}",
+                "select": "value",
+                "convert": false,
+                "filename": "{{9.fileName}}",
+                "folderId": "",
+                "destination": "drive"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1500,
+                    "y": 0
+                },
+                "restore": {
+                    "select": {
+                        "label": "Select from the list"
+                    },
+                    "folderId": {
+                        "mode": "chose",
+                        "path": [
+                            "Public",
+                            "Integromat",
+                            "ダウンロード"
+                        ]
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    },
+                    "destination": {
+                        "label": "My Drive"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Enter a Folder ID",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "value"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "type": "text",
+                        "label": "New File Name"
+                    },
+                    {
+                        "mean": "name",
+                        "name": "filename",
+                        "type": "filename",
+                        "label": "File Name",
+                        "required": true
+                    },
+                    {
+                        "mean": "data",
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Data",
+                        "required": true
+                    },
+                    {
+                        "name": "convert",
+                        "type": "boolean",
+                        "label": "Convert a File",
+                        "required": true
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "New Drive Location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "New Folder Location",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "slack:CreateMessage",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 1120039
+            },
+            "mapper": {
+                "text": "切り抜きました（プレビュー版なので小さいです）\n{{8.webContentLink}}",
+                "parse": false,
+                "mrkdwn": true,
+                "channel": "{{1.user}}",
+                "thread_ts": "{{1.ts}}",
+                "channelWType": "manualy"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1800,
+                    "y": 0
+                },
+                "restore": {
+                    "parse": {
+                        "mode": "chose"
+                    },
+                    "mrkdwn": {
+                        "mode": "chose"
+                    },
+                    "as_user": {
+                        "mode": "chose"
+                    },
+                    "link_names": {
+                        "mode": "chose"
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    },
+                    "attachments": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "channelWType": {
+                        "label": "Enter manually"
+                    },
+                    "unfurl_links": {
+                        "mode": "chose"
+                    },
+                    "unfurl_media": {
+                        "mode": "chose"
+                    },
+                    "reply_broadcast": {
+                        "mode": "chose"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "channelWType",
+                        "type": "select",
+                        "label": "Enter a channel ID or name",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "manualy",
+                                "list"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true,
+                        "multiline": true
+                    },
+                    {
+                        "name": "as_user",
+                        "type": "boolean",
+                        "label": "As user"
+                    },
+                    {
+                        "name": "thread_ts",
+                        "type": "text",
+                        "label": "Thread message ID (time stamp)"
+                    },
+                    {
+                        "name": "reply_broadcast",
+                        "type": "boolean",
+                        "label": "Reply broadcast"
+                    },
+                    {
+                        "name": "attachments",
+                        "spec": [
+                            {
+                                "name": "fallback",
+                                "type": "text",
+                                "label": "Fallback",
+                                "required": true
+                            },
+                            {
+                                "name": "color",
+                                "type": "text",
+                                "label": "Color"
+                            },
+                            {
+                                "name": "pretext",
+                                "type": "text",
+                                "label": "Pretext"
+                            },
+                            {
+                                "name": "author_name",
+                                "type": "text",
+                                "label": "Author name"
+                            },
+                            {
+                                "name": "author_link",
+                                "type": "url",
+                                "label": "Author link"
+                            },
+                            {
+                                "name": "author_icon",
+                                "type": "url",
+                                "label": "Author icon (URL)"
+                            },
+                            {
+                                "name": "title",
+                                "type": "text",
+                                "label": "Title"
+                            },
+                            {
+                                "name": "title_link",
+                                "type": "url",
+                                "label": "Title link"
+                            },
+                            {
+                                "name": "text",
+                                "type": "text",
+                                "label": "Text"
+                            },
+                            {
+                                "name": "image_url",
+                                "type": "text",
+                                "label": "Image (URL)"
+                            },
+                            {
+                                "name": "thumb_url",
+                                "type": "url",
+                                "label": "Thumbnail (URL)"
+                            },
+                            {
+                                "name": "footer",
+                                "type": "text",
+                                "label": "Footer"
+                            },
+                            {
+                                "name": "footer_icon",
+                                "type": "url",
+                                "label": "Footer icon (URL)"
+                            },
+                            {
+                                "name": "ts",
+                                "type": "number",
+                                "label": "Time stamp"
+                            },
+                            {
+                                "name": "fields",
+                                "spec": [
+                                    {
+                                        "name": "title",
+                                        "type": "text",
+                                        "label": "Title",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "short",
+                                        "type": "boolean",
+                                        "label": "Display side-by-side with other values",
+                                        "required": true
+                                    }
+                                ],
+                                "type": "array",
+                                "label": "Fields inside message attachments"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Attachments"
+                    },
+                    {
+                        "name": "icon_emoji",
+                        "type": "text",
+                        "label": "Icon emoji"
+                    },
+                    {
+                        "name": "icon_url",
+                        "type": "url",
+                        "label": "Icon url"
+                    },
+                    {
+                        "name": "link_names",
+                        "type": "boolean",
+                        "label": "Link names"
+                    },
+                    {
+                        "name": "parse",
+                        "type": "boolean",
+                        "label": "Parse message text"
+                    },
+                    {
+                        "name": "mrkdwn",
+                        "type": "boolean",
+                        "label": "Use markdown"
+                    },
+                    {
+                        "name": "unfurl_links",
+                        "type": "boolean",
+                        "label": "Unfurl primarily text-based content"
+                    },
+                    {
+                        "name": "unfurl_media",
+                        "type": "boolean",
+                        "label": "Unfurl media content"
+                    },
+                    {
+                        "name": "username",
+                        "type": "text",
+                        "label": "User name"
+                    },
+                    {
+                        "name": "channel",
+                        "type": "text",
+                        "label": "Channel ID or name",
+                        "required": true
+                    }
+                ],
+                "advanced": true
+            }
+        }
+    ],
+    "metadata": {
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "shatter": false,
+            "maxErrors": 3,
+            "autoCommit": false,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.integromat.com"
+    }
+}

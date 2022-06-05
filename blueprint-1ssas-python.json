@@ -1,0 +1,144 @@
+{
+    "name": "ニシキヘビを走らせるDX戦略！",
+    "flow": [
+        {
+            "id": 2,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "param",
+                "scope": "roundtrip",
+                "value": "1"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "scope": {
+                        "label": "One cycle"
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "param",
+                        "type": "any",
+                        "label": "param"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "onesaas:Python",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 3198912
+            },
+            "mapper": {
+                "pythonCode": "import numpy as np\n\narr = np.array([7,6,{{2.param}}])\nmin = str(np.min(arr))\n\nresult = { 'data': min }"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "__IMTCONN__": {
+                        "label": "1saas"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "pythonCode",
+                        "type": "text",
+                        "label": "Your Python Code",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "util:GetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "{{3.data}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": null,
+                        "type": "any",
+                        "label": null
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "shatter": false,
+            "maxErrors": 3,
+            "autoCommit": false,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.integromat.com"
+    }
+}

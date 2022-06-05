@@ -1,0 +1,409 @@
+{
+    "name": "終わりの風景〜画像ファイルだけ「ヨハン」にリネームする",
+    "flow": [
+        {
+            "id": 4,
+            "module": "google-drive:searchForFilesFolders",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 1763439
+            },
+            "mapper": {
+                "limit": "20",
+                "query": "*.jpg",
+                "select": "list",
+                "folderId": "",
+                "retrieve": "file",
+                "searchType": "fulltext",
+                "destination": "drive"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "風景の検索"
+                },
+                "restore": {
+                    "select": {
+                        "label": "Select from the list"
+                    },
+                    "folderId": {
+                        "mode": "chose",
+                        "path": [
+                            "Public",
+                            "Integromat",
+                            "Images",
+                            "Original"
+                        ]
+                    },
+                    "retrieve": {
+                        "label": "Files"
+                    },
+                    "searchType": {
+                        "label": "Fulltext search"
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    },
+                    "destination": {
+                        "label": "My Drive"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Select the Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "list"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "retrieve",
+                        "type": "select",
+                        "label": "Retrieve",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "file",
+                                "folder",
+                                "file_folder"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "searchType",
+                        "type": "select",
+                        "label": "Search",
+                        "validate": {
+                            "enum": [
+                                "title",
+                                "fulltext",
+                                "custom"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit"
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "Choose a Drive",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "query",
+                        "type": "text",
+                        "label": "Query",
+                        "required": true
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "Choose a Folder"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 4
+            },
+            "mapper": {
+                "id": "{{4.id}}",
+                "name": "{{4.name}}",
+                "fileExtension": "{{4.fileExtension}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "たくさんの終わりの風景…"
+                },
+                "restore": {
+                    "feeder": {
+                        "label": "Google Drive - Search for Files/Folders"
+                    },
+                    "mapper": {
+                        "label": [
+                            null,
+                            null,
+                            null
+                        ]
+                    },
+                    "target": {
+                        "label": "Custom"
+                    }
+                }
+            }
+        },
+        {
+            "id": 9,
+            "module": "builtin:BasicFeeder",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "array": "{{8.array}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0,
+                    "name": "これ位近づけば見えるか"
+                },
+                "restore": {
+                    "array": {
+                        "mode": "edit"
+                    }
+                },
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "array",
+                        "spec": [],
+                        "type": "array",
+                        "label": "Array"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 11,
+            "module": "google-drive:copyAFile",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 1763449
+            },
+            "mapper": {
+                "copy": "drive",
+                "file": "{{9.id}}",
+                "name": "ヨハン_{{9.`__IMTINDEX__`}}.{{9.fileExtension}}",
+                "select": "list",
+                "folderId": "",
+                "destination": "drive"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0,
+                    "name": "僕の目に映っているものが"
+                },
+                "restore": {
+                    "copy": {
+                        "label": "My Drive"
+                    },
+                    "file": {
+                        "mode": "edit",
+                        "path": []
+                    },
+                    "select": {
+                        "label": "Select from the list"
+                    },
+                    "folderId": {
+                        "mode": "chose",
+                        "path": [
+                            "Public",
+                            "Integromat",
+                            "Images",
+                            "Renamed"
+                        ]
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    },
+                    "destination": {
+                        "label": "My Drive"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Select the Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "list"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Copied File Name"
+                    },
+                    {
+                        "name": "copy",
+                        "type": "select",
+                        "label": "Original File's Drive",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "New Drive Location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "file",
+                        "type": "file",
+                        "label": "Original File ID",
+                        "required": true
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "New Folder Location",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 12,
+            "module": "util:TextAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 9,
+                "rowSeparator": "\n"
+            },
+            "mapper": {
+                "value": "- 機密情報は「{{11.name}}」に変更されました"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0,
+                    "name": "見えますか？"
+                },
+                "restore": {
+                    "feeder": {
+                        "label": "これ位近づけば見えるか"
+                    },
+                    "rowSeparator": {
+                        "label": "New row"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "rowSeparator",
+                        "type": "select",
+                        "label": "Row separator",
+                        "validate": {
+                            "enum": [
+                                "\n",
+                                "\t",
+                                "other"
+                            ]
+                        }
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "value",
+                        "type": "text",
+                        "label": "Text",
+                        "multiline": true
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 13,
+            "module": "util:GetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "{{12.text}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1500,
+                    "y": 0,
+                    "name": "これが本当の終わりの風景"
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": null,
+                        "type": "any",
+                        "label": null
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "shatter": false,
+            "maxErrors": 3,
+            "autoCommit": false,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.integromat.com"
+    }
+}

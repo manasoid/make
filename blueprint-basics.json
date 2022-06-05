@@ -1,0 +1,466 @@
+{
+    "name": "密会のエニグマ",
+    "flow": [
+        {
+            "id": 1,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "元の文章",
+                "scope": "roundtrip",
+                "value": "今夜、7時に、六本木の、リッツカールトンホテルにて、お会いしましょう"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "秘密の連絡"
+                },
+                "restore": {
+                    "scope": {
+                        "label": "One cycle"
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "元の文章",
+                        "type": "any",
+                        "label": "元の文章"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "情報の分解",
+                "scope": "roundtrip",
+                "value": "{{split(1.`元の文章`; \"、\")}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "コマ切れ事件"
+                },
+                "restore": {
+                    "scope": {
+                        "label": "One cycle"
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "情報の分解",
+                        "type": "any",
+                        "label": "情報の分解"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "builtin:BasicFeeder",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "array": "{{2.`情報の分解`}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0,
+                    "name": "さらなる暗号化"
+                },
+                "restore": {
+                    "array": {
+                        "mode": "edit"
+                    }
+                },
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "array",
+                        "spec": [],
+                        "type": "array",
+                        "label": "Array"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "util:Switcher",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "input": "{{3.value}}",
+                "casesTable": [
+                    {
+                        "output": "{{replace(3.value; \"7時\"; \"コンビニ銀行\")}}",
+                        "pattern": "7時"
+                    },
+                    {
+                        "output": "{{replace(3.value; \"六本木\"; \"天地が結合する木曜日\")}}",
+                        "pattern": "六本木"
+                    },
+                    {
+                        "output": "{{replace(3.value; \"リッツカールトンホテル\"; \"黒き芳醇な飲み物を欲するところ\")}}",
+                        "pattern": "リッツカールトンホテル"
+                    },
+                    {
+                        "output": "{{replace(3.value; \"お会い\"; \"統合と次元上昇\")}}",
+                        "pattern": "お会い"
+                    }
+                ],
+                "elseOutput": "{{3.value}}",
+                "useRegExpMatch": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0,
+                    "name": "辞書による撹乱"
+                },
+                "restore": {
+                    "casesTable": {
+                        "mode": "chose",
+                        "items": [
+                            "undefined",
+                            "undefined",
+                            "undefined",
+                            "undefined"
+                        ]
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "input",
+                        "type": "text",
+                        "label": "Input"
+                    },
+                    {
+                        "name": "useRegExpMatch",
+                        "type": "boolean",
+                        "label": "Use regular expressions to match",
+                        "required": true
+                    },
+                    {
+                        "name": "casesTable",
+                        "spec": [
+                            {
+                                "name": "pattern",
+                                "type": "text",
+                                "label": "Pattern"
+                            },
+                            {
+                                "name": "output",
+                                "type": "any",
+                                "label": "Output"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Cases",
+                        "required": true
+                    },
+                    {
+                        "name": "elseOutput",
+                        "type": "any",
+                        "label": "Else"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "util:TextAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 3,
+                "rowSeparator": "other",
+                "otherRowSeparator": "、"
+            },
+            "mapper": {
+                "value": "{{5.output}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0,
+                    "name": "暗号化の完了"
+                },
+                "restore": {
+                    "feeder": {
+                        "label": "さらなる暗号化"
+                    },
+                    "rowSeparator": {
+                        "label": "Other"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "rowSeparator",
+                        "type": "select",
+                        "label": "Row separator",
+                        "validate": {
+                            "enum": [
+                                "\n",
+                                "\t",
+                                "other"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "otherRowSeparator",
+                        "type": "text",
+                        "label": "Separator"
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "value",
+                        "type": "text",
+                        "label": "Text",
+                        "multiline": true
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 7,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "混沌による暗号化",
+                "scope": "roundtrip",
+                "value": "{{shuffle(split(6.text; \"、\"))}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 601,
+                    "y": 371,
+                    "name": "さらなる混沌"
+                },
+                "restore": {
+                    "scope": {
+                        "label": "One cycle"
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "混沌による暗号化",
+                        "type": "any",
+                        "label": "混沌による暗号化"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "送信する文章",
+                "scope": "roundtrip",
+                "value": "{{join(7.`混沌による暗号化`; \"、\")}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 903,
+                    "y": 373,
+                    "name": "暗号化の完了"
+                },
+                "restore": {
+                    "scope": {
+                        "label": "One cycle"
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "送信する文章",
+                        "type": "any",
+                        "label": "送信する文章"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 9,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "とどめの一撃",
+                "scope": "roundtrip",
+                "value": "{{sha512(8.`送信する文章`)}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1203,
+                    "y": 368,
+                    "name": "解読不可"
+                },
+                "restore": {
+                    "scope": {
+                        "label": "One cycle"
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "とどめの一撃",
+                        "type": "any",
+                        "label": "とどめの一撃"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "shatter": false,
+            "maxErrors": 3,
+            "autoCommit": false,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.integromat.com"
+    }
+}

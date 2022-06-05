@@ -1,0 +1,1559 @@
+{
+    "name": "Audio App for LINE",
+    "flow": [
+        {
+            "id": 1,
+            "module": "line:watchMessages",
+            "version": 1,
+            "parameters": {
+                "__IMTHOOK__": 686250
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "__IMTHOOK__": {
+                        "label": "My LINE Event webhook"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTHOOK__",
+                        "type": "hook",
+                        "label": "Webhook",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 10,
+            "module": "http:ActionSendData",
+            "version": 3,
+            "parameters": {
+                "handleErrors": false
+            },
+            "filter": {
+                "name": "Audio",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{1.events[].message.type}}",
+                            "b": "audio",
+                            "o": "text:equal"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "ca": "",
+                "qs": [],
+                "url": "https://api-data.line.me/v2/bot/message/{{1.events[].message.id}}/content",
+                "data": "",
+                "gzip": true,
+                "method": "get",
+                "headers": [
+                    {
+                        "name": "Authorization",
+                        "value": "Bearer ここにキーを入れてください"
+                    }
+                ],
+                "timeout": "",
+                "authPass": "",
+                "authUser": "",
+                "bodyType": "raw",
+                "contentType": "",
+                "shareCookies": false,
+                "parseResponse": false,
+                "followRedirect": true,
+                "useQuerystring": false,
+                "followAllRedirects": false,
+                "rejectUnauthorized": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "qs": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "method": {
+                        "mode": "chose",
+                        "label": "GET"
+                    },
+                    "headers": {
+                        "mode": "chose",
+                        "items": [
+                            "undefined"
+                        ]
+                    },
+                    "bodyType": {
+                        "label": "Raw"
+                    },
+                    "contentType": {
+                        "label": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "handleErrors",
+                        "type": "boolean",
+                        "label": "Evaluate all states as errors (except for 2xx and 3xx )",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "url",
+                        "type": "url",
+                        "label": "URL",
+                        "required": true
+                    },
+                    {
+                        "name": "method",
+                        "type": "select",
+                        "label": "Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "get",
+                                "head",
+                                "post",
+                                "put",
+                                "patch",
+                                "delete"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Headers",
+                        "labels": {
+                            "add": "Add a header",
+                            "edit": "Edit a header"
+                        }
+                    },
+                    {
+                        "name": "qs",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Query String",
+                        "labels": {
+                            "add": "Add parameter",
+                            "edit": "Edit parameter"
+                        }
+                    },
+                    {
+                        "name": "bodyType",
+                        "type": "select",
+                        "label": "Body type",
+                        "validate": {
+                            "enum": [
+                                "raw",
+                                "x_www_form_urlencoded",
+                                "multipart_form_data"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "parseResponse",
+                        "type": "boolean",
+                        "label": "Parse response",
+                        "required": true
+                    },
+                    {
+                        "name": "authUser",
+                        "type": "text",
+                        "label": "User name"
+                    },
+                    {
+                        "name": "authPass",
+                        "type": "password",
+                        "label": "Password"
+                    },
+                    {
+                        "name": "timeout",
+                        "type": "uinteger",
+                        "label": "Timeout",
+                        "validate": {
+                            "max": 300,
+                            "min": 1
+                        }
+                    },
+                    {
+                        "name": "shareCookies",
+                        "type": "boolean",
+                        "label": "Share cookies with other HTTP modules",
+                        "required": true
+                    },
+                    {
+                        "name": "ca",
+                        "type": "cert",
+                        "label": "Self-signed certificate",
+                        "multiline": true
+                    },
+                    {
+                        "name": "rejectUnauthorized",
+                        "type": "boolean",
+                        "label": "Reject connections that are using unverified (self-signed) certificates",
+                        "required": true
+                    },
+                    {
+                        "name": "followRedirect",
+                        "type": "boolean",
+                        "label": "Follow redirect",
+                        "required": true
+                    },
+                    {
+                        "name": "useQuerystring",
+                        "type": "boolean",
+                        "label": "Disable serialization of multiple same query string keys as arrays",
+                        "required": true
+                    },
+                    {
+                        "name": "gzip",
+                        "type": "boolean",
+                        "label": "Request compressed content",
+                        "required": true
+                    },
+                    {
+                        "name": "contentType",
+                        "type": "select",
+                        "label": "Content type",
+                        "validate": {
+                            "enum": [
+                                "text/plain",
+                                "application/json",
+                                "application/xml",
+                                "text/xml",
+                                "text/html",
+                                "custom"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Request content"
+                    },
+                    {
+                        "name": "followAllRedirects",
+                        "type": "boolean",
+                        "label": "Follow all redirect",
+                        "required": true
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 11,
+            "module": "google-drive:uploadAFile",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 1763449
+            },
+            "mapper": {
+                "data": "{{10.data}}",
+                "select": "value",
+                "convert": false,
+                "filename": "{{1.events[].message.type}}-{{1.events[].message.id}}-{{formatDate(1.events[].timestamp; \"YYYYMMDD\")}}.m4a",
+                "folderId": "",
+                "destination": "drive"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "select": {
+                        "label": "Select from the list"
+                    },
+                    "folderId": {
+                        "mode": "chose",
+                        "path": [
+                            "Public",
+                            "Vmailer",
+                            "M4A"
+                        ]
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    },
+                    "destination": {
+                        "label": "My Drive"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Enter a Folder ID",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "value"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "type": "text",
+                        "label": "New File Name"
+                    },
+                    {
+                        "mean": "name",
+                        "name": "filename",
+                        "type": "filename",
+                        "label": "File Name",
+                        "required": true
+                    },
+                    {
+                        "mean": "data",
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Data",
+                        "required": true
+                    },
+                    {
+                        "name": "convert",
+                        "type": "boolean",
+                        "label": "Convert a File",
+                        "required": true
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "New Drive Location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "New Folder Location",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 17,
+            "module": "line:sendAReplyMessage",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2109238
+            },
+            "mapper": {
+                "messages": [
+                    {
+                        "text": "録音されたオーディオです！",
+                        "type": "text"
+                    },
+                    {
+                        "type": "audio",
+                        "duration": "{{round(1.events[].message.duration * 0.001)}}",
+                        "originalContentUrl": "{{11.webContentLink}}"
+                    }
+                ],
+                "replyToken": "{{1.events[].replyToken}}",
+                "notificationDisabled": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {
+                    "messages": {
+                        "mode": "chose",
+                        "items": [
+                            {
+                                "type": {
+                                    "mode": "chose",
+                                    "label": "Text"
+                                },
+                                "emojis": {
+                                    "mode": "chose",
+                                    "items": []
+                                }
+                            },
+                            {
+                                "type": {
+                                    "mode": "chose",
+                                    "label": "Audio"
+                                }
+                            }
+                        ]
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    },
+                    "notificationDisabled": {
+                        "mode": "chose"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "replyToken",
+                        "type": "text",
+                        "label": "Reply Token",
+                        "required": true
+                    },
+                    {
+                        "name": "messages",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "select",
+                                "label": "Type",
+                                "options": [
+                                    {
+                                        "label": "Text",
+                                        "value": "text",
+                                        "nested": [
+                                            {
+                                                "name": "text",
+                                                "type": "text",
+                                                "label": "Text",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 5000
+                                                }
+                                            },
+                                            {
+                                                "name": "emojis",
+                                                "spec": [
+                                                    {
+                                                        "name": "productId",
+                                                        "type": "text",
+                                                        "label": "Product ID",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "emojiId",
+                                                        "type": "text",
+                                                        "label": "Emoji ID",
+                                                        "required": true
+                                                    }
+                                                ],
+                                                "type": "array",
+                                                "label": "LINE Emojis",
+                                                "validate": {
+                                                    "maxItems": 20
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Sticker",
+                                        "value": "sticker",
+                                        "nested": [
+                                            {
+                                                "name": "packageId",
+                                                "type": "text",
+                                                "label": "Package ID",
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "stickerId",
+                                                "type": "text",
+                                                "label": "Sticker ID",
+                                                "required": true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Image",
+                                        "value": "image",
+                                        "nested": [
+                                            {
+                                                "name": "originalContentUrl",
+                                                "type": "url",
+                                                "label": "Original Content URL",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 1000
+                                                }
+                                            },
+                                            {
+                                                "name": "previewImageUrl",
+                                                "type": "url",
+                                                "label": "Preview Image URL",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 1000
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Video",
+                                        "value": "video",
+                                        "nested": [
+                                            {
+                                                "name": "originalContentUrl",
+                                                "type": "url",
+                                                "label": "Original Content URL",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 1000
+                                                }
+                                            },
+                                            {
+                                                "name": "previewImageUrl",
+                                                "type": "url",
+                                                "label": "Preview Image URL",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 1000
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Audio",
+                                        "value": "audio",
+                                        "nested": [
+                                            {
+                                                "name": "originalContentUrl",
+                                                "type": "url",
+                                                "label": "Original Content URL",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 1000
+                                                }
+                                            },
+                                            {
+                                                "name": "duration",
+                                                "type": "uinteger",
+                                                "label": "Duration (in seconds)",
+                                                "required": true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Location",
+                                        "value": "location",
+                                        "nested": [
+                                            {
+                                                "name": "title",
+                                                "type": "text",
+                                                "label": "Title",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 100
+                                                }
+                                            },
+                                            {
+                                                "name": "address",
+                                                "type": "text",
+                                                "label": "Address",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 100
+                                                }
+                                            },
+                                            {
+                                                "name": "latitude",
+                                                "type": "number",
+                                                "label": "Latitude",
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "longitude",
+                                                "type": "number",
+                                                "label": "Longitude",
+                                                "required": true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Image Map",
+                                        "value": "imagemap",
+                                        "nested": [
+                                            {
+                                                "name": "baseUrl",
+                                                "type": "url",
+                                                "label": "Base URL of the image",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 1000
+                                                }
+                                            },
+                                            {
+                                                "name": "altText",
+                                                "type": "text",
+                                                "label": "Alternative Text",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 400
+                                                }
+                                            },
+                                            {
+                                                "name": "baseSize",
+                                                "spec": [
+                                                    {
+                                                        "name": "width",
+                                                        "type": "uinteger",
+                                                        "label": "Width",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "max": 1040
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "height",
+                                                        "type": "uinteger",
+                                                        "label": "Height",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "max": 1040
+                                                        }
+                                                    }
+                                                ],
+                                                "type": "collection",
+                                                "label": "Base Image Size"
+                                            },
+                                            {
+                                                "name": "actions",
+                                                "spec": [
+                                                    {
+                                                        "name": "type",
+                                                        "type": "select",
+                                                        "label": "Type",
+                                                        "options": [
+                                                            {
+                                                                "label": "URL",
+                                                                "value": "uri",
+                                                                "nested": [
+                                                                    {
+                                                                        "name": "linkUri",
+                                                                        "type": "url",
+                                                                        "label": "Link URL",
+                                                                        "required": true,
+                                                                        "validate": {
+                                                                            "max": 1000
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "label": "Message",
+                                                                "value": "message",
+                                                                "nested": [
+                                                                    {
+                                                                        "name": "text",
+                                                                        "type": "text",
+                                                                        "label": "Text",
+                                                                        "required": true,
+                                                                        "validate": {
+                                                                            "max": 400
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ],
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "label",
+                                                        "type": "text",
+                                                        "label": "Label",
+                                                        "validate": {
+                                                            "max": 50
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "area",
+                                                        "spec": [
+                                                            {
+                                                                "help": "Horizontal position relative to the left edge of the imagemap area.",
+                                                                "name": "x",
+                                                                "type": "uinteger",
+                                                                "label": "X Axis",
+                                                                "required": true
+                                                            },
+                                                            {
+                                                                "help": "Vertical position relative to the top of the imagemap area.",
+                                                                "name": "y",
+                                                                "type": "uinteger",
+                                                                "label": "Y Axis",
+                                                                "required": true
+                                                            },
+                                                            {
+                                                                "help": "Width of the tappable area",
+                                                                "name": "width",
+                                                                "type": "uinteger",
+                                                                "label": "Width",
+                                                                "required": true
+                                                            },
+                                                            {
+                                                                "help": "Height of the tappable are",
+                                                                "name": "height",
+                                                                "type": "uinteger",
+                                                                "label": "Height",
+                                                                "required": true
+                                                            }
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Area"
+                                                    }
+                                                ],
+                                                "type": "array",
+                                                "label": "Actions",
+                                                "required": true,
+                                                "validate": {
+                                                    "maxItems": 50
+                                                }
+                                            },
+                                            {
+                                                "name": "video",
+                                                "spec": [
+                                                    {
+                                                        "help": "Max file size is 200 MB. A very wide or tall video may be cropped when played in some environments.\nSupported image format - MP4",
+                                                        "name": "originalContentUrl",
+                                                        "type": "url",
+                                                        "label": "Original Content URL",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "max": 1000
+                                                        }
+                                                    },
+                                                    {
+                                                        "help": "Max file size is 1MB.\nSupported image format - JPG, JPEG or PNG",
+                                                        "name": "previewImageUrl",
+                                                        "type": "url",
+                                                        "label": "Preview Image URL",
+                                                        "required": true,
+                                                        "validate": {
+                                                            "max": 1000
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "area",
+                                                        "spec": [
+                                                            {
+                                                                "help": "Horizontal position of the video area relative to the left edge of the imagemap area.",
+                                                                "name": "x",
+                                                                "type": "uinteger",
+                                                                "label": "X Axis"
+                                                            },
+                                                            {
+                                                                "help": "Vertical position of the video area relative to the top of the imagemap area.",
+                                                                "name": "y",
+                                                                "type": "uinteger",
+                                                                "label": "Y Axis"
+                                                            },
+                                                            {
+                                                                "help": "Width of the video area",
+                                                                "name": "width",
+                                                                "type": "uinteger",
+                                                                "label": "Width"
+                                                            },
+                                                            {
+                                                                "help": "Height of the video are",
+                                                                "name": "height",
+                                                                "type": "uinteger",
+                                                                "label": "Height"
+                                                            }
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Area"
+                                                    },
+                                                    {
+                                                        "name": "externalLink",
+                                                        "spec": [
+                                                            {
+                                                                "name": "linkUri",
+                                                                "type": "url",
+                                                                "label": "Link URL",
+                                                                "validate": {
+                                                                    "max": 1000
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "label",
+                                                                "type": "text",
+                                                                "label": "Label",
+                                                                "validate": {
+                                                                    "max": 30
+                                                                }
+                                                            }
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "External Link"
+                                                    }
+                                                ],
+                                                "type": "collection",
+                                                "label": "Video"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Template",
+                                        "value": "template",
+                                        "nested": [
+                                            {
+                                                "name": "altText",
+                                                "type": "text",
+                                                "label": "Alternative Text",
+                                                "required": true,
+                                                "validate": {
+                                                    "max": 400
+                                                }
+                                            },
+                                            {
+                                                "name": "template",
+                                                "spec": [
+                                                    {
+                                                        "name": "type",
+                                                        "type": "select",
+                                                        "label": "Type",
+                                                        "options": [
+                                                            {
+                                                                "label": "Buttons",
+                                                                "value": "buttons",
+                                                                "nested": [
+                                                                    {
+                                                                        "help": "Max file size is 1 MB.\nSupported image format - JPEG or PNG",
+                                                                        "name": "thumbnailImageUrl",
+                                                                        "type": "url",
+                                                                        "label": "Thumbnail Image URL",
+                                                                        "validate": {
+                                                                            "max": 1000
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "name": "imageAspectRatio",
+                                                                        "type": "select",
+                                                                        "label": "Image Aspect Ratio",
+                                                                        "options": [
+                                                                            {
+                                                                                "label": "Rectangle (1.51 : 1)",
+                                                                                "value": "rectangle",
+                                                                                "default": true
+                                                                            },
+                                                                            {
+                                                                                "label": "Square (1 : 1)",
+                                                                                "value": "square"
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "help": "◉`Cover`: The image fills the entire image area. Parts of the image that do not fit in the area are not displayed.\n◉`Contain`: The entire image is displayed in the image area. A background is displayed in the unused areas to the left and right of vertical images and in the areas above and below horizontal images.",
+                                                                        "name": "imageSize",
+                                                                        "type": "select",
+                                                                        "label": "Image Size",
+                                                                        "options": [
+                                                                            {
+                                                                                "label": "Cover",
+                                                                                "value": "cover",
+                                                                                "default": true
+                                                                            },
+                                                                            {
+                                                                                "label": "Contain",
+                                                                                "value": "contain"
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "name": "imageBackgroundColor",
+                                                                        "type": "color",
+                                                                        "label": "Image Background Color",
+                                                                        "default": "#FFFFFF"
+                                                                    },
+                                                                    {
+                                                                        "name": "title",
+                                                                        "type": "text",
+                                                                        "label": "Title",
+                                                                        "validate": {
+                                                                            "max": 40
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "name": "text",
+                                                                        "type": "text",
+                                                                        "label": "Text",
+                                                                        "required": true,
+                                                                        "validate": {
+                                                                            "max": 160
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "name": "defaultAction",
+                                                                        "spec": [
+                                                                            {
+                                                                                "name": "type",
+                                                                                "type": "select",
+                                                                                "label": "Type",
+                                                                                "options": [
+                                                                                    {
+                                                                                        "label": "Postback",
+                                                                                        "value": "postback",
+                                                                                        "nested": [
+                                                                                            {
+                                                                                                "name": "label",
+                                                                                                "type": "text",
+                                                                                                "label": "Label",
+                                                                                                "validate": {
+                                                                                                    "max": 20
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                "name": "text",
+                                                                                                "type": "text",
+                                                                                                "label": "Text",
+                                                                                                "required": true
+                                                                                            },
+                                                                                            {
+                                                                                                "name": "data",
+                                                                                                "type": "text",
+                                                                                                "label": "Data",
+                                                                                                "required": true,
+                                                                                                "validate": {
+                                                                                                    "max": 300
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        "label": "Message",
+                                                                                        "value": "message",
+                                                                                        "nested": [
+                                                                                            {
+                                                                                                "name": "label",
+                                                                                                "type": "text",
+                                                                                                "label": "Label",
+                                                                                                "validate": {
+                                                                                                    "max": 20
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                "name": "text",
+                                                                                                "type": "text",
+                                                                                                "label": "Text",
+                                                                                                "required": true
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        "label": "URL",
+                                                                                        "value": "uri",
+                                                                                        "nested": [
+                                                                                            {
+                                                                                                "name": "label",
+                                                                                                "type": "text",
+                                                                                                "label": "Label",
+                                                                                                "validate": {
+                                                                                                    "max": 20
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                "name": "uri",
+                                                                                                "type": "text",
+                                                                                                "label": "URL",
+                                                                                                "required": true
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ],
+                                                                        "type": "collection",
+                                                                        "label": "Default Action"
+                                                                    },
+                                                                    {
+                                                                        "name": "actions",
+                                                                        "spec": [
+                                                                            {
+                                                                                "name": "type",
+                                                                                "type": "select",
+                                                                                "label": "Type",
+                                                                                "options": [
+                                                                                    {
+                                                                                        "label": "Postback",
+                                                                                        "value": "postback",
+                                                                                        "nested": [
+                                                                                            {
+                                                                                                "name": "label",
+                                                                                                "type": "text",
+                                                                                                "label": "Label",
+                                                                                                "validate": {
+                                                                                                    "max": 20
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                "name": "text",
+                                                                                                "type": "text",
+                                                                                                "label": "Text",
+                                                                                                "required": true
+                                                                                            },
+                                                                                            {
+                                                                                                "name": "data",
+                                                                                                "type": "text",
+                                                                                                "label": "Data",
+                                                                                                "required": true,
+                                                                                                "validate": {
+                                                                                                    "max": 300
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        "label": "Message",
+                                                                                        "value": "message",
+                                                                                        "nested": [
+                                                                                            {
+                                                                                                "name": "label",
+                                                                                                "type": "text",
+                                                                                                "label": "Label",
+                                                                                                "validate": {
+                                                                                                    "max": 20
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                "name": "text",
+                                                                                                "type": "text",
+                                                                                                "label": "Text",
+                                                                                                "required": true
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        "label": "URL",
+                                                                                        "value": "uri",
+                                                                                        "nested": [
+                                                                                            {
+                                                                                                "name": "label",
+                                                                                                "type": "text",
+                                                                                                "label": "Label",
+                                                                                                "validate": {
+                                                                                                    "max": 20
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                "name": "uri",
+                                                                                                "type": "text",
+                                                                                                "label": "URL",
+                                                                                                "required": true
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "required": true
+                                                                            }
+                                                                        ],
+                                                                        "type": "array",
+                                                                        "label": "Actions",
+                                                                        "required": true
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "label": "Confirm",
+                                                                "value": "confirm",
+                                                                "nested": [
+                                                                    {
+                                                                        "name": "text",
+                                                                        "type": "text",
+                                                                        "label": "Text",
+                                                                        "required": true,
+                                                                        "validate": {
+                                                                            "max": 240
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "name": "actions",
+                                                                        "spec": [
+                                                                            {
+                                                                                "name": "text",
+                                                                                "type": "text",
+                                                                                "label": "Text",
+                                                                                "required": true
+                                                                            },
+                                                                            {
+                                                                                "name": "type",
+                                                                                "type": "hidden",
+                                                                                "label": "Type",
+                                                                                "default": "message"
+                                                                            },
+                                                                            {
+                                                                                "name": "label",
+                                                                                "type": "text",
+                                                                                "label": "Label"
+                                                                            }
+                                                                        ],
+                                                                        "type": "array",
+                                                                        "label": "Actions",
+                                                                        "required": true,
+                                                                        "validate": {
+                                                                            "maxItems": 2
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "label": "Carousel",
+                                                                "value": "carousel",
+                                                                "nested": [
+                                                                    {
+                                                                        "name": "columns",
+                                                                        "spec": [
+                                                                            {
+                                                                                "help": "Max file size is 1 MB.\nSupported image format - JPEG or PNG",
+                                                                                "name": "thumbnailImageUrl",
+                                                                                "type": "url",
+                                                                                "label": "Thumbnail Image URL",
+                                                                                "validate": {
+                                                                                    "max": 1000
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "name": "imageBackgroundColor",
+                                                                                "type": "color",
+                                                                                "label": "Image Background Color",
+                                                                                "default": "#FFFFFF"
+                                                                            },
+                                                                            {
+                                                                                "name": "title",
+                                                                                "type": "text",
+                                                                                "label": "Title",
+                                                                                "validate": {
+                                                                                    "max": 40
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "name": "text",
+                                                                                "type": "text",
+                                                                                "label": "Text",
+                                                                                "required": true,
+                                                                                "validate": {
+                                                                                    "max": 120
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "name": "defaultAction",
+                                                                                "spec": [
+                                                                                    {
+                                                                                        "name": "type",
+                                                                                        "type": "select",
+                                                                                        "label": "Type",
+                                                                                        "options": [
+                                                                                            {
+                                                                                                "label": "Postback",
+                                                                                                "value": "postback",
+                                                                                                "nested": [
+                                                                                                    {
+                                                                                                        "name": "label",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Label",
+                                                                                                        "validate": {
+                                                                                                            "max": 20
+                                                                                                        }
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "text",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Text",
+                                                                                                        "required": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "data",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Data",
+                                                                                                        "required": true,
+                                                                                                        "validate": {
+                                                                                                            "max": 300
+                                                                                                        }
+                                                                                                    }
+                                                                                                ]
+                                                                                            },
+                                                                                            {
+                                                                                                "label": "Message",
+                                                                                                "value": "message",
+                                                                                                "nested": [
+                                                                                                    {
+                                                                                                        "name": "label",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Label",
+                                                                                                        "validate": {
+                                                                                                            "max": 20
+                                                                                                        }
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "text",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Text",
+                                                                                                        "required": true
+                                                                                                    }
+                                                                                                ]
+                                                                                            },
+                                                                                            {
+                                                                                                "label": "URL",
+                                                                                                "value": "uri",
+                                                                                                "nested": [
+                                                                                                    {
+                                                                                                        "name": "label",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Label",
+                                                                                                        "validate": {
+                                                                                                            "max": 20
+                                                                                                        }
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "uri",
+                                                                                                        "type": "text",
+                                                                                                        "label": "URL",
+                                                                                                        "required": true
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "type": "collection",
+                                                                                "label": "Default Action"
+                                                                            },
+                                                                            {
+                                                                                "name": "actions",
+                                                                                "spec": [
+                                                                                    {
+                                                                                        "name": "type",
+                                                                                        "type": "select",
+                                                                                        "label": "Type",
+                                                                                        "options": [
+                                                                                            {
+                                                                                                "label": "Postback",
+                                                                                                "value": "postback",
+                                                                                                "nested": [
+                                                                                                    {
+                                                                                                        "name": "label",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Label",
+                                                                                                        "validate": {
+                                                                                                            "max": 20
+                                                                                                        }
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "text",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Text",
+                                                                                                        "required": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "data",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Data",
+                                                                                                        "required": true,
+                                                                                                        "validate": {
+                                                                                                            "max": 300
+                                                                                                        }
+                                                                                                    }
+                                                                                                ]
+                                                                                            },
+                                                                                            {
+                                                                                                "label": "Message",
+                                                                                                "value": "message",
+                                                                                                "nested": [
+                                                                                                    {
+                                                                                                        "name": "label",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Label",
+                                                                                                        "validate": {
+                                                                                                            "max": 20
+                                                                                                        }
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "text",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Text",
+                                                                                                        "required": true
+                                                                                                    }
+                                                                                                ]
+                                                                                            },
+                                                                                            {
+                                                                                                "label": "URL",
+                                                                                                "value": "uri",
+                                                                                                "nested": [
+                                                                                                    {
+                                                                                                        "name": "label",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Label",
+                                                                                                        "validate": {
+                                                                                                            "max": 20
+                                                                                                        }
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "uri",
+                                                                                                        "type": "text",
+                                                                                                        "label": "URL",
+                                                                                                        "required": true
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "required": true
+                                                                                    }
+                                                                                ],
+                                                                                "type": "array",
+                                                                                "label": "Actions",
+                                                                                "required": true,
+                                                                                "validate": {
+                                                                                    "maxItems": 3
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "type": "array",
+                                                                        "label": "Columns",
+                                                                        "required": true,
+                                                                        "validate": {
+                                                                            "maxItems": 10
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "name": "imageAspectRatio",
+                                                                        "type": "select",
+                                                                        "label": "Image Aspect Ratio",
+                                                                        "options": [
+                                                                            {
+                                                                                "label": "Rectangle (1.51 : 1)",
+                                                                                "value": "rectangle",
+                                                                                "default": true
+                                                                            },
+                                                                            {
+                                                                                "label": "Square (1 : 1)",
+                                                                                "value": "square"
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "help": "◉`Cover`: The image fills the entire image area. Parts of the image that do not fit in the area are not displayed.\n◉`Contain`: The entire image is displayed in the image area. A background is displayed in the unused areas to the left and right of vertical images and in the areas above and below horizontal images.",
+                                                                        "name": "imageSize",
+                                                                        "type": "select",
+                                                                        "label": "Image Size",
+                                                                        "options": [
+                                                                            {
+                                                                                "label": "Cover",
+                                                                                "value": "cover",
+                                                                                "default": true
+                                                                            },
+                                                                            {
+                                                                                "label": "Contain",
+                                                                                "value": "contain"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "label": "Image Carousel",
+                                                                "value": "image_carousel",
+                                                                "nested": [
+                                                                    {
+                                                                        "name": "columns",
+                                                                        "spec": [
+                                                                            {
+                                                                                "help": "Max file size is 1 MB.\nSupported image format - JPEG or PNG",
+                                                                                "name": "imageUrl",
+                                                                                "type": "text",
+                                                                                "label": "Image URL",
+                                                                                "required": true
+                                                                            },
+                                                                            {
+                                                                                "name": "action",
+                                                                                "spec": [
+                                                                                    {
+                                                                                        "name": "type",
+                                                                                        "type": "select",
+                                                                                        "label": "Type",
+                                                                                        "options": [
+                                                                                            {
+                                                                                                "label": "Postback",
+                                                                                                "value": "postback",
+                                                                                                "nested": [
+                                                                                                    {
+                                                                                                        "name": "label",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Label",
+                                                                                                        "validate": {
+                                                                                                            "max": 20
+                                                                                                        }
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "text",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Text",
+                                                                                                        "required": true
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "data",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Data",
+                                                                                                        "required": true,
+                                                                                                        "validate": {
+                                                                                                            "max": 300
+                                                                                                        }
+                                                                                                    }
+                                                                                                ]
+                                                                                            },
+                                                                                            {
+                                                                                                "label": "Message",
+                                                                                                "value": "message",
+                                                                                                "nested": [
+                                                                                                    {
+                                                                                                        "name": "label",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Label",
+                                                                                                        "validate": {
+                                                                                                            "max": 20
+                                                                                                        }
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "text",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Text",
+                                                                                                        "required": true
+                                                                                                    }
+                                                                                                ]
+                                                                                            },
+                                                                                            {
+                                                                                                "label": "URL",
+                                                                                                "value": "uri",
+                                                                                                "nested": [
+                                                                                                    {
+                                                                                                        "name": "label",
+                                                                                                        "type": "text",
+                                                                                                        "label": "Label",
+                                                                                                        "validate": {
+                                                                                                            "max": 20
+                                                                                                        }
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "uri",
+                                                                                                        "type": "text",
+                                                                                                        "label": "URL",
+                                                                                                        "required": true
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "required": true
+                                                                                    }
+                                                                                ],
+                                                                                "type": "collection",
+                                                                                "label": "Action"
+                                                                            }
+                                                                        ],
+                                                                        "type": "array",
+                                                                        "label": "Columns",
+                                                                        "required": true,
+                                                                        "validate": {
+                                                                            "maxItems": 10
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ],
+                                                "type": "collection",
+                                                "label": "Template"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Messages",
+                        "required": true,
+                        "validate": {
+                            "maxItems": 5
+                        }
+                    },
+                    {
+                        "name": "notificationDisabled",
+                        "type": "boolean",
+                        "label": "Notification Disabled",
+                        "required": true
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "shatter": false,
+            "maxErrors": 3,
+            "autoCommit": false,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.integromat.com"
+    }
+}

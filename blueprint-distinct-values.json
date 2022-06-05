@@ -1,0 +1,263 @@
+{
+    "name": "Distinct duplicated value",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomMailHook",
+            "version": 1,
+            "parameters": {
+                "hook": 66293,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "label": "DEMO for community support",
+                            "data": {
+                                "editable": "false"
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-mailhook",
+                        "label": "Mailhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "regexp:HTMLParser",
+            "version": 1,
+            "parameters": {
+                "continueWhenNoRes": false
+            },
+            "mapper": {
+                "elementType": "a",
+                "html": "{{1.html}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "elementType": {
+                            "label": "Link (a)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "continueWhenNoRes",
+                        "type": "boolean",
+                        "label": "Continue the execution of the route even if the module finds no matches",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "elementType",
+                        "type": "select",
+                        "label": "Element type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "img",
+                                "a",
+                                "iframe"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "html",
+                        "type": "text",
+                        "label": "HTML"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "element",
+                        "label": "Element",
+                        "type": "text"
+                    },
+                    {
+                        "name": "innerContent",
+                        "label": "Inner content",
+                        "type": "text"
+                    },
+                    {
+                        "name": "attrs",
+                        "label": "Attributes",
+                        "type": "collection",
+                        "spec": [
+                            {
+                                "name": "href",
+                                "label": "href",
+                                "type": "text"
+                            },
+                            {
+                                "name": "rel",
+                                "label": "rel",
+                                "type": "text"
+                            },
+                            {
+                                "name": "target",
+                                "label": "target",
+                                "type": "text"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "util:TextAggregator",
+            "version": 1,
+            "parameters": {
+                "rowSeparator": "other",
+                "otherRowSeparator": ":::::",
+                "feeder": 2
+            },
+            "mapper": {
+                "value": "{{2.attrs.href}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "rowSeparator": {
+                            "label": "Other"
+                        }
+                    },
+                    "extra": {
+                        "feeder": {
+                            "label": "Text parser - Get elements from HTML [2]"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "rowSeparator",
+                        "type": "select",
+                        "label": "Row separator",
+                        "validate": {
+                            "enum": [
+                                "\n",
+                                "\t",
+                                "other"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "otherRowSeparator",
+                        "type": "text",
+                        "label": "Separator"
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "value",
+                        "type": "text",
+                        "label": "Text"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 4,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "distinct",
+                "scope": "roundtrip",
+                "value": "{{distinct(split(3.text; \":::::\"))}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "distinct",
+                        "label": "distinct",
+                        "type": "any"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}
