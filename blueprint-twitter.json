@@ -209,7 +209,7 @@
                 "text": "キーワード「ノーコード」の検索結果です！\n\n{{2.text}}",
                 "parse": false,
                 "mrkdwn": true,
-                "channel": "G010MBP6PR9",
+                "channel": "",
                 "channelType": "private",
                 "channelWType": "list"
             },
