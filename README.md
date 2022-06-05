@@ -10,4 +10,7 @@ Share the automation scenarios we made with Make/Integromat
 5. select the JSON file you download
 6. set connections with your credentials
 
+### step-by-step instruction
+[How to import automation blueprint](https://scribehow.com/shared/How_to_import_automation_blueprint__pV29D3F4QXGSdTD1HFmFHQ)
+
 If you have any questions, please feel free ask us in [Discussions](https://github.com/manasoid/make/discussions).
