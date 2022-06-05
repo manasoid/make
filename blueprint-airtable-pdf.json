@@ -1,0 +1,1720 @@
+{
+    "name": "請求書テンプレートからPDFを発行する",
+    "flow": [
+        {
+            "id": 3,
+            "module": "airtable:TriggerWatchRecords",
+            "version": 3,
+            "parameters": {
+                "base": "",
+                "view": "",
+                "table": "Invoice",
+                "config": {
+                    "labelField": "invoice_id",
+                    "triggerField": "Created"
+                },
+                "formula": "",
+                "maxRecords": 3,
+                "__IMTCONN__": 1305361
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "base": {
+                        "label": "PDF Invoice"
+                    },
+                    "view": {
+                        "label": "Grid view"
+                    },
+                    "table": {
+                        "label": "Invoice"
+                    },
+                    "config": {
+                        "nested": {
+                            "labelField": {
+                                "label": "invoice_id"
+                            },
+                            "triggerField": {
+                                "label": "Created"
+                            }
+                        }
+                    },
+                    "__IMTCONN__": {
+                        "label": "Airtable"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "config",
+                        "spec": [
+                            {
+                                "name": "triggerField",
+                                "type": "select",
+                                "label": "Trigger field",
+                                "required": true
+                            },
+                            {
+                                "name": "triggerField",
+                                "type": "hidden"
+                            },
+                            {
+                                "name": "labelField",
+                                "type": "select",
+                                "label": "Label field",
+                                "required": true
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Trigger configuration",
+                        "required": false
+                    },
+                    {
+                        "name": "maxRecords",
+                        "type": "integer",
+                        "label": "Limit",
+                        "required": true
+                    },
+                    {
+                        "name": "view",
+                        "type": "select",
+                        "label": "View"
+                    },
+                    {
+                        "name": "formula",
+                        "type": "text",
+                        "label": "Formula"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created Time"
+                    },
+                    {
+                        "name": "invoice_id",
+                        "type": "text",
+                        "label": "invoice_id"
+                    },
+                    {
+                        "name": "client_name",
+                        "type": "text",
+                        "label": "client_name"
+                    },
+                    {
+                        "name": "client_company",
+                        "type": "text",
+                        "label": "client_company"
+                    },
+                    {
+                        "name": "client_address",
+                        "type": "text",
+                        "label": "client_address"
+                    },
+                    {
+                        "name": "client_email",
+                        "type": "text",
+                        "label": "client_email"
+                    },
+                    {
+                        "name": "Status",
+                        "type": "text",
+                        "label": "Status"
+                    },
+                    {
+                        "name": "invoice_date",
+                        "time": false,
+                        "type": "date",
+                        "label": "invoice_date"
+                    },
+                    {
+                        "name": "invoice_dateDue",
+                        "time": false,
+                        "type": "date",
+                        "label": "invoice_dateDue"
+                    },
+                    {
+                        "name": "note",
+                        "type": "text",
+                        "label": "note",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Items 2",
+                        "spec": {
+                            "name": "value",
+                            "type": "text",
+                            "label": "Record ID"
+                        },
+                        "type": "array",
+                        "label": "Items 2"
+                    },
+                    {
+                        "name": "Created",
+                        "type": "date",
+                        "label": "Created"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "builtin:BasicFeeder",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "array": "{{3.Items}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "項目の取得"
+                },
+                "restore": {
+                    "array": {
+                        "mode": "edit"
+                    }
+                },
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "array",
+                        "spec": [],
+                        "type": "array",
+                        "label": "Array"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "airtable:ActionGetRecord",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 1305361
+            },
+            "mapper": {
+                "id": "{{4.value}}",
+                "base": "",
+                "table": "Items"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "base": {
+                        "mode": "chose",
+                        "label": "PDF Invoice"
+                    },
+                    "table": {
+                        "mode": "chose",
+                        "label": "Items"
+                    },
+                    "__IMTCONN__": {
+                        "label": "Airtable"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "Record ID",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created Time"
+                    },
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "name"
+                    },
+                    {
+                        "name": "price",
+                        "type": "number",
+                        "label": "price"
+                    },
+                    {
+                        "name": "invoice_id (from invoice_id)",
+                        "spec": {
+                            "label": "Record ID"
+                        },
+                        "type": "array",
+                        "label": "invoice_id (from invoice_id)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 4
+            },
+            "mapper": {
+                "name": "{{5.name}}",
+                "price": "{{5.price}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0,
+                    "name": "項目のまとめ"
+                },
+                "restore": {
+                    "feeder": {
+                        "label": "Iterator"
+                    },
+                    "mapper": {
+                        "label": [
+                            null,
+                            null
+                        ]
+                    },
+                    "target": {
+                        "label": "Custom"
+                    }
+                }
+            }
+        },
+        {
+            "id": 22,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                    {
+                        "name": "subtotal",
+                        "value": "{{sum(map(8.array; \"price\"))}}"
+                    },
+                    {
+                        "name": "tax",
+                        "value": "{{1 + 3.tax}}"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0,
+                    "name": "小計と合計の税率"
+                },
+                "restore": {
+                    "scope": {
+                        "label": "One cycle"
+                    },
+                    "variables": {
+                        "items": [
+                            "undefined",
+                            "undefined"
+                        ]
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Variable name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Variable value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Variables"
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "subtotal",
+                        "type": "any",
+                        "label": "subtotal"
+                    },
+                    {
+                        "name": "tax",
+                        "type": "any",
+                        "label": "tax"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 23,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "discount",
+                "scope": "roundtrip",
+                "value": "{{22.subtotal * 3.discount}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1500,
+                    "y": 0,
+                    "name": "割引価格"
+                },
+                "restore": {
+                    "scope": {
+                        "label": "One cycle"
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "discount",
+                        "type": "any",
+                        "label": "discount"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 12,
+            "module": "json:CreateJSON",
+            "version": 1,
+            "parameters": {
+                "type": 205996,
+                "space": ""
+            },
+            "mapper": {
+                "tax": "{{formatNumber((22.subtotal - 23.discount) * 3.tax; \".\"; ; \",\")}}",
+                "note": "{{3.note}}",
+                "items": "{{8.array}}",
+                "total": "{{formatNumber((22.subtotal - 23.discount) * 22.tax; \".\"; ; \",\")}}",
+                "discount": "{{formatNumber(23.discount; \".\"; ; \",\")}}",
+                "subtotal": "{{formatNumber(22.subtotal; \".\"; ; \",\")}}",
+                "invoice_id": "{{3.invoice_id}}",
+                "client_name": "{{3.client_name}}",
+                "issuer_name": "サナト・クマラ",
+                "client_email": "{{3.client_email}}",
+                "invoice_date": "{{formatDate(3.invoice_date; \"YYYY年MM月DD日\")}}",
+                "issuer_email": "",
+                "client_address": "{{3.client_address}}",
+                "client_company": "{{3.client_company}}",
+                "issuer_address": "宮崎県延岡市金星2-2-2",
+                "issuer_company": "合同会社アインソフ",
+                "issuer_website": "",
+                "invoice_dateDue": "{{formatDate(3.invoice_dateDue; \"YYYY年MM月DD日\")}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1800,
+                    "y": 0,
+                    "name": "データ定義"
+                },
+                "restore": {
+                    "type": {
+                        "label": "pdf invoice"
+                    },
+                    "items": {
+                        "mode": "edit"
+                    },
+                    "space": {
+                        "label": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "type",
+                        "type": "udt",
+                        "label": "Data structure",
+                        "required": true
+                    },
+                    {
+                        "name": "space",
+                        "type": "select",
+                        "label": "Indentation",
+                        "validate": {
+                            "enum": [
+                                "tab",
+                                "2",
+                                "4"
+                            ]
+                        }
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "issuer_name",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "issuer_company",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "issuer_address",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "issuer_email",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "issuer_website",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "invoice_id",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "invoice_date",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "invoice_dateDue",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "client_name",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "client_company",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "client_address",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "client_email",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "items",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": null,
+                                "multiline": false
+                            },
+                            {
+                                "name": "price",
+                                "type": "number",
+                                "label": null
+                            }
+                        ],
+                        "type": "array"
+                    },
+                    {
+                        "name": "note",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "subtotal",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "discount",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "tax",
+                        "type": "text",
+                        "multiline": false
+                    },
+                    {
+                        "name": "total",
+                        "type": "text",
+                        "multiline": false
+                    }
+                ]
+            }
+        },
+        {
+            "id": 13,
+            "module": "pdf-co:HTMLtoPDF",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2973242
+            },
+            "mapper": {
+                "name": "{{3.invoice_id}}",
+                "async": 15000,
+                "export": {
+                    "exportType": "downloadFile"
+                },
+                "convert": {
+                    "templateId": "55",
+                    "convertType": "fromHtmlTemplate",
+                    "templateData": "{{12.json}}"
+                },
+                "paperSize": "letter",
+                "orientation": "portrait",
+                "printBackground": false,
+                "doNotWaitFullLoad": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 241,
+                    "y": 532
+                },
+                "restore": {
+                    "async": {
+                        "mode": "chose",
+                        "label": "15 sec"
+                    },
+                    "export": {
+                        "nested": {
+                            "exportType": {
+                                "label": "Download a File"
+                            }
+                        }
+                    },
+                    "convert": {
+                        "nested": {
+                            "convertType": {
+                                "label": "HTML Template to PDF"
+                            }
+                        }
+                    },
+                    "paperSize": {
+                        "label": "Letter"
+                    },
+                    "__IMTCONN__": {
+                        "label": "PDF.co"
+                    },
+                    "orientation": {
+                        "label": "Portrait"
+                    },
+                    "printBackground": {
+                        "mode": "chose"
+                    },
+                    "doNotWaitFullLoad": {
+                        "mode": "chose"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "convert",
+                        "spec": [
+                            {
+                                "name": "convertType",
+                                "type": "select",
+                                "label": "Convert Type",
+                                "required": true,
+                                "validate": {
+                                    "enum": [
+                                        "fromHtml",
+                                        "fromHtmlTemplate",
+                                        "fromWebsite"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "templateId",
+                                "type": "text",
+                                "label": "HTML Template ID",
+                                "required": true
+                            },
+                            {
+                                "name": "templateData",
+                                "type": "text",
+                                "label": "Input data in JSON format",
+                                "required": true
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Convert Options",
+                        "required": true
+                    },
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Output File Name"
+                    },
+                    {
+                        "name": "orientation",
+                        "type": "select",
+                        "label": "Orientation",
+                        "validate": {
+                            "enum": [
+                                "portrait",
+                                "landscape"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "paperSize",
+                        "type": "select",
+                        "label": "Paper Size ",
+                        "validate": {
+                            "enum": [
+                                "a0",
+                                "a1",
+                                "a2",
+                                "a3",
+                                "a4",
+                                "a5",
+                                "a6",
+                                "legal",
+                                "letter",
+                                "tabloid",
+                                "custom"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "printBackground",
+                        "type": "boolean",
+                        "label": "Print Background"
+                    },
+                    {
+                        "name": "doNotWaitFullLoad",
+                        "type": "boolean",
+                        "label": "Do not wait for full load"
+                    },
+                    {
+                        "name": "margins",
+                        "type": "text",
+                        "label": "Margins"
+                    },
+                    {
+                        "name": "async",
+                        "type": "select",
+                        "label": "Async",
+                        "validate": {
+                            "enum": [
+                                15000,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "profiles",
+                        "type": "text",
+                        "label": "Profiles"
+                    },
+                    {
+                        "name": "export",
+                        "spec": [
+                            {
+                                "name": "exportType",
+                                "type": "select",
+                                "label": "Export Type",
+                                "required": true,
+                                "validate": {
+                                    "enum": [
+                                        "downloadFile",
+                                        "inline"
+                                    ]
+                                }
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Export options",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 25,
+            "module": "pdf-co:AddSecurityToPDF",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2973242
+            },
+            "mapper": {
+                "async": 15000,
+                "export": {
+                    "exportType": "downloadFile"
+                },
+                "import": {
+                    "data": "{{13.data}}",
+                    "name": "{{13.name}}",
+                    "importType": "upload"
+                },
+                "printQuality": "HighResolution",
+                "userPassword": "{{3.security}}",
+                "ownerPassword": "P@tcEJt5P?Xr9BQM",
+                "allowFillForms": true,
+                "allowPrintDocument": true,
+                "allowModifyDocument": true,
+                "encryptionAlgorithm": "AES_128bit",
+                "allowAssemblyDocument": true,
+                "allowContentExtraction": true,
+                "allowModifyAnnotations": true,
+                "allowAccessibilitySupport": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 613,
+                    "y": 521,
+                    "name": "パスワード付与"
+                },
+                "restore": {
+                    "async": {
+                        "mode": "chose",
+                        "label": "15 sec"
+                    },
+                    "export": {
+                        "nested": {
+                            "exportType": {
+                                "label": "Download a File"
+                            }
+                        }
+                    },
+                    "import": {
+                        "nested": {
+                            "importType": {
+                                "label": "Upload a File"
+                            }
+                        }
+                    },
+                    "__IMTCONN__": {
+                        "label": "PDF.co"
+                    },
+                    "printQuality": {
+                        "mode": "chose",
+                        "label": "High Resolution"
+                    },
+                    "allowFillForms": {
+                        "mode": "chose"
+                    },
+                    "allowPrintDocument": {
+                        "mode": "chose"
+                    },
+                    "allowModifyDocument": {
+                        "mode": "chose"
+                    },
+                    "encryptionAlgorithm": {
+                        "mode": "chose",
+                        "label": "AES 128bit"
+                    },
+                    "allowAssemblyDocument": {
+                        "mode": "chose"
+                    },
+                    "allowContentExtraction": {
+                        "mode": "chose"
+                    },
+                    "allowModifyAnnotations": {
+                        "mode": "chose"
+                    },
+                    "allowAccessibilitySupport": {
+                        "mode": "chose"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "import",
+                        "spec": [
+                            {
+                                "name": "importType",
+                                "type": "select",
+                                "label": "Input File",
+                                "required": true,
+                                "validate": {
+                                    "enum": [
+                                        "upload",
+                                        "url"
+                                    ]
+                                }
+                            },
+                            {
+                                "mean": "data",
+                                "name": "data",
+                                "type": "buffer",
+                                "label": "Data",
+                                "required": true
+                            },
+                            {
+                                "mean": "name",
+                                "name": "name",
+                                "type": "text",
+                                "label": "Output File Name"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Import Options",
+                        "required": true
+                    },
+                    {
+                        "name": "ownerPassword",
+                        "type": "text",
+                        "label": "Owner Password"
+                    },
+                    {
+                        "name": "userPassword",
+                        "type": "text",
+                        "label": "User Password"
+                    },
+                    {
+                        "name": "encryptionAlgorithm",
+                        "type": "select",
+                        "label": "Encryption Algorithm",
+                        "validate": {
+                            "enum": [
+                                "AES_128bit",
+                                "AES_256bit",
+                                "RC4_40bit",
+                                "RC4_128bit"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "allowPrintDocument",
+                        "type": "boolean",
+                        "label": "Print Document"
+                    },
+                    {
+                        "name": "printQuality",
+                        "type": "select",
+                        "label": "Print Quality",
+                        "validate": {
+                            "enum": [
+                                "HighResolution",
+                                "LowResolution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "allowAssemblyDocument",
+                        "type": "boolean",
+                        "label": "Assembly Document"
+                    },
+                    {
+                        "name": "allowContentExtraction",
+                        "type": "boolean",
+                        "label": "Content Extraction"
+                    },
+                    {
+                        "name": "allowAccessibilitySupport",
+                        "type": "boolean",
+                        "label": "Accessibility Support"
+                    },
+                    {
+                        "name": "allowModifyDocument",
+                        "type": "boolean",
+                        "label": "Modify Document"
+                    },
+                    {
+                        "name": "allowFillForms",
+                        "type": "boolean",
+                        "label": "Fill Forms"
+                    },
+                    {
+                        "name": "allowModifyAnnotations",
+                        "type": "boolean",
+                        "label": "Modify Annotations"
+                    },
+                    {
+                        "name": "async",
+                        "type": "select",
+                        "label": "Async",
+                        "validate": {
+                            "enum": [
+                                15000,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "profiles",
+                        "type": "text",
+                        "label": "Profiles"
+                    },
+                    {
+                        "name": "export",
+                        "spec": [
+                            {
+                                "name": "exportType",
+                                "type": "select",
+                                "label": "Export Type",
+                                "required": true,
+                                "validate": {
+                                    "enum": [
+                                        "downloadFile",
+                                        "inline"
+                                    ]
+                                }
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Export options",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 24,
+            "module": "google-drive:uploadAFile",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 1763449
+            },
+            "mapper": {
+                "data": "{{25.data}}",
+                "select": "value",
+                "convert": false,
+                "filename": "{{25.name}}",
+                "folderId": "",
+                "destination": "drive"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 919,
+                    "y": 514,
+                    "name": "共有リンク発行"
+                },
+                "restore": {
+                    "select": {
+                        "label": "Select from the list"
+                    },
+                    "folderId": {
+                        "mode": "chose",
+                        "path": [
+                            "public",
+                            "PDF.co",
+                            "invoice-demo"
+                        ]
+                    },
+                    "__IMTCONN__": {
+                        "label": ""
+                    },
+                    "destination": {
+                        "label": "My Drive"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Enter a Folder ID",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "value"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "type": "text",
+                        "label": "New File Name"
+                    },
+                    {
+                        "mean": "name",
+                        "name": "filename",
+                        "type": "filename",
+                        "label": "File Name",
+                        "required": true
+                    },
+                    {
+                        "mean": "data",
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Data",
+                        "required": true
+                    },
+                    {
+                        "name": "convert",
+                        "type": "boolean",
+                        "label": "Convert a File",
+                        "required": true
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "New Drive Location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "New Folder Location",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 27,
+            "module": "handlebars:Compile",
+            "version": 1,
+            "parameters": {
+                "mode": "",
+                "template": "<p>{{client_name}}さま、</p>\n\n<p>お世話になっております。<br>\n請求書を送付いたしますので、ご確認よろしくお願いいたします。</p>\n\n<p>{{link}}</p>\n\n<p>PDFパスワード<br>\n{{security}}</p>\n\n<p>過不足ありましたら、ご指摘ください。</p>\n\n<p>{{issuer_name}}<br>\n{{issuer_company}}<br>\n{{issuer_email}}</p>"
+            },
+            "mapper": {
+                "variables": [
+                    {
+                        "key": "client_name",
+                        "value": "{{3.client_name}}"
+                    },
+                    {
+                        "key": "link",
+                        "value": "{{24.webContentLink}}"
+                    },
+                    {
+                        "key": "issuer_name",
+                        "value": "サナト・クマラ"
+                    },
+                    {
+                        "key": "issuer_company",
+                        "value": "合同会社アインソフ"
+                    },
+                    {
+                        "key": "issuer_email",
+                        "value": ""
+                    },
+                    {
+                        "key": "security",
+                        "value": "{{3.security}}"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1207,
+                    "y": 513,
+                    "name": "メールテンプレート"
+                },
+                "restore": {
+                    "mode": {
+                        "label": "Non-mappable"
+                    },
+                    "variables": {
+                        "mode": "chose",
+                        "items": [
+                            "undefined",
+                            "undefined",
+                            "undefined",
+                            "undefined",
+                            "undefined",
+                            "undefined"
+                        ]
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "mode",
+                        "type": "select",
+                        "label": "Template mode",
+                        "validate": {
+                            "enum": [
+                                "mappable"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "template",
+                        "type": "text",
+                        "label": "Template",
+                        "required": true,
+                        "multiline": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Variables"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 26,
+            "module": "email:ActionSendEmail",
+            "version": 7,
+            "parameters": {
+                "account": 1763449,
+                "saveAfterSent": false
+            },
+            "mapper": {
+                "cc": [],
+                "to": "{{3.client_email}}",
+                "bcc": [],
+                "from": "",
+                "html": "{{27.data}}",
+                "sender": "",
+                "headers": [],
+                "replyTo": "",
+                "subject": "請求書の送付（{{3.invoice_id}}）",
+                "priority": "normal",
+                "inReplyTo": "",
+                "references": [],
+                "attachments": [],
+                "contentType": "html"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1514,
+                    "y": 497
+                },
+                "restore": {
+                    "cc": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "to": {
+                        "mode": "edit"
+                    },
+                    "bcc": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "account": {
+                        "label": ""
+                    },
+                    "headers": {
+                        "items": []
+                    },
+                    "priority": {
+                        "label": "Normal"
+                    },
+                    "references": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "attachments": {
+                        "mode": "chose",
+                        "items": []
+                    },
+                    "contentType": {
+                        "label": "HTML"
+                    },
+                    "saveAfterSent": {
+                        "label": "No"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "account",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "saveAfterSent",
+                        "type": "select",
+                        "label": "Save message after sending",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "to",
+                        "spec": {
+                            "name": "email",
+                            "type": "email",
+                            "label": "Email address",
+                            "required": true
+                        },
+                        "type": "array",
+                        "label": "To",
+                        "labels": {
+                            "add": "Add a recipient",
+                            "edit": "Edit a recipient"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject"
+                    },
+                    {
+                        "name": "contentType",
+                        "type": "select",
+                        "label": "Content Type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "html",
+                                "text"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "attachments",
+                        "spec": [
+                            {
+                                "name": "fileName",
+                                "type": "filename",
+                                "label": "File name",
+                                "required": true,
+                                "semantic": "file:name"
+                            },
+                            {
+                                "name": "data",
+                                "type": "buffer",
+                                "label": "Data",
+                                "required": true,
+                                "semantic": "file:data"
+                            },
+                            {
+                                "name": "cid",
+                                "type": "text",
+                                "label": "Content-ID"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Attachments",
+                        "labels": {
+                            "add": "Add an attachment",
+                            "edit": "Edit an attachment"
+                        }
+                    },
+                    {
+                        "name": "cc",
+                        "spec": {
+                            "name": "email",
+                            "type": "email",
+                            "label": "Email address"
+                        },
+                        "type": "array",
+                        "label": "Copy recipient",
+                        "labels": {
+                            "add": "Add a copy recipient",
+                            "edit": "Edit a copy recipient"
+                        }
+                    },
+                    {
+                        "name": "bcc",
+                        "spec": {
+                            "name": "email",
+                            "type": "email",
+                            "label": "Email address"
+                        },
+                        "type": "array",
+                        "label": "Blind copy recipient",
+                        "labels": {
+                            "add": "Add a blind copy recipient",
+                            "edit": "Edit a blind copy recipient"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "type": "text",
+                        "label": "From"
+                    },
+                    {
+                        "name": "sender",
+                        "type": "text",
+                        "label": "Sender"
+                    },
+                    {
+                        "name": "replyTo",
+                        "type": "text",
+                        "label": "Reply-To"
+                    },
+                    {
+                        "name": "inReplyTo",
+                        "type": "text",
+                        "label": "In-Reply-To"
+                    },
+                    {
+                        "name": "references",
+                        "spec": {
+                            "type": "text",
+                            "label": "Reference",
+                            "required": true
+                        },
+                        "type": "array",
+                        "label": "References"
+                    },
+                    {
+                        "name": "priority",
+                        "type": "select",
+                        "label": "Priority",
+                        "validate": {
+                            "enum": [
+                                "high",
+                                "normal",
+                                "low"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Headers"
+                    },
+                    {
+                        "name": "html",
+                        "type": "text",
+                        "label": "Content"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 28,
+            "module": "todoist:CreateItem",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 2062394
+            },
+            "mapper": {
+                "due": {
+                    "date": "{{3.invoice_dateDue}}",
+                    "type": "date"
+                },
+                "content": "請求書発行・送付（{{3.invoice_id}} - {{3.client_company}}）",
+                "project_id": 000,
+                "section_id": 000,
+                "description": "{{stripHTML(27.data)}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1821,
+                    "y": 504,
+                    "name": "タスク化（支払期限）"
+                },
+                "restore": {
+                    "due": {
+                        "nested": {
+                            "type": {
+                                "mode": "chose",
+                                "label": "Only date"
+                            },
+                            "is_recurring": {
+                                "mode": "chose"
+                            }
+                        }
+                    },
+                    "labels": {
+                        "mode": "chose"
+                    },
+                    "priority": {
+                        "mode": "chose",
+                        "label": ""
+                    },
+                    "project_id": {
+                        "mode": "chose",
+                        "label": "Integromat"
+                    },
+                    "section_id": {
+                        "mode": "chose",
+                        "label": "セールス"
+                    },
+                    "__IMTCONN__": {
+                        "label": "Todoist"
+                    },
+                    "auto_reminder": {
+                        "mode": "chose"
+                    },
+                    "assigned_by_uid": {
+                        "mode": "chose",
+                        "label": ""
+                    },
+                    "responsible_uid": {
+                        "mode": "chose",
+                        "label": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "content",
+                        "type": "text",
+                        "label": "Content",
+                        "required": true
+                    },
+                    {
+                        "name": "description",
+                        "type": "text",
+                        "label": "Description"
+                    },
+                    {
+                        "name": "project_id",
+                        "type": "select",
+                        "label": "Project"
+                    },
+                    {
+                        "name": "labels",
+                        "type": "select",
+                        "label": "Labels",
+                        "multiple": true
+                    },
+                    {
+                        "name": "due",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "select",
+                                "label": "Format",
+                                "validate": {
+                                    "enum": [
+                                        "date",
+                                        "datetime"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "string",
+                                "type": "text",
+                                "label": "Human-readable representation of due date"
+                            },
+                            {
+                                "name": "is_recurring",
+                                "type": "boolean",
+                                "label": "Is recurring"
+                            },
+                            {
+                                "name": "date",
+                                "type": "date",
+                                "label": "Date"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Due date",
+                        "required": false
+                    },
+                    {
+                        "name": "priority",
+                        "type": "select",
+                        "label": "Priority",
+                        "validate": {
+                            "enum": [
+                                4,
+                                3,
+                                2,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "parent_id",
+                        "type": "text",
+                        "label": "Parent ID"
+                    },
+                    {
+                        "name": "responsible_uid",
+                        "type": "select",
+                        "label": "Responsible"
+                    },
+                    {
+                        "name": "assigned_by_uid",
+                        "type": "select",
+                        "label": "Assigned by"
+                    },
+                    {
+                        "name": "auto_reminder",
+                        "type": "boolean",
+                        "label": "Auto reminder"
+                    },
+                    {
+                        "name": "section_id",
+                        "type": "select",
+                        "label": "Section"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "shatter": false,
+            "maxErrors": 3,
+            "autoCommit": false,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.integromat.com"
+    }
+}
