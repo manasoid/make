@@ -1,0 +1,796 @@
+{
+    "name": "Integration Kintone",
+    "flow": [
+        {
+            "id": 13,
+            "module": "kintone:getRecord",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 186209
+            },
+            "mapper": {
+                "id": "21",
+                "app": "1"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "id": {
+                            "mode": "edit"
+                        },
+                        "app": {
+                            "mode": "chose",
+                            "label": "問い合わせ管理"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "kintone"
+                            },
+                            "label": "Kintone"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:kintone,kintone2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "app",
+                        "type": "select",
+                        "label": "App ID",
+                        "required": true
+                    },
+                    {
+                        "mode": "edit",
+                        "name": "id",
+                        "type": "select",
+                        "label": "Record ID",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "$id",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "number",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Record ID"
+                    },
+                    {
+                        "name": "$revision",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "number",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Revision"
+                    },
+                    {
+                        "name": "Status",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "対応状況"
+                    },
+                    {
+                        "name": "レコード番号",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "レコード番号"
+                    },
+                    {
+                        "name": "作業者",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "spec": [
+                                    {
+                                        "name": "code",
+                                        "type": "text",
+                                        "label": "Code"
+                                    },
+                                    {
+                                        "name": "name",
+                                        "type": "text",
+                                        "label": "Name"
+                                    }
+                                ],
+                                "type": "array",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "作業者"
+                    },
+                    {
+                        "name": "LimitDay",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "期限"
+                    },
+                    {
+                        "name": "Customer",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "顧客名"
+                    },
+                    {
+                        "name": "ReceptionDate",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "date",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "受付日時"
+                    },
+                    {
+                        "name": "更新者",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "spec": [
+                                    {
+                                        "name": "code",
+                                        "type": "text",
+                                        "label": "Code"
+                                    },
+                                    {
+                                        "name": "name",
+                                        "type": "text",
+                                        "label": "Name"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "更新者"
+                    },
+                    {
+                        "name": "作成者",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "spec": [
+                                    {
+                                        "name": "code",
+                                        "type": "text",
+                                        "label": "Code"
+                                    },
+                                    {
+                                        "name": "name",
+                                        "type": "text",
+                                        "label": "Name"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "作成者"
+                    },
+                    {
+                        "name": "ステータス",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "ステータス"
+                    },
+                    {
+                        "name": "文字列__1行__0",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "ご担当者名"
+                    },
+                    {
+                        "name": "更新日時",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "date",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "更新日時"
+                    },
+                    {
+                        "name": "カテゴリー",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "array",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "カテゴリー"
+                    },
+                    {
+                        "name": "対応詳細",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "spec": [
+                                    {
+                                        "name": "id",
+                                        "type": "number",
+                                        "label": "Field ID"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "spec": [
+                                            {
+                                                "name": "文字列__複数行__1",
+                                                "spec": [
+                                                    {
+                                                        "name": "type",
+                                                        "type": "text",
+                                                        "label": "Type"
+                                                    },
+                                                    {
+                                                        "name": "value",
+                                                        "type": "text",
+                                                        "label": "Value"
+                                                    }
+                                                ],
+                                                "type": "collection",
+                                                "label": "対応内容"
+                                            },
+                                            {
+                                                "name": "添付ファイル",
+                                                "spec": [
+                                                    {
+                                                        "name": "type",
+                                                        "type": "text",
+                                                        "label": "Type"
+                                                    },
+                                                    {
+                                                        "name": "value",
+                                                        "type": "text",
+                                                        "label": "Value"
+                                                    }
+                                                ],
+                                                "type": "collection",
+                                                "label": "添付ファイル"
+                                            },
+                                            {
+                                                "name": "日時_0",
+                                                "spec": [
+                                                    {
+                                                        "name": "type",
+                                                        "type": "text",
+                                                        "label": "Type"
+                                                    },
+                                                    {
+                                                        "name": "value",
+                                                        "type": "text",
+                                                        "label": "Value"
+                                                    }
+                                                ],
+                                                "type": "collection",
+                                                "label": "対応日時"
+                                            }
+                                        ],
+                                        "type": "collection",
+                                        "label": "Value"
+                                    }
+                                ],
+                                "type": "array",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "対応詳細"
+                    },
+                    {
+                        "name": "QType",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "問い合わせ種別"
+                    },
+                    {
+                        "name": "Person",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "spec": [
+                                    {
+                                        "name": "code",
+                                        "type": "text",
+                                        "label": "Code"
+                                    },
+                                    {
+                                        "name": "name",
+                                        "type": "text",
+                                        "label": "Name"
+                                    }
+                                ],
+                                "type": "array",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "対応担当者"
+                    },
+                    {
+                        "name": "作成日時",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "date",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "作成日時"
+                    },
+                    {
+                        "name": "Detail",
+                        "spec": [
+                            {
+                                "name": "type",
+                                "type": "text",
+                                "label": "Type"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "詳細"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 18,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                    {
+                        "name": "key",
+                        "value": "{{map(13.`対応詳細`.value[].value.`添付ファイル`.value; \"fileKey\")}}"
+                    },
+                    {
+                        "name": "name",
+                        "value": "{{map(13.`対応詳細`.value[].value.`添付ファイル`.value; \"name\")}}"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        },
+                        "variables": {
+                            "items": [
+                                null,
+                                null
+                            ]
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Variable name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Variable value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Variables"
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "key",
+                        "type": "any",
+                        "label": "key"
+                    },
+                    {
+                        "name": "name",
+                        "type": "any",
+                        "label": "name"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 14,
+            "module": "kintone:makeAPICall",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 186209
+            },
+            "mapper": {
+                "qs": [
+                    {
+                        "key": "fileKey",
+                        "value": "{{18.key[]}}"
+                    }
+                ],
+                "url": "v1/file.json",
+                "method": "GET"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "qs": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        },
+                        "method": {
+                            "mode": "chose",
+                            "label": "GET"
+                        },
+                        "headers": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "kintone"
+                            },
+                            "label": "Kintone"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:kintone,kintone2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "hidden",
+                        "type": "hidden",
+                        "label": "Hidden"
+                    },
+                    {
+                        "name": "url",
+                        "type": "text",
+                        "label": "URL",
+                        "required": true
+                    },
+                    {
+                        "name": "method",
+                        "type": "select",
+                        "label": "Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "GET",
+                                "POST",
+                                "PUT",
+                                "PATCH",
+                                "DELETE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Headers"
+                    },
+                    {
+                        "name": "qs",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Query String"
+                    },
+                    {
+                        "name": "body",
+                        "type": "any",
+                        "label": "Body"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 16,
+            "module": "box:uploadFile",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 186417
+            },
+            "mapper": {
+                "data": "{{14.body}}",
+                "fileName": "test.pdf",
+                "parentId": ""
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "parentId": {
+                            "mode": "chose",
+                            "path": [
+                                "PDF"
+                            ]
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "box2"
+                            },
+                            "label": "Box"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:box2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "parentId",
+                        "type": "folder",
+                        "label": "Upload to Folder",
+                        "required": true
+                    },
+                    {
+                        "name": "fileName",
+                        "type": "filename",
+                        "label": "File name",
+                        "required": true
+                    },
+                    {
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Data",
+                        "required": true
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}
