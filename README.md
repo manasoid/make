@@ -1,4 +1,4 @@
-# make
+# make blueprints
 Share the automation scenarios we made with Make/Integromat
 
 ## project info
