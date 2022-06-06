@@ -1,5 +1,9 @@
-# make
+# make blueprints
 Share the automation scenarios we made with Make/Integromat
+
+## project info
+
+this is the open-sourse project based on donations and sponsorships. for more details, please visit our [OpenCollective](https://opencollective.com/automation) page.
 
 ## steps to import the scenarios
 
@@ -10,4 +14,7 @@ Share the automation scenarios we made with Make/Integromat
 5. select the JSON file you download
 6. set connections with your credentials
 
-If you have any questions, please feel free ask us in [Discussions](https://github.com/manasoid/make/discussions).
+### step-by-step instruction
+[How to import automation blueprint](https://scribehow.com/shared/How_to_import_automation_blueprint__pV29D3F4QXGSdTD1HFmFHQ)
+
+if you have any questions, please feel free ask us in [Discussions](https://github.com/manasoid/make/discussions).
