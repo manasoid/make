@@ -1,5 +1,5 @@
 {
-    "name": "密会のエニグマ",
+    "name": "learning basic functions",
     "flow": [
         {
             "id": 1,
@@ -7,19 +7,21 @@
             "version": 1,
             "parameters": {},
             "mapper": {
-                "name": "元の文章",
+                "name": "original_text",
                 "scope": "roundtrip",
-                "value": "今夜、7時に、六本木の、リッツカールトンホテルにて、お会いしましょう"
+                "value": "You're learning about how the text fucntions work with an automation scenario!"
             },
             "metadata": {
                 "designer": {
                     "x": 0,
                     "y": 0,
-                    "name": "秘密の連絡"
+                    "name": "original text"
                 },
                 "restore": {
-                    "scope": {
-                        "label": "One cycle"
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        }
                     }
                 },
                 "expect": [
@@ -49,9 +51,9 @@
                 ],
                 "interface": [
                     {
-                        "name": "元の文章",
-                        "type": "any",
-                        "label": "元の文章"
+                        "name": "original_text",
+                        "label": "original_text",
+                        "type": "any"
                     }
                 ]
             }
@@ -62,19 +64,21 @@
             "version": 1,
             "parameters": {},
             "mapper": {
-                "name": "情報の分解",
+                "name": "split_text",
                 "scope": "roundtrip",
-                "value": "{{split(1.`元の文章`; \"、\")}}"
+                "value": "{{split(1.original_text; space)}}"
             },
             "metadata": {
                 "designer": {
                     "x": 300,
                     "y": 0,
-                    "name": "コマ切れ事件"
+                    "name": "split text into words"
                 },
                 "restore": {
-                    "scope": {
-                        "label": "One cycle"
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        }
                     }
                 },
                 "expect": [
@@ -104,9 +108,9 @@
                 ],
                 "interface": [
                     {
-                        "name": "情報の分解",
-                        "type": "any",
-                        "label": "情報の分解"
+                        "name": "split_text",
+                        "label": "split_text",
+                        "type": "any"
                     }
                 ]
             }
@@ -117,26 +121,28 @@
             "version": 1,
             "parameters": {},
             "mapper": {
-                "array": "{{2.`情報の分解`}}"
+                "array": "{{2.split_text}}"
             },
             "metadata": {
                 "designer": {
                     "x": 600,
                     "y": 0,
-                    "name": "さらなる暗号化"
+                    "name": "iterate with words"
                 },
                 "restore": {
-                    "array": {
-                        "mode": "edit"
+                    "expect": {
+                        "array": {
+                            "mode": "edit"
+                        }
                     }
                 },
                 "expect": [
                     {
-                        "mode": "edit",
                         "name": "array",
-                        "spec": [],
                         "type": "array",
-                        "label": "Array"
+                        "label": "Array",
+                        "mode": "edit",
+                        "spec": []
                     }
                 ]
             }
@@ -148,42 +154,44 @@
             "parameters": {},
             "mapper": {
                 "input": "{{3.value}}",
+                "useRegExpMatch": true,
                 "casesTable": [
                     {
-                        "output": "{{replace(3.value; \"7時\"; \"コンビニ銀行\")}}",
-                        "pattern": "7時"
+                        "pattern": "learning",
+                        "output": "{{replace(3.value; \"learning\"; \"studying\")}}"
                     },
                     {
-                        "output": "{{replace(3.value; \"六本木\"; \"天地が結合する木曜日\")}}",
-                        "pattern": "六本木"
+                        "pattern": "text",
+                        "output": "{{replace(3.value; \"text\"; \"string\")}}"
                     },
                     {
-                        "output": "{{replace(3.value; \"リッツカールトンホテル\"; \"黒き芳醇な飲み物を欲するところ\")}}",
-                        "pattern": "リッツカールトンホテル"
+                        "pattern": "functions",
+                        "output": "{{replace(3.value; \"functions\"; \"manipluation\")}}"
                     },
                     {
-                        "output": "{{replace(3.value; \"お会い\"; \"統合と次元上昇\")}}",
-                        "pattern": "お会い"
+                        "pattern": "work",
+                        "output": "{{replace(3.value; \"work\"; \"make you feel better\")}}"
                     }
                 ],
-                "elseOutput": "{{3.value}}",
-                "useRegExpMatch": true
+                "elseOutput": "{{3.value}}"
             },
             "metadata": {
                 "designer": {
                     "x": 900,
                     "y": 0,
-                    "name": "辞書による撹乱"
+                    "name": "replace it"
                 },
                 "restore": {
-                    "casesTable": {
-                        "mode": "chose",
-                        "items": [
-                            "undefined",
-                            "undefined",
-                            "undefined",
-                            "undefined"
-                        ]
+                    "expect": {
+                        "casesTable": {
+                            "mode": "chose",
+                            "items": [
+                                null,
+                                null,
+                                null,
+                                null
+                            ]
+                        }
                     }
                 },
                 "expect": [
@@ -200,21 +208,21 @@
                     },
                     {
                         "name": "casesTable",
+                        "type": "array",
+                        "label": "Cases",
+                        "required": true,
                         "spec": [
                             {
                                 "name": "pattern",
-                                "type": "text",
-                                "label": "Pattern"
+                                "label": "Pattern",
+                                "type": "text"
                             },
                             {
                                 "name": "output",
-                                "type": "any",
-                                "label": "Output"
+                                "label": "Output",
+                                "type": "any"
                             }
-                        ],
-                        "type": "array",
-                        "label": "Cases",
-                        "required": true
+                        ]
                     },
                     {
                         "name": "elseOutput",
@@ -229,9 +237,9 @@
             "module": "util:TextAggregator",
             "version": 1,
             "parameters": {
-                "feeder": 3,
                 "rowSeparator": "other",
-                "otherRowSeparator": "、"
+                "otherRowSeparator": "---",
+                "feeder": 3
             },
             "mapper": {
                 "value": "{{5.output}}"
@@ -240,14 +248,18 @@
                 "designer": {
                     "x": 1200,
                     "y": 0,
-                    "name": "暗号化の完了"
+                    "name": "bind them all"
                 },
                 "restore": {
-                    "feeder": {
-                        "label": "さらなる暗号化"
+                    "parameters": {
+                        "rowSeparator": {
+                            "label": "Other"
+                        }
                     },
-                    "rowSeparator": {
-                        "label": "Other"
+                    "extra": {
+                        "feeder": {
+                            "label": "iterate with words [3]"
+                        }
                     }
                 },
                 "parameters": [
@@ -273,8 +285,7 @@
                     {
                         "name": "value",
                         "type": "text",
-                        "label": "Text",
-                        "multiline": true
+                        "label": "Text"
                     }
                 ],
                 "advanced": true
@@ -286,19 +297,21 @@
             "version": 1,
             "parameters": {},
             "mapper": {
-                "name": "混沌による暗号化",
+                "name": "shuffle_words",
                 "scope": "roundtrip",
-                "value": "{{shuffle(split(6.text; \"、\"))}}"
+                "value": "{{shuffle(split(6.text; \"---\"))}}"
             },
             "metadata": {
                 "designer": {
                     "x": 601,
                     "y": 371,
-                    "name": "さらなる混沌"
+                    "name": "shuffle words"
                 },
                 "restore": {
-                    "scope": {
-                        "label": "One cycle"
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        }
                     }
                 },
                 "expect": [
@@ -328,9 +341,9 @@
                 ],
                 "interface": [
                     {
-                        "name": "混沌による暗号化",
-                        "type": "any",
-                        "label": "混沌による暗号化"
+                        "name": "shuffle_words",
+                        "label": "shuffle_words",
+                        "type": "any"
                     }
                 ]
             }
@@ -341,19 +354,21 @@
             "version": 1,
             "parameters": {},
             "mapper": {
-                "name": "送信する文章",
+                "name": "result",
                 "scope": "roundtrip",
-                "value": "{{join(7.`混沌による暗号化`; \"、\")}}"
+                "value": "{{join(7.shuffle_words; \"---\")}}"
             },
             "metadata": {
                 "designer": {
                     "x": 903,
                     "y": 373,
-                    "name": "暗号化の完了"
+                    "name": "bind them again"
                 },
                 "restore": {
-                    "scope": {
-                        "label": "One cycle"
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        }
                     }
                 },
                 "expect": [
@@ -383,9 +398,9 @@
                 ],
                 "interface": [
                     {
-                        "name": "送信する文章",
-                        "type": "any",
-                        "label": "送信する文章"
+                        "name": "result",
+                        "label": "result",
+                        "type": "any"
                     }
                 ]
             }
@@ -396,19 +411,21 @@
             "version": 1,
             "parameters": {},
             "mapper": {
-                "name": "とどめの一撃",
+                "name": "hash_result",
                 "scope": "roundtrip",
-                "value": "{{sha512(8.`送信する文章`)}}"
+                "value": "{{sha512(8.result)}}"
             },
             "metadata": {
                 "designer": {
                     "x": 1203,
                     "y": 368,
-                    "name": "解読不可"
+                    "name": "hash result"
                 },
                 "restore": {
-                    "scope": {
-                        "label": "One cycle"
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        }
                     }
                 },
                 "expect": [
@@ -438,29 +455,37 @@
                 ],
                 "interface": [
                     {
-                        "name": "とどめの一撃",
-                        "type": "any",
-                        "label": "とどめの一撃"
+                        "name": "hash_result",
+                        "label": "hash_result",
+                        "type": "any"
                     }
                 ]
             }
         }
     ],
     "metadata": {
+        "instant": false,
         "version": 1,
         "scenario": {
             "roundtrips": 1,
-            "shatter": false,
             "maxErrors": 3,
             "autoCommit": false,
+            "autoCommitTriggerLast": true,
             "sequential": false,
             "confidential": false,
             "dataloss": false,
             "dlq": false
         },
         "designer": {
-            "orphans": []
+            "orphans": [],
+            "notes": [
+                {
+                    "id": 1,
+                    "text": "With this scenario, you'll learn how the text functions work as application logic. Functions are the advanced feature, but the basics of visual programming as well.",
+                    "filter": false
+                }
+            ]
         },
-        "zone": "eu1.integromat.com"
+        "zone": "us1.make.com"
     }
 }
