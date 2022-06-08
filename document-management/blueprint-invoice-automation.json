@@ -6,8 +6,8 @@
             "module": "airtable:TriggerWatchRecords",
             "version": 3,
             "parameters": {
-                "base": "app7LeiSI8GbsvBgP",
-                "view": "viwMarEhICQpN4YLH",
+                "base": "",
+                "view": "",
                 "table": "Invoice",
                 "config": {
                     "labelField": "invoice_id",
@@ -223,7 +223,7 @@
             },
             "mapper": {
                 "id": "{{4.value}}",
-                "base": "app7LeiSI8GbsvBgP",
+                "base": "",
                 "table": "Items"
             },
             "metadata": {
@@ -523,7 +523,7 @@
                                     "name": "issuer_company",
                                     "label": null,
                                     "type": "text",
-                                    "default": "合同会社アインソフ",
+                                    "default": "COMPANY_NAME",
                                     "required": false,
                                     "multiline": false
                                 },
@@ -531,7 +531,7 @@
                                     "name": "issuer_address",
                                     "label": null,
                                     "type": "text",
-                                    "default": "宮崎県延岡市金星2-2-2",
+                                    "default": "COMPANYADDR2-2-2",
                                     "required": false,
                                     "multiline": false
                                 },
@@ -539,7 +539,7 @@
                                     "name": "issuer_email",
                                     "label": null,
                                     "type": "text",
-                                    "default": "mana@ainsoph.org",
+                                    "default": "email@email.email",
                                     "required": false,
                                     "multiline": false
                                 },
@@ -1261,7 +1261,7 @@
                 "select": "value",
                 "convert": false,
                 "filename": "{{25.name}}",
-                "folderId": "/19MofyA7-Ul2jtFC2yavnhVYDngm7ieJb/1Y-FvX-_HS9S80CCWG26nDGfF3Zb2dlY1/1TsnU6Tg4ojjAbeEXVIsFULhxjCAVdA-k",
+                "folderId": "",
                 "destination": "drive"
             },
             "metadata": {
@@ -1283,7 +1283,7 @@
                         ]
                     },
                     "__IMTCONN__": {
-                        "label": "My Google Restricted connection (mana@ethical.works)"
+                        "label": "Google"
                     },
                     "destination": {
                         "label": "My Drive"
@@ -1490,7 +1490,7 @@
                 "restore": {
                     "parameters": {
                         "account": {
-                            "label": "My Google Restricted connection (mana@ethical.works)",
+                            "label": "Google",
                             "data": {
                                 "scoped": "true",
                                 "connection": "google-restricted"
@@ -1716,7 +1716,7 @@
                 "restore": {
                     "parameters": {
                         "__IMTCONN__": {
-                            "label": "Todoist EW",
+                            "label": "Todoist",
                             "data": {
                                 "scoped": "true",
                                 "connection": "todoist"
@@ -1726,7 +1726,7 @@
                     "expect": {
                         "project_id": {
                             "mode": "chose",
-                            "label": "Integromat"
+                            "label": "Make"
                         },
                         "labels": {
                             "mode": "chose"
