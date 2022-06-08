@@ -1,13 +1,13 @@
 {
-    "name": "請求書テンプレートからPDFを発行する",
+    "name": "generate invoice from template",
     "flow": [
         {
             "id": 3,
             "module": "airtable:TriggerWatchRecords",
             "version": 3,
             "parameters": {
-                "base": "",
-                "view": "",
+                "base": "app7LeiSI8GbsvBgP",
+                "view": "viwMarEhICQpN4YLH",
                 "table": "Invoice",
                 "config": {
                     "labelField": "invoice_id",
@@ -15,7 +15,7 @@
                 },
                 "formula": "",
                 "maxRecords": 3,
-                "__IMTCONN__": 1305361
+                "__IMTCONN__": 2058
             },
             "mapper": {},
             "metadata": {
@@ -196,7 +196,7 @@
                 "designer": {
                     "x": 300,
                     "y": 0,
-                    "name": "項目の取得"
+                    "name": "iterate items"
                 },
                 "restore": {
                     "array": {
@@ -219,11 +219,11 @@
             "module": "airtable:ActionGetRecord",
             "version": 3,
             "parameters": {
-                "__IMTCONN__": 1305361
+                "__IMTCONN__": 2058
             },
             "mapper": {
                 "id": "{{4.value}}",
-                "base": "",
+                "base": "app7LeiSI8GbsvBgP",
                 "table": "Items"
             },
             "metadata": {
@@ -319,7 +319,7 @@
                 "designer": {
                     "x": 900,
                     "y": 0,
-                    "name": "項目のまとめ"
+                    "name": "items as array"
                 },
                 "restore": {
                     "feeder": {
@@ -359,7 +359,7 @@
                 "designer": {
                     "x": 1200,
                     "y": 0,
-                    "name": "小計と合計の税率"
+                    "name": "subtotal and tax"
                 },
                 "restore": {
                     "scope": {
@@ -432,7 +432,7 @@
                 "designer": {
                     "x": 1500,
                     "y": 0,
-                    "name": "割引価格"
+                    "name": "discount"
                 },
                 "restore": {
                     "scope": {
@@ -478,44 +478,212 @@
             "module": "json:CreateJSON",
             "version": 1,
             "parameters": {
-                "type": 205996,
+                "type": 378,
                 "space": ""
             },
             "mapper": {
-                "tax": "{{formatNumber((22.subtotal - 23.discount) * 3.tax; \".\"; ; \",\")}}",
-                "note": "{{3.note}}",
-                "items": "{{8.array}}",
-                "total": "{{formatNumber((22.subtotal - 23.discount) * 22.tax; \".\"; ; \",\")}}",
-                "discount": "{{formatNumber(23.discount; \".\"; ; \",\")}}",
-                "subtotal": "{{formatNumber(22.subtotal; \".\"; ; \",\")}}",
+                "issuer_name": "NAME",
+                "issuer_company": "COMAPNY_NAME",
+                "issuer_address": "COMPANY_ADDRESS",
+                "issuer_email": "email@email.email",
+                "issuer_website": "https://ethical.works",
                 "invoice_id": "{{3.invoice_id}}",
+                "invoice_date": "{{formatDate(3.invoice_date; \"YYYY-MM-DD\")}}",
+                "invoice_dateDue": "{{formatDate(3.invoice_dateDue; \"YYYY-MM-DD\")}}",
                 "client_name": "{{3.client_name}}",
-                "issuer_name": "サナト・クマラ",
-                "client_email": "{{3.client_email}}",
-                "invoice_date": "{{formatDate(3.invoice_date; \"YYYY年MM月DD日\")}}",
-                "issuer_email": "",
-                "client_address": "{{3.client_address}}",
                 "client_company": "{{3.client_company}}",
-                "issuer_address": "宮崎県延岡市金星2-2-2",
-                "issuer_company": "合同会社アインソフ",
-                "issuer_website": "",
-                "invoice_dateDue": "{{formatDate(3.invoice_dateDue; \"YYYY年MM月DD日\")}}"
+                "client_address": "{{3.client_address}}",
+                "client_email": "{{3.client_email}}",
+                "items": "{{8.array}}",
+                "note": "{{3.note}}",
+                "subtotal": "{{formatNumber(22.subtotal; \".\"; ; \",\")}}",
+                "discount": "{{formatNumber(23.discount; \".\"; ; \",\")}}",
+                "tax": "{{formatNumber((22.subtotal - 23.discount) * 3.tax; \".\"; ; \",\")}}",
+                "total": "{{formatNumber((22.subtotal - 23.discount) * 22.tax; \".\"; ; \",\")}}"
             },
             "metadata": {
                 "designer": {
                     "x": 1800,
                     "y": 0,
-                    "name": "データ定義"
+                    "name": "format data"
                 },
                 "restore": {
-                    "type": {
-                        "label": "pdf invoice"
+                    "parameters": {
+                        "type": {
+                            "nested": [
+                                {
+                                    "name": "issuer_name",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": "サナト・クマラ",
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "issuer_company",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": "合同会社アインソフ",
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "issuer_address",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": "宮崎県延岡市金星2-2-2",
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "issuer_email",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": "mana@ainsoph.org",
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "issuer_website",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": "https://ainsoph.org/",
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "invoice_id",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "invoice_date",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "invoice_dateDue",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "client_name",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "client_company",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "client_address",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "client_email",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "items",
+                                    "label": null,
+                                    "type": "array",
+                                    "spec": {
+                                        "type": "collection",
+                                        "spec": [
+                                            {
+                                                "name": "name",
+                                                "label": null,
+                                                "type": "text",
+                                                "default": null,
+                                                "required": false,
+                                                "multiline": false
+                                            },
+                                            {
+                                                "name": "price",
+                                                "label": null,
+                                                "type": "number",
+                                                "default": null,
+                                                "required": false
+                                            }
+                                        ],
+                                        "name": "value"
+                                    }
+                                },
+                                {
+                                    "name": "note",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "subtotal",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "discount",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "tax",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "total",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                }
+                            ],
+                            "label": "pdf invoice"
+                        },
+                        "space": {
+                            "label": "Empty"
+                        }
                     },
-                    "items": {
-                        "mode": "edit"
-                    },
-                    "space": {
-                        "label": ""
+                    "expect": {
+                        "items": {
+                            "mode": "edit"
+                        }
                     }
                 },
                 "parameters": [
@@ -542,104 +710,108 @@
                     {
                         "name": "issuer_name",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "issuer_company",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "issuer_address",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "issuer_email",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "issuer_website",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "invoice_id",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "invoice_date",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "invoice_dateDue",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "client_name",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "client_company",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "client_address",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "client_email",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "items",
-                        "spec": [
-                            {
-                                "name": "name",
-                                "type": "text",
-                                "label": null,
-                                "multiline": false
-                            },
-                            {
-                                "name": "price",
-                                "type": "number",
-                                "label": null
-                            }
-                        ],
-                        "type": "array"
+                        "type": "array",
+                        "label": null,
+                        "spec": {
+                            "type": "collection",
+                            "spec": [
+                                {
+                                    "name": "name",
+                                    "label": null,
+                                    "type": "text"
+                                },
+                                {
+                                    "name": "price",
+                                    "label": null,
+                                    "type": "number"
+                                }
+                            ],
+                            "name": "value"
+                        }
                     },
                     {
                         "name": "note",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "subtotal",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "discount",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "tax",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     },
                     {
                         "name": "total",
                         "type": "text",
-                        "multiline": false
+                        "label": null
                     }
                 ]
             }
@@ -649,7 +821,7 @@
             "module": "pdf-co:HTMLtoPDF",
             "version": 1,
             "parameters": {
-                "__IMTCONN__": 2973242
+                "__IMTCONN__": 2047
             },
             "mapper": {
                 "name": "{{3.invoice_id}}",
@@ -670,7 +842,8 @@
             "metadata": {
                 "designer": {
                     "x": 241,
-                    "y": 532
+                    "y": 532,
+                    "name": "html to pdf"
                 },
                 "restore": {
                     "async": {
@@ -844,7 +1017,7 @@
             "module": "pdf-co:AddSecurityToPDF",
             "version": 1,
             "parameters": {
-                "__IMTCONN__": 2973242
+                "__IMTCONN__": 2047
             },
             "mapper": {
                 "async": 15000,
@@ -872,7 +1045,7 @@
                 "designer": {
                     "x": 613,
                     "y": 521,
-                    "name": "パスワード付与"
+                    "name": "add passwords"
                 },
                 "restore": {
                     "async": {
@@ -1081,21 +1254,21 @@
             "module": "google-drive:uploadAFile",
             "version": 4,
             "parameters": {
-                "__IMTCONN__": 1763449
+                "__IMTCONN__": 2037
             },
             "mapper": {
                 "data": "{{25.data}}",
                 "select": "value",
                 "convert": false,
                 "filename": "{{25.name}}",
-                "folderId": "",
+                "folderId": "/19MofyA7-Ul2jtFC2yavnhVYDngm7ieJb/1Y-FvX-_HS9S80CCWG26nDGfF3Zb2dlY1/1TsnU6Tg4ojjAbeEXVIsFULhxjCAVdA-k",
                 "destination": "drive"
             },
             "metadata": {
                 "designer": {
                     "x": 919,
                     "y": 514,
-                    "name": "共有リンク発行"
+                    "name": "generate share link"
                 },
                 "restore": {
                     "select": {
@@ -1110,7 +1283,7 @@
                         ]
                     },
                     "__IMTCONN__": {
-                        "label": ""
+                        "label": "My Google Restricted connection (mana@ethical.works)"
                     },
                     "destination": {
                         "label": "My Drive"
@@ -1190,7 +1363,7 @@
             "version": 1,
             "parameters": {
                 "mode": "",
-                "template": "<p>{{client_name}}さま、</p>\n\n<p>お世話になっております。<br>\n請求書を送付いたしますので、ご確認よろしくお願いいたします。</p>\n\n<p>{{link}}</p>\n\n<p>PDFパスワード<br>\n{{security}}</p>\n\n<p>過不足ありましたら、ご指摘ください。</p>\n\n<p>{{issuer_name}}<br>\n{{issuer_company}}<br>\n{{issuer_email}}</p>"
+                "template": "<p>Dear {{client_name}},</p>\n\n<p>Hope all is well with you!<br>\nI'm attaching an invoice so please kindly find the attached.</p>\n\n<p>{{link}}</p>\n\n<p>Password (NOT RECOMMEND!)<br>\n{{security}}</p>\n\n<p>Warm regards,</p>\n<p>{{issuer_name}}<br>\n{{issuer_company}}<br>\n{{issuer_email}}</p>"
             },
             "mapper": {
                 "variables": [
@@ -1204,15 +1377,15 @@
                     },
                     {
                         "key": "issuer_name",
-                        "value": "サナト・クマラ"
+                        "value": "YOUR_NAME"
                     },
                     {
                         "key": "issuer_company",
-                        "value": "合同会社アインソフ"
+                        "value": "YOUR_COMAPNY"
                     },
                     {
                         "key": "issuer_email",
-                        "value": ""
+                        "value": "YOUR_EMAIL"
                     },
                     {
                         "key": "security",
@@ -1224,22 +1397,26 @@
                 "designer": {
                     "x": 1207,
                     "y": 513,
-                    "name": "メールテンプレート"
+                    "name": "create email"
                 },
                 "restore": {
-                    "mode": {
-                        "label": "Non-mappable"
+                    "parameters": {
+                        "mode": {
+                            "label": "Non-mappable"
+                        }
                     },
-                    "variables": {
-                        "mode": "chose",
-                        "items": [
-                            "undefined",
-                            "undefined",
-                            "undefined",
-                            "undefined",
-                            "undefined",
-                            "undefined"
-                        ]
+                    "expect": {
+                        "variables": {
+                            "mode": "chose",
+                            "items": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                            ]
+                        }
                     }
                 },
                 "parameters": [
@@ -1257,27 +1434,26 @@
                         "name": "template",
                         "type": "text",
                         "label": "Template",
-                        "required": true,
-                        "multiline": true
+                        "required": true
                     }
                 ],
                 "expect": [
                     {
                         "name": "variables",
+                        "type": "array",
+                        "label": "Variables",
                         "spec": [
                             {
                                 "name": "key",
-                                "type": "text",
-                                "label": "Key"
+                                "label": "Key",
+                                "type": "text"
                             },
                             {
                                 "name": "value",
-                                "type": "any",
-                                "label": "Value"
+                                "label": "Value",
+                                "type": "any"
                             }
-                        ],
-                        "type": "array",
-                        "label": "Variables"
+                        ]
                     }
                 ]
             }
@@ -1287,24 +1463,24 @@
             "module": "email:ActionSendEmail",
             "version": 7,
             "parameters": {
-                "account": 1763449,
+                "account": 2037,
                 "saveAfterSent": false
             },
             "mapper": {
-                "cc": [],
                 "to": "{{3.client_email}}",
+                "subject": "Invoice ({{3.invoice_id}})",
+                "contentType": "html",
+                "attachments": [],
+                "cc": [],
                 "bcc": [],
                 "from": "",
-                "html": "{{27.data}}",
                 "sender": "",
-                "headers": [],
                 "replyTo": "",
-                "subject": "請求書の送付（{{3.invoice_id}}）",
-                "priority": "normal",
                 "inReplyTo": "",
                 "references": [],
-                "attachments": [],
-                "contentType": "html"
+                "priority": "normal",
+                "headers": [],
+                "html": "{{27.data}}"
             },
             "metadata": {
                 "designer": {
@@ -1312,45 +1488,46 @@
                     "y": 497
                 },
                 "restore": {
-                    "cc": {
-                        "mode": "chose",
-                        "items": []
+                    "parameters": {
+                        "account": {
+                            "label": "My Google Restricted connection (mana@ethical.works)",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            }
+                        },
+                        "saveAfterSent": {
+                            "label": "No"
+                        }
                     },
-                    "to": {
-                        "mode": "edit"
-                    },
-                    "bcc": {
-                        "mode": "chose",
-                        "items": []
-                    },
-                    "account": {
-                        "label": ""
-                    },
-                    "headers": {
-                        "items": []
-                    },
-                    "priority": {
-                        "label": "Normal"
-                    },
-                    "references": {
-                        "mode": "chose",
-                        "items": []
-                    },
-                    "attachments": {
-                        "mode": "chose",
-                        "items": []
-                    },
-                    "contentType": {
-                        "label": "HTML"
-                    },
-                    "saveAfterSent": {
-                        "label": "No"
+                    "expect": {
+                        "to": {
+                            "mode": "edit"
+                        },
+                        "contentType": {
+                            "label": "HTML"
+                        },
+                        "attachments": {
+                            "mode": "chose"
+                        },
+                        "cc": {
+                            "mode": "chose"
+                        },
+                        "bcc": {
+                            "mode": "chose"
+                        },
+                        "references": {
+                            "mode": "chose"
+                        },
+                        "priority": {
+                            "label": "Normal"
+                        }
                     }
                 },
                 "parameters": [
                     {
                         "name": "account",
-                        "type": "account",
+                        "type": "account:smtp,google-restricted",
                         "label": "Connection",
                         "required": true
                     },
@@ -1370,19 +1547,15 @@
                 "expect": [
                     {
                         "name": "to",
+                        "type": "array",
+                        "label": "To",
+                        "required": true,
                         "spec": {
-                            "name": "email",
+                            "name": "value",
                             "type": "email",
                             "label": "Email address",
                             "required": true
-                        },
-                        "type": "array",
-                        "label": "To",
-                        "labels": {
-                            "add": "Add a recipient",
-                            "edit": "Edit a recipient"
-                        },
-                        "required": true
+                        }
                     },
                     {
                         "name": "subject",
@@ -1403,60 +1576,48 @@
                     },
                     {
                         "name": "attachments",
+                        "type": "array",
+                        "label": "Attachments",
                         "spec": [
                             {
                                 "name": "fileName",
-                                "type": "filename",
                                 "label": "File name",
+                                "type": "filename",
                                 "required": true,
                                 "semantic": "file:name"
                             },
                             {
                                 "name": "data",
-                                "type": "buffer",
                                 "label": "Data",
+                                "type": "buffer",
                                 "required": true,
                                 "semantic": "file:data"
                             },
                             {
                                 "name": "cid",
-                                "type": "text",
-                                "label": "Content-ID"
+                                "label": "Content-ID",
+                                "type": "text"
                             }
-                        ],
-                        "type": "array",
-                        "label": "Attachments",
-                        "labels": {
-                            "add": "Add an attachment",
-                            "edit": "Edit an attachment"
-                        }
+                        ]
                     },
                     {
                         "name": "cc",
-                        "spec": {
-                            "name": "email",
-                            "type": "email",
-                            "label": "Email address"
-                        },
                         "type": "array",
                         "label": "Copy recipient",
-                        "labels": {
-                            "add": "Add a copy recipient",
-                            "edit": "Edit a copy recipient"
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
                         }
                     },
                     {
                         "name": "bcc",
-                        "spec": {
-                            "name": "email",
-                            "type": "email",
-                            "label": "Email address"
-                        },
                         "type": "array",
                         "label": "Blind copy recipient",
-                        "labels": {
-                            "add": "Add a blind copy recipient",
-                            "edit": "Edit a blind copy recipient"
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
                         }
                     },
                     {
@@ -1481,13 +1642,14 @@
                     },
                     {
                         "name": "references",
+                        "type": "array",
+                        "label": "References",
                         "spec": {
                             "type": "text",
                             "label": "Reference",
-                            "required": true
-                        },
-                        "type": "array",
-                        "label": "References"
+                            "required": true,
+                            "name": "value"
+                        }
                     },
                     {
                         "name": "priority",
@@ -1503,22 +1665,22 @@
                     },
                     {
                         "name": "headers",
+                        "type": "array",
+                        "label": "Headers",
                         "spec": [
                             {
                                 "name": "key",
-                                "type": "text",
                                 "label": "Key",
+                                "type": "text",
                                 "required": true
                             },
                             {
                                 "name": "value",
-                                "type": "text",
                                 "label": "Value",
+                                "type": "text",
                                 "required": true
                             }
-                        ],
-                        "type": "array",
-                        "label": "Headers"
+                        ]
                     },
                     {
                         "name": "html",
@@ -1533,70 +1695,76 @@
             "module": "todoist:CreateItem",
             "version": 2,
             "parameters": {
-                "__IMTCONN__": 2062394
+                "__IMTCONN__": 98788
             },
             "mapper": {
+                "content": "invoice ({{3.invoice_id}} - {{3.client_company}})",
+                "description": "{{stripHTML(27.data)}}",
+                "project_id": 2274680072,
                 "due": {
-                    "date": "{{3.invoice_dateDue}}",
-                    "type": "date"
+                    "type": "date",
+                    "date": "{{3.invoice_dateDue}}"
                 },
-                "content": "請求書発行・送付（{{3.invoice_id}} - {{3.client_company}}）",
-                "project_id": 000,
-                "section_id": 000,
-                "description": "{{stripHTML(27.data)}}"
+                "section_id": 63883072
             },
             "metadata": {
                 "designer": {
                     "x": 1821,
                     "y": 504,
-                    "name": "タスク化（支払期限）"
+                    "name": "task with due date"
                 },
                 "restore": {
-                    "due": {
-                        "nested": {
-                            "type": {
-                                "mode": "chose",
-                                "label": "Only date"
-                            },
-                            "is_recurring": {
-                                "mode": "chose"
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Todoist EW",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "todoist"
                             }
                         }
                     },
-                    "labels": {
-                        "mode": "chose"
-                    },
-                    "priority": {
-                        "mode": "chose",
-                        "label": ""
-                    },
-                    "project_id": {
-                        "mode": "chose",
-                        "label": "Integromat"
-                    },
-                    "section_id": {
-                        "mode": "chose",
-                        "label": "セールス"
-                    },
-                    "__IMTCONN__": {
-                        "label": "Todoist"
-                    },
-                    "auto_reminder": {
-                        "mode": "chose"
-                    },
-                    "assigned_by_uid": {
-                        "mode": "chose",
-                        "label": ""
-                    },
-                    "responsible_uid": {
-                        "mode": "chose",
-                        "label": ""
+                    "expect": {
+                        "project_id": {
+                            "mode": "chose",
+                            "label": "Integromat"
+                        },
+                        "labels": {
+                            "mode": "chose"
+                        },
+                        "due": {
+                            "nested": {
+                                "type": {
+                                    "mode": "chose",
+                                    "label": "Only date"
+                                },
+                                "is_recurring": {
+                                    "mode": "chose"
+                                }
+                            }
+                        },
+                        "priority": {
+                            "mode": "chose",
+                            "label": "Empty"
+                        },
+                        "responsible_uid": {
+                            "mode": "chose"
+                        },
+                        "assigned_by_uid": {
+                            "mode": "chose"
+                        },
+                        "auto_reminder": {
+                            "mode": "chose"
+                        },
+                        "section_id": {
+                            "mode": "chose",
+                            "label": "Sales"
+                        }
                     }
                 },
                 "parameters": [
                     {
                         "name": "__IMTCONN__",
-                        "type": "account",
+                        "type": "account:todoist",
                         "label": "Connection",
                         "required": true
                     }
@@ -1626,6 +1794,8 @@
                     },
                     {
                         "name": "due",
+                        "type": "collection",
+                        "label": "Due date",
                         "spec": [
                             {
                                 "name": "type",
@@ -1639,6 +1809,11 @@
                                 }
                             },
                             {
+                                "name": "date",
+                                "type": "date",
+                                "label": "Date"
+                            },
+                            {
                                 "name": "string",
                                 "type": "text",
                                 "label": "Human-readable representation of due date"
@@ -1647,16 +1822,8 @@
                                 "name": "is_recurring",
                                 "type": "boolean",
                                 "label": "Is recurring"
-                            },
-                            {
-                                "name": "date",
-                                "type": "date",
-                                "label": "Date"
                             }
-                        ],
-                        "type": "collection",
-                        "label": "Due date",
-                        "required": false
+                        ]
                     },
                     {
                         "name": "priority",
@@ -1701,12 +1868,13 @@
         }
     ],
     "metadata": {
+        "instant": false,
         "version": 1,
         "scenario": {
             "roundtrips": 1,
-            "shatter": false,
             "maxErrors": 3,
             "autoCommit": false,
+            "autoCommitTriggerLast": true,
             "sequential": false,
             "confidential": false,
             "dataloss": false,
@@ -1715,6 +1883,6 @@
         "designer": {
             "orphans": []
         },
-        "zone": "eu1.integromat.com"
+        "zone": "us1.make.com"
     }
 }

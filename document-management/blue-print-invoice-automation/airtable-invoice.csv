@@ -1,0 +1,2 @@
+﻿invoice_id,client_name,client_company,client_address,client_email,discount,tax,Status,invoice_date,invoice_dateDue,note,security,Items,Created
+20200112001,NAME,COM,ADDR,email@email.email,10%,10%,issued,2022-01-12,2022-02-22,MESSAGE,iPbs$h&5@TCiMFEJ,"design,strategy,implementation",2022-01-12 1:26pm

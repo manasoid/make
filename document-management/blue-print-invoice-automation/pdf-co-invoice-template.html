@@ -1,7 +1,7 @@
 <!-- this sample shows how to use {{macro}} styles variables but also how to define simple functions and conditional logic -->
 <!-- Handlebars it the powerful template language based on {{Mustache}} but with conditions, js functions and much more. See https://handlebarsjs.com/ for information and samples -->
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
 
 <script>
@@ -109,7 +109,7 @@ Handlebars.registerHelper('multiply', function(value1, value2){
 <body>
     {{#if paid}}
     <div style="border-width: 3px;border-style: solid; border-color: #008000;border-radius: 11px; color: #008000; opacity:0.4; position: absolute; z-index: 1; left:80%; top:3%; font-size: 60pt;transform: rotate(-20deg)">
-    済 </div>
+    Paid </div>
     {{/if}}
     
     <div class="container">
@@ -129,13 +129,13 @@ Handlebars.registerHelper('multiply', function(value1, value2){
                     <div class="col col-md-6">
                         <div class="">
                             <div class="">
-                                <span class="font-weight-bold">請求書番号：</span> {{invoice_id}}
+                                <span class="font-weight-bold">No. </span> {{invoice_id}}
                             </div>
                             <div class="">
-                                <span class="font-weight-bold">請求日：</span> {{invoice_date}}
+                                <span class="font-weight-bold">Date: </span> {{invoice_date}}
                             </div>
                             <div class="">
-                                <span class="font-weight-bold">支払期限：</span> {{invoice_dateDue}}
+                                <span class="font-weight-bold">Due: </span> {{invoice_dateDue}}
                             </div>
                         </div>
                     </div>
@@ -145,12 +145,12 @@ Handlebars.registerHelper('multiply', function(value1, value2){
                     <div class="col col-md-6"></div>
 
                     <div class="col col-md-6">
-                        <div class="font-weight-bold footer-title">請求先</div>
+                        <div class="font-weight-bold footer-title">Issued</div>
                         <div class="mb-3">
-                            <div class=""><strong>氏名：</strong> {{client_name}}様</div>
-                            <div class=""><strong>会社名：</strong> {{client_company}}</div>
-                            <div class=""><strong>住所：</strong> {{client_address}}</div>
-                            <div  class=""><strong>メール：</strong> {{client_email}}</div>
+                            <div class=""><strong>Name: </strong> {{client_name}}</div>
+                            <div class=""><strong>Company: </strong> {{client_company}}</div>
+                            <div class=""><strong>Address: </strong> {{client_address}}</div>
+                            <div  class=""><strong>Email:  </strong> {{client_email}}</div>
                         </div>
                     </div>    
                 </div>
@@ -160,8 +160,8 @@ Handlebars.registerHelper('multiply', function(value1, value2){
                     <table class="table table-striped" cellspacing="0">
                         <thead>
                             <tr class="table-head">
-                                <th class="text-left">内訳</th>
-                                <th class="text-right">価格</th>
+                                <th class="text-left">Items</th>
+                                <th class="text-right">Price</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -180,10 +180,10 @@ Handlebars.registerHelper('multiply', function(value1, value2){
                   <div class="col col-md-6">
                   </div>
                     <div class="col col-md-6 text-right">
-                        <div style="margin-bottom: 10px;">小計：   <span class="amount">{{subtotal}}</span></div>
-                        <div style="margin-bottom: 10px;">割引：   <span class="amount">{{discount}}</span></div>
-                        <div style="margin-bottom: 10px;">税：  <span class="amount">{{tax}}</span></div>
-                        <div class="font-weight-bold footer-title alert-warning">合計： <span class="total-amount amount font-weight-bold">{{total}}</span></div>                        
+                        <div style="margin-bottom: 10px;">Subtotal:   <span class="amount">{{subtotal}}</span></div>
+                        <div style="margin-bottom: 10px;">Discount:    <span class="amount">{{discount}}</span></div>
+                        <div style="margin-bottom: 10px;">Tax:   <span class="amount">{{tax}}</span></div>
+                        <div class="font-weight-bold footer-title alert-warning">Total:  <span class="total-amount amount font-weight-bold">{{total}}</span></div>                        
                     </div>
                     
                 </div>
