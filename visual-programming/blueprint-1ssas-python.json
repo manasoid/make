@@ -1,5 +1,5 @@
 {
-    "name": "ニシキヘビを走らせるDX戦略！",
+    "name": "Run Python in your scenario!",
     "flow": [
         {
             "id": 2,
@@ -14,7 +14,8 @@
             "metadata": {
                 "designer": {
                     "x": 0,
-                    "y": 0
+                    "y": 0,
+                    "name": "set a number"
                 },
                 "restore": {
                     "scope": {
@@ -60,7 +61,7 @@
             "module": "onesaas:Python",
             "version": 1,
             "parameters": {
-                "__IMTCONN__": 3198912
+                "__IMTCONN__": 2045
             },
             "mapper": {
                 "pythonCode": "import numpy as np\n\narr = np.array([7,6,{{2.param}}])\nmin = str(np.min(arr))\n\nresult = { 'data': min }"
@@ -68,7 +69,8 @@
             "metadata": {
                 "designer": {
                     "x": 300,
-                    "y": 0
+                    "y": 0,
+                    "name": "run Python code with NumPy"
                 },
                 "restore": {
                     "__IMTCONN__": {
@@ -104,7 +106,8 @@
             "metadata": {
                 "designer": {
                     "x": 600,
-                    "y": 0
+                    "y": 0,
+                    "name": "get result"
                 },
                 "expect": [
                     {
@@ -125,12 +128,13 @@
         }
     ],
     "metadata": {
+        "instant": false,
         "version": 1,
         "scenario": {
             "roundtrips": 1,
-            "shatter": false,
             "maxErrors": 3,
             "autoCommit": false,
+            "autoCommitTriggerLast": true,
             "sequential": false,
             "confidential": false,
             "dataloss": false,
@@ -139,6 +143,6 @@
         "designer": {
             "orphans": []
         },
-        "zone": "eu1.integromat.com"
+        "zone": "us1.make.com"
     }
 }
