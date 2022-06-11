@@ -1,0 +1,371 @@
+{
+    "name": "encrypt and decrypt text",
+    "flow": [
+        {
+            "id": 1,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "string",
+                "scope": "roundtrip",
+                "value": "1SaaS and Make are the great tools to automate your daily tasks!"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "message"
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "string",
+                        "label": "string",
+                        "type": "any"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "onesaas:cryptoencrypt",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 139255
+            },
+            "mapper": {
+                "message": "{{1.string}}",
+                "secretKey": "this-is-your-secret-key",
+                "cryptoType": "AES"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "encrypt"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "1SaaS ver. 2",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "cryptoType": {
+                            "mode": "chose",
+                            "label": "AES"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "message",
+                        "type": "text",
+                        "label": "Message to encrypt",
+                        "required": true
+                    },
+                    {
+                        "name": "secretKey",
+                        "type": "text",
+                        "label": "Secret Key",
+                        "required": true
+                    },
+                    {
+                        "name": "cryptoType",
+                        "type": "select",
+                        "label": "Crypto Type",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "util:GetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "{{3.encryptedText}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0,
+                    "name": "get result"
+                },
+                "restore": {},
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "U2FsdGVkX19zzFuX8MPEfK+Q7tXONB4Yhy9hOaUC+3kwCryE9YJVpR/3OIcr+9PZDVCDRTq3fcuO7ONJ3LDyv6+EdnbErLrgHrj+...",
+                        "label": "U2FsdGVkX19zzFuX8MPEfK+Q7tXONB4Yhy9hOaUC+3kwCryE9YJVpR/3OIcr+9PZDVCDRTq3fcuO7ONJ3LDyv6+EdnbErLrgHrj+...",
+                        "type": "any"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "onesaas:cryptodecrypt",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 139255
+            },
+            "mapper": {
+                "ciphertext": "{{3.encryptedText}}",
+                "secretKey": "this-is-your-secret-key",
+                "cryptoType": "AES"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0,
+                    "name": "decrypt"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "1SaaS ver. 2",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "cryptoType": {
+                            "mode": "chose",
+                            "label": "AES"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "ciphertext",
+                        "type": "text",
+                        "label": "Cipher text",
+                        "required": true
+                    },
+                    {
+                        "name": "secretKey",
+                        "type": "text",
+                        "label": "Secret Key",
+                        "required": true
+                    },
+                    {
+                        "name": "cryptoType",
+                        "type": "select",
+                        "label": "Crypto Type",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "util:GetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "{{5.decryptedText}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0,
+                    "name": "get result"
+                },
+                "restore": {},
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": null,
+                        "label": null,
+                        "type": "any"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "onesaas:cryptohash",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 139255
+            },
+            "mapper": {
+                "message": "{{5.decryptedText}}",
+                "secretKey": "this-is-your-secret-key",
+                "hashType": "HmacSHA512"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1500,
+                    "y": 0,
+                    "name": "hmac-sha512"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "1SaaS ver. 2",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "hashType": {
+                            "mode": "chose",
+                            "label": "HmacSHA512"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "message",
+                        "type": "text",
+                        "label": "Message to hash",
+                        "required": true
+                    },
+                    {
+                        "name": "secretKey",
+                        "type": "text",
+                        "label": "Secret Key",
+                        "required": true
+                    },
+                    {
+                        "name": "hashType",
+                        "type": "select",
+                        "label": "Hash Type",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8,
+            "module": "util:GetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "{{7.hashedText}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1800,
+                    "y": 0,
+                    "name": "get result"
+                },
+                "restore": {},
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": null,
+                        "label": null,
+                        "type": "any"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": false,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}
