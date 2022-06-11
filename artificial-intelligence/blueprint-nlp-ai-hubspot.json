@@ -1,12 +1,12 @@
 {
-    "name": "サポートフォームに人工知能を実装する",
+    "name": "implement NLP into your customer support",
     "flow": [
         {
             "id": 1,
             "module": "gateway:CustomWebHook",
             "version": 1,
             "parameters": {
-                "hook": 1245845,
+                "hook": 1304,
                 "maxResults": 1
             },
             "mapper": {},
@@ -14,11 +14,11 @@
                 "designer": {
                     "x": 0,
                     "y": 0,
-                    "name": "フォーム受信"
+                    "name": "from contact fom"
                 },
                 "restore": {
                     "hook": {
-                        "label": "UMSO"
+                        "label": "UMSO (Ethical Works)"
                     }
                 },
                 "parameters": [
@@ -48,23 +48,23 @@
                         "type": "text"
                     },
                     {
-                        "name": "エシカルワークスからメールを受け取る",
+                        "name": "Opt-in",
                         "type": "text"
                     },
                     {
-                        "name": "メッセージ",
+                        "name": "Message",
                         "type": "text"
                     },
                     {
-                        "name": "メール",
+                        "name": "Email",
                         "type": "text"
                     },
                     {
-                        "name": "名前",
+                        "name": "First Name",
                         "type": "text"
                     },
                     {
-                        "name": "名字",
+                        "name": "Last Name",
                         "type": "text"
                     }
                 ]
@@ -80,19 +80,19 @@
                 "variables": [
                     {
                         "name": "first_name",
-                        "value": "{{stripHTML(1.`名前`)}}"
+                        "value": "{{stripHTML(1.`First Name`)}}"
                     },
                     {
                         "name": "last_name",
-                        "value": "{{stripHTML(1.`名字`)}}"
+                        "value": "{{stripHTML(1.`Last Name`)}}"
                     },
                     {
                         "name": "email",
-                        "value": "{{stripHTML(1.`メール`)}}"
+                        "value": "{{stripHTML(1.`Email`)}}"
                     },
                     {
                         "name": "message",
-                        "value": "{{stripHTML(1.`メッセージ`)}}"
+                        "value": "{{stripHTML(1.`Message`)}}"
                     }
                 ]
             },
@@ -100,7 +100,7 @@
                 "designer": {
                     "x": 300,
                     "y": 0,
-                    "name": "タグの除去"
+                    "name": "strip HTML tags"
                 },
                 "restore": {
                     "scope": {
@@ -172,131 +172,58 @@
             }
         },
         {
-            "id": 15,
-            "module": "deepl:translateText",
+            "id": 18,
+            "module": "onesaas:translatetext",
             "version": 1,
             "parameters": {
-                "__IMTCONN__": 3322936
+                "__IMTCONN__": 2045
             },
             "mapper": {
-                "text": "{{7.message}}",
-                "source_lang": "JA",
-                "target_lang": "EN-GB"
+                "textToTranslate": "{{7.message}}",
+                "resultLang": "en"
             },
             "metadata": {
                 "designer": {
                     "x": 600,
-                    "y": 0,
-                    "name": "英語に翻訳"
+                    "y": 0
                 },
                 "restore": {
-                    "__IMTCONN__": {
-                        "label": "DeepL Free"
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "1saas",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas"
+                            }
+                        }
                     },
-                    "glossary_id": {
-                        "mode": "chose",
-                        "label": ""
-                    },
-                    "source_lang": {
-                        "mode": "chose",
-                        "label": "Japanese"
-                    },
-                    "target_lang": {
-                        "mode": "chose",
-                        "label": "English (British)"
-                    },
-                    "tag_handling": {
-                        "mode": "chose",
-                        "label": ""
-                    },
-                    "split_sentences": {
-                        "mode": "chose",
-                        "label": ""
-                    },
-                    "outline_detection": {
-                        "mode": "chose"
-                    },
-                    "preserve_formatting": {
-                        "mode": "chose"
+                    "expect": {
+                        "resultLang": {
+                            "mode": "chose",
+                            "label": "English"
+                        }
                     }
                 },
                 "parameters": [
                     {
                         "name": "__IMTCONN__",
-                        "type": "account",
+                        "type": "account:onesaas",
                         "label": "Connection",
                         "required": true
                     }
                 ],
                 "expect": [
                     {
-                        "name": "text",
+                        "name": "textToTranslate",
                         "type": "text",
                         "label": "Text",
                         "required": true
                     },
                     {
-                        "name": "target_lang",
+                        "name": "resultLang",
                         "type": "select",
-                        "label": "Target Language",
+                        "label": "Result Language",
                         "required": true
-                    },
-                    {
-                        "name": "source_lang",
-                        "type": "select",
-                        "label": "Source Language"
-                    },
-                    {
-                        "name": "split_sentences",
-                        "type": "select",
-                        "label": "Split Sentences",
-                        "validate": {
-                            "enum": [
-                                "0",
-                                "1",
-                                "nonewlines"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "preserve_formatting",
-                        "type": "boolean",
-                        "label": "Preserve Formatting"
-                    },
-                    {
-                        "name": "glossary_id",
-                        "type": "select",
-                        "label": "Glossary ID"
-                    },
-                    {
-                        "name": "tag_handling",
-                        "type": "select",
-                        "label": "Tag Handling",
-                        "validate": {
-                            "enum": [
-                                "xml"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "non_splitting_tags",
-                        "type": "text",
-                        "label": "Non Splitting Tags"
-                    },
-                    {
-                        "name": "outline_detection",
-                        "type": "boolean",
-                        "label": "Outline Detection"
-                    },
-                    {
-                        "name": "splitting_tags",
-                        "type": "text",
-                        "label": "Splitting Tags"
-                    },
-                    {
-                        "name": "ignore_tags",
-                        "type": "text",
-                        "label": "Ignored Tags"
                     }
                 ]
             }
@@ -306,26 +233,32 @@
             "module": "onesaas:stimmungserkennung",
             "version": 1,
             "parameters": {
-                "__IMTCONN__": 3198912
+                "__IMTCONN__": 2045
             },
             "mapper": {
-                "text": "{{15.translations[].text}}"
+                "text": "{{18.translation}}"
             },
             "metadata": {
                 "designer": {
                     "x": 900,
                     "y": 0,
-                    "name": "自然言語処理（AI）"
+                    "name": "NLP with 1SaaS!"
                 },
                 "restore": {
-                    "__IMTCONN__": {
-                        "label": "1saas"
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "1saas",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas"
+                            }
+                        }
                     }
                 },
                 "parameters": [
                     {
                         "name": "__IMTCONN__",
-                        "type": "account",
+                        "type": "account:onesaas",
                         "label": "Connection",
                         "required": true
                     }
@@ -366,9 +299,9 @@
             },
             "metadata": {
                 "designer": {
-                    "x": 558,
-                    "y": 315,
-                    "name": "優先度を決定"
+                    "x": 315,
+                    "y": 449,
+                    "name": "prioritise"
                 },
                 "restore": {
                     "casesTable": {
@@ -423,71 +356,78 @@
             "module": "todoist:CreateItem",
             "version": 2,
             "parameters": {
-                "__IMTCONN__": 2062394
+                "__IMTCONN__": 98788
             },
             "mapper": {
-                "due": {
-                    "date": "{{addDays(now; 1)}}",
-                    "type": "date"
-                },
                 "content": "{{7.last_name}}：{{substring(7.message; 0; 10)}}…",
-                "priority": "{{get(10.output; 1)}}",
-                "project_id": 000,
-                "section_id": 000,
                 "description": "{{7.email}}\n{{7.message}}",
-                "auto_reminder": true
+                "project_id": 00000000,
+                "due": {
+                    "type": "date",
+                    "date": "{{addDays(now; 1)}}"
+                },
+                "auto_reminder": true,
+                "section_id": 00000000
             },
             "metadata": {
                 "designer": {
-                    "x": 901,
-                    "y": 312,
-                    "name": "タスクの作成"
+                    "x": 706,
+                    "y": 445,
+                    "name": "create marketing task"
                 },
                 "restore": {
-                    "due": {
-                        "nested": {
-                            "type": {
-                                "mode": "chose",
-                                "label": "Only date"
-                            },
-                            "is_recurring": {
-                                "mode": "chose"
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Todoist",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "todoist"
                             }
                         }
                     },
-                    "labels": {
-                        "mode": "chose"
-                    },
-                    "priority": {
-                        "mode": "edit"
-                    },
-                    "project_id": {
-                        "mode": "chose",
-                        "label": "Integromat"
-                    },
-                    "section_id": {
-                        "mode": "chose",
-                        "label": "Service"
-                    },
-                    "__IMTCONN__": {
-                        "label": "Todoist"
-                    },
-                    "auto_reminder": {
-                        "mode": "chose"
-                    },
-                    "assigned_by_uid": {
-                        "mode": "chose",
-                        "label": ""
-                    },
-                    "responsible_uid": {
-                        "mode": "chose",
-                        "label": ""
+                    "expect": {
+                        "project_id": {
+                            "mode": "chose",
+                            "label": "Make Support"
+                        },
+                        "labels": {
+                            "mode": "chose"
+                        },
+                        "due": {
+                            "nested": {
+                                "type": {
+                                    "mode": "chose",
+                                    "label": "Only date"
+                                },
+                                "is_recurring": {
+                                    "mode": "chose"
+                                }
+                            }
+                        },
+                        "priority": {
+                            "mode": "chose"
+                        },
+                        "responsible_uid": {
+                            "mode": "chose",
+                            "label": "Empty"
+                        },
+                        "assigned_by_uid": {
+                            "mode": "chose",
+                            "label": "Empty"
+                        },
+                        "auto_reminder": {
+                            "mode": "chose"
+                        },
+                        "section_id": {
+                            "mode": "chose",
+                            "label": "Service"
+                        }
                     }
                 },
                 "parameters": [
                     {
                         "name": "__IMTCONN__",
-                        "type": "account",
+                        "type": "account:todoist",
                         "label": "Connection",
                         "required": true
                     }
@@ -517,6 +457,8 @@
                     },
                     {
                         "name": "due",
+                        "type": "collection",
+                        "label": "Due date",
                         "spec": [
                             {
                                 "name": "type",
@@ -530,6 +472,11 @@
                                 }
                             },
                             {
+                                "name": "date",
+                                "type": "date",
+                                "label": "Date"
+                            },
+                            {
                                 "name": "string",
                                 "type": "text",
                                 "label": "Human-readable representation of due date"
@@ -538,16 +485,8 @@
                                 "name": "is_recurring",
                                 "type": "boolean",
                                 "label": "Is recurring"
-                            },
-                            {
-                                "name": "date",
-                                "type": "date",
-                                "label": "Date"
                             }
-                        ],
-                        "type": "collection",
-                        "label": "Due date",
-                        "required": false
+                        ]
                     },
                     {
                         "name": "priority",
@@ -596,7 +535,7 @@
             "module": "hubspotcrm:CreateTicket",
             "version": 1,
             "parameters": {
-                "__IMTCONN__": 1217582
+                "__IMTCONN__": 2036
             },
             "mapper": {
                 "stageId": "1",
@@ -617,9 +556,9 @@
             },
             "metadata": {
                 "designer": {
-                    "x": 1207,
-                    "y": 311,
-                    "name": "チケットの発行"
+                    "x": 1058,
+                    "y": 443,
+                    "name": "create support ticket"
                 },
                 "restore": {
                     "stageId": {
@@ -640,7 +579,7 @@
                             },
                             "hubspot_owner_id": {
                                 "mode": "chose",
-                                "label": "HubSpot"
+                                "label": "Mana Kaneuchi"
                             },
                             "hs_ticket_category": {
                                 "mode": "chose",
@@ -926,12 +865,13 @@
         }
     ],
     "metadata": {
+        "instant": true,
         "version": 1,
         "scenario": {
             "roundtrips": 1,
-            "shatter": false,
             "maxErrors": 3,
             "autoCommit": false,
+            "autoCommitTriggerLast": true,
             "sequential": false,
             "confidential": false,
             "dataloss": false,
@@ -940,6 +880,6 @@
         "designer": {
             "orphans": []
         },
-        "zone": "eu1.integromat.com"
+        "zone": "us1.make.com"
     }
 }
