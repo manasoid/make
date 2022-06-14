@@ -1,12 +1,12 @@
 {
-    "name": "終わりの風景〜画像ファイルだけ「ヨハン」にリネームする",
+    "name": "rename image files at once",
     "flow": [
         {
             "id": 4,
             "module": "google-drive:searchForFilesFolders",
             "version": 4,
             "parameters": {
-                "__IMTCONN__": 1763439
+                "__IMTCONN__": 2042
             },
             "mapper": {
                 "limit": "20",
@@ -21,7 +21,7 @@
                 "designer": {
                     "x": 0,
                     "y": 0,
-                    "name": "風景の検索"
+                    "name": "search image files"
                 },
                 "restore": {
                     "select": {
@@ -43,7 +43,7 @@
                         "label": "Fulltext search"
                     },
                     "__IMTCONN__": {
-                        "label": ""
+                        "label": "Google"
                     },
                     "destination": {
                         "label": "My Drive"
@@ -143,7 +143,7 @@
                 "designer": {
                     "x": 300,
                     "y": 0,
-                    "name": "たくさんの終わりの風景…"
+                    "name": "collect files"
                 },
                 "restore": {
                     "feeder": {
@@ -174,7 +174,7 @@
                 "designer": {
                     "x": 600,
                     "y": 0,
-                    "name": "これ位近づけば見えるか"
+                    "name": "process one by one"
                 },
                 "restore": {
                     "array": {
@@ -197,53 +197,61 @@
             "module": "google-drive:copyAFile",
             "version": 4,
             "parameters": {
-                "__IMTCONN__": 1763449
+                "__IMTCONN__": 2037
             },
             "mapper": {
-                "copy": "drive",
-                "file": "{{9.id}}",
-                "name": "ヨハン_{{9.`__IMTINDEX__`}}.{{9.fileExtension}}",
                 "select": "list",
-                "folderId": "",
-                "destination": "drive"
+                "name": "prefix_{{9.`__IMTINDEX__`}}.{{9.fileExtension}}",
+                "copy": "drive",
+                "destination": "drive",
+                "file": "{{9.id}}",
+                "folderId": ""
             },
             "metadata": {
                 "designer": {
                     "x": 900,
                     "y": 0,
-                    "name": "僕の目に映っているものが"
+                    "name": "copy original file"
                 },
                 "restore": {
-                    "copy": {
-                        "label": "My Drive"
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Google",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            }
+                        }
                     },
-                    "file": {
-                        "mode": "edit",
-                        "path": []
-                    },
-                    "select": {
-                        "label": "Select from the list"
-                    },
-                    "folderId": {
-                        "mode": "chose",
-                        "path": [
-                            "Public",
-                            "Integromat",
-                            "Images",
-                            "Renamed"
-                        ]
-                    },
-                    "__IMTCONN__": {
-                        "label": ""
-                    },
-                    "destination": {
-                        "label": "My Drive"
+                    "expect": {
+                        "select": {
+                            "label": "Select from the list"
+                        },
+                        "copy": {
+                            "label": "My Drive"
+                        },
+                        "destination": {
+                            "label": "My Drive"
+                        },
+                        "file": {
+                            "mode": "edit",
+                            "path": []
+                        },
+                        "folderId": {
+                            "mode": "chose",
+                            "path": [
+                                "Public",
+                                "Integromat",
+                                "Images",
+                                "Renamed"
+                            ]
+                        }
                     }
                 },
                 "parameters": [
                     {
                         "name": "__IMTCONN__",
-                        "type": "account",
+                        "type": "account:google-restricted",
                         "label": "Connection",
                         "required": true
                     }
@@ -312,24 +320,28 @@
             "module": "util:TextAggregator",
             "version": 1,
             "parameters": {
-                "feeder": 9,
-                "rowSeparator": "\n"
+                "rowSeparator": "\n",
+                "feeder": 9
             },
             "mapper": {
-                "value": "- 機密情報は「{{11.name}}」に変更されました"
+                "value": "- changed a file name to {{11.name}}"
             },
             "metadata": {
                 "designer": {
                     "x": 1200,
                     "y": 0,
-                    "name": "見えますか？"
+                    "name": "collect logs"
                 },
                 "restore": {
-                    "feeder": {
-                        "label": "これ位近づけば見えるか"
+                    "parameters": {
+                        "rowSeparator": {
+                            "label": "New row"
+                        }
                     },
-                    "rowSeparator": {
-                        "label": "New row"
+                    "extra": {
+                        "feeder": {
+                            "label": "process one by one [9]"
+                        }
                     }
                 },
                 "parameters": [
@@ -350,8 +362,7 @@
                     {
                         "name": "value",
                         "type": "text",
-                        "label": "Text",
-                        "multiline": true
+                        "label": "Text"
                     }
                 ],
                 "advanced": true
@@ -369,8 +380,9 @@
                 "designer": {
                     "x": 1500,
                     "y": 0,
-                    "name": "これが本当の終わりの風景"
+                    "name": "show logs"
                 },
+                "restore": {},
                 "expect": [
                     {
                         "name": "name",
@@ -381,21 +393,22 @@
                 ],
                 "interface": [
                     {
-                        "name": null,
-                        "type": "any",
-                        "label": null
+                        "name": "",
+                        "label": "",
+                        "type": "any"
                     }
                 ]
             }
         }
     ],
     "metadata": {
+        "instant": false,
         "version": 1,
         "scenario": {
             "roundtrips": 1,
-            "shatter": false,
             "maxErrors": 3,
             "autoCommit": false,
+            "autoCommitTriggerLast": true,
             "sequential": false,
             "confidential": false,
             "dataloss": false,
@@ -404,6 +417,6 @@
         "designer": {
             "orphans": []
         },
-        "zone": "eu1.integromat.com"
+        "zone": "us1.make.com"
     }
 }
