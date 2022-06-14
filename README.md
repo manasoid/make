@@ -3,7 +3,10 @@ Share the automation scenarios we made with Make/Integromat
 
 ## project info
 
-this is the open-sourse project based on donations and sponsorships. for more details, please visit our [OpenCollective](https://opencollective.com/automation) page.
+this is the open-sourse project based on donations and sponsorships. your support is highly appreciated!
+
+- [Buy me a coffee](https://www.buymeacoffee.com/ethicalworks)
+- [OpenCollective](https://opencollective.com/automation)
 
 ## steps to import the scenarios
 
