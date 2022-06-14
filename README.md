@@ -1,4 +1,4 @@
-# make blueprints
+# make automation templates for your healthy lifestyle
 Share the automation scenarios we made with Make/Integromat
 
 ## project info
