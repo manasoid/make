@@ -1,0 +1,1116 @@
+{
+    "name": "certificate generator",
+    "flow": [
+        {
+            "id": 3,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                    {
+                        "name": "full_name",
+                        "value": "mana kaneuchi"
+                    },
+                    {
+                        "name": "company_name",
+                        "value": "ethical works"
+                    },
+                    {
+                        "name": "date",
+                        "value": "{{formatDate(now; \"YYYY-MM-DD\")}}"
+                    },
+                    {
+                        "name": "signature",
+                        "value": "data:image/png;base64,........."
+                    },
+                    {
+                        "name": "email",
+                        "value": "email-address-here"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "info & signature"
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        },
+                        "variables": {
+                            "items": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                            ]
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Variable name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Variable value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Variables"
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "full_name",
+                        "type": "any",
+                        "label": "full_name"
+                    },
+                    {
+                        "name": "company_name",
+                        "type": "any",
+                        "label": "company_name"
+                    },
+                    {
+                        "name": "date",
+                        "type": "any",
+                        "label": "date"
+                    },
+                    {
+                        "name": "signature",
+                        "type": "any",
+                        "label": "signature"
+                    },
+                    {
+                        "name": "email",
+                        "type": "any",
+                        "label": "email"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "documint:CreateDocument",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 190925
+            },
+            "mapper": {
+                "id": "",
+                "date": "{{3.date}}",
+                "full_name": "{{3.full_name}}",
+                "company_name": "{{3.company_name}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "create a certificate"
+                },
+                "restore": {
+                    "expect": {
+                        "id": {
+                            "label": "test-certificate",
+                            "nested": [
+                                {
+                                    "name": "full_name",
+                                    "type": "text",
+                                    "label": "full_name"
+                                },
+                                {
+                                    "name": "company_name",
+                                    "type": "text",
+                                    "label": "company_name"
+                                },
+                                {
+                                    "name": "date",
+                                    "type": "text",
+                                    "label": "date"
+                                }
+                            ]
+                        },
+                        "active": {
+                            "mode": "chose"
+                        },
+                        "preview": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "documint"
+                            },
+                            "label": "Documint"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:documint",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "id",
+                        "type": "select",
+                        "label": "Template",
+                        "required": true
+                    },
+                    {
+                        "name": "preview",
+                        "type": "boolean",
+                        "label": "Preview Mode"
+                    },
+                    {
+                        "name": "active",
+                        "type": "boolean",
+                        "label": "Force Active Template"
+                    },
+                    {
+                        "name": "watch_paths",
+                        "type": "text",
+                        "label": "Watch Paths"
+                    },
+                    {
+                        "name": "ignore_paths",
+                        "type": "text",
+                        "label": "Ignore Paths"
+                    },
+                    {
+                        "name": "full_name",
+                        "type": "text"
+                    },
+                    {
+                        "name": "company_name",
+                        "type": "text"
+                    },
+                    {
+                        "name": "date",
+                        "type": "text"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "pdf-co:pdfEditAdd",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2047
+            },
+            "mapper": {
+                "async": 15000,
+                "export": {
+                    "exportType": "downloadFile"
+                },
+                "import": {
+                    "url": "{{2.url}}",
+                    "name": "cetificate-{{replace(3.full_name; space; \"-\")}}",
+                    "importType": "url"
+                },
+                "expiration": "60",
+                "parameters": {
+                    "images": [
+                        {
+                            "x": "123",
+                            "y": "520",
+                            "url": "{{3.signature}}",
+                            "pages": "0",
+                            "width": "150",
+                            "height": "60"
+                        }
+                    ]
+                }
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0,
+                    "name": "add a signature"
+                },
+                "restore": {
+                    "expect": {
+                        "async": {
+                            "mode": "chose",
+                            "label": "15 sec"
+                        },
+                        "export": {
+                            "nested": {
+                                "exportType": {
+                                    "label": "Download a File"
+                                }
+                            }
+                        },
+                        "import": {
+                            "nested": {
+                                "importType": {
+                                    "label": "Import PDF from URL"
+                                }
+                            }
+                        },
+                        "parameters": {
+                            "nested": {
+                                "fields": {
+                                    "mode": "chose"
+                                },
+                                "images": {
+                                    "mode": "chose",
+                                    "items": [
+                                        null
+                                    ]
+                                },
+                                "annotations": {
+                                    "mode": "chose"
+                                }
+                            }
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "pdf-co"
+                            },
+                            "label": "PDF.co"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:pdf-co",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "import",
+                        "spec": [
+                            {
+                                "name": "importType",
+                                "type": "select",
+                                "label": "Input File",
+                                "required": true,
+                                "validate": {
+                                    "enum": [
+                                        "upload",
+                                        "url"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "url",
+                                "type": "text",
+                                "label": "Url"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Output File Name"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Import Options",
+                        "required": true
+                    },
+                    {
+                        "name": "parameters",
+                        "spec": [
+                            {
+                                "name": "annotations",
+                                "spec": [
+                                    {
+                                        "name": "x",
+                                        "type": "text",
+                                        "label": "X",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "y",
+                                        "type": "text",
+                                        "label": "Y",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "pages",
+                                        "type": "text",
+                                        "label": "Pages"
+                                    },
+                                    {
+                                        "name": "size",
+                                        "type": "text",
+                                        "label": "Font Size"
+                                    },
+                                    {
+                                        "name": "fontItalic",
+                                        "type": "boolean",
+                                        "label": "Font Italic"
+                                    },
+                                    {
+                                        "name": "fontBold",
+                                        "type": "boolean",
+                                        "label": "Font Bold"
+                                    },
+                                    {
+                                        "name": "fontStrikeout",
+                                        "type": "boolean",
+                                        "label": "Font Strikeout"
+                                    },
+                                    {
+                                        "name": "fontUnderline",
+                                        "type": "boolean",
+                                        "label": "Font Underline"
+                                    },
+                                    {
+                                        "name": "fontName",
+                                        "type": "text",
+                                        "label": "Font Name"
+                                    },
+                                    {
+                                        "name": "color",
+                                        "type": "text",
+                                        "label": "Font Color"
+                                    },
+                                    {
+                                        "name": "link",
+                                        "type": "text",
+                                        "label": "Link"
+                                    },
+                                    {
+                                        "name": "transparent",
+                                        "type": "boolean",
+                                        "label": "Transparent"
+                                    },
+                                    {
+                                        "name": "width",
+                                        "type": "text",
+                                        "label": "Width"
+                                    },
+                                    {
+                                        "name": "height",
+                                        "type": "text",
+                                        "label": "Height"
+                                    },
+                                    {
+                                        "name": "alignment",
+                                        "type": "select",
+                                        "label": "Alignment",
+                                        "options": [
+                                            {
+                                                "label": "Center",
+                                                "value": "center"
+                                            },
+                                            {
+                                                "label": "Right",
+                                                "value": "right"
+                                            },
+                                            {
+                                                "label": "Left",
+                                                "value": "left"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "type",
+                                        "type": "select",
+                                        "label": "Type",
+                                        "options": [
+                                            {
+                                                "label": "Text",
+                                                "value": "text"
+                                            },
+                                            {
+                                                "label": "Text Input Field",
+                                                "value": "textfield"
+                                            },
+                                            {
+                                                "label": "Checkbox Input Field",
+                                                "value": "checkbox"
+                                            },
+                                            {
+                                                "label": "Checkbox Input Field Checked",
+                                                "value": "checkboxChecked"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "id",
+                                        "type": "text",
+                                        "label": "Id"
+                                    }
+                                ],
+                                "type": "array",
+                                "label": "Text Annotations"
+                            },
+                            {
+                                "name": "images",
+                                "spec": [
+                                    {
+                                        "name": "x",
+                                        "type": "text",
+                                        "label": "X",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "y",
+                                        "type": "text",
+                                        "label": "Y",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "url",
+                                        "type": "text",
+                                        "label": "URL to the source image.",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "pages",
+                                        "type": "text",
+                                        "label": "Pages or pages range."
+                                    },
+                                    {
+                                        "name": "link",
+                                        "type": "text",
+                                        "label": "Link"
+                                    },
+                                    {
+                                        "name": "width",
+                                        "type": "text",
+                                        "label": "Width"
+                                    },
+                                    {
+                                        "name": "height",
+                                        "type": "text",
+                                        "label": "Height"
+                                    }
+                                ],
+                                "type": "array",
+                                "label": "Images"
+                            },
+                            {
+                                "name": "fields",
+                                "spec": [
+                                    {
+                                        "name": "fieldName",
+                                        "type": "text",
+                                        "label": "Field Name",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "pages",
+                                        "type": "text",
+                                        "label": "Page or pages range."
+                                    },
+                                    {
+                                        "name": "size",
+                                        "type": "text",
+                                        "label": "Font Size"
+                                    },
+                                    {
+                                        "name": "fontItalic",
+                                        "type": "boolean",
+                                        "label": "Font Italic"
+                                    },
+                                    {
+                                        "name": "fontBold",
+                                        "type": "boolean",
+                                        "label": "Font Bold"
+                                    },
+                                    {
+                                        "name": "fontStrikeout",
+                                        "type": "boolean",
+                                        "label": "Font Strikeout"
+                                    },
+                                    {
+                                        "name": "fontUnderline",
+                                        "type": "boolean",
+                                        "label": "Font Underline"
+                                    },
+                                    {
+                                        "name": "fontName",
+                                        "type": "text",
+                                        "label": "Font Name"
+                                    },
+                                    {
+                                        "name": "color",
+                                        "type": "text",
+                                        "label": "Font Color"
+                                    }
+                                ],
+                                "type": "array",
+                                "label": "Fields"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Parameters",
+                        "required": true
+                    },
+                    {
+                        "name": "async",
+                        "type": "select",
+                        "label": "Async",
+                        "validate": {
+                            "enum": [
+                                15000,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "profiles",
+                        "type": "text",
+                        "label": "Profiles"
+                    },
+                    {
+                        "name": "templateData",
+                        "type": "text",
+                        "label": "Template Data"
+                    },
+                    {
+                        "name": "expiration",
+                        "type": "number",
+                        "label": "Output Links Expiration"
+                    },
+                    {
+                        "name": "export",
+                        "spec": [
+                            {
+                                "name": "exportType",
+                                "type": "select",
+                                "label": "Export Type",
+                                "required": true,
+                                "validate": {
+                                    "enum": [
+                                        "downloadFile",
+                                        "inline"
+                                    ]
+                                }
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Export options",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "google-drive:uploadAFile",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 2042
+            },
+            "mapper": {
+                "data": "{{4.data}}",
+                "select": "value",
+                "convert": false,
+                "filename": "{{4.name}}",
+                "folderId": "",
+                "destination": "drive"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0,
+                    "name": "upload the file"
+                },
+                "restore": {
+                    "expect": {
+                        "select": {
+                            "label": "Select from the list"
+                        },
+                        "folderId": {
+                            "mode": "chose",
+                            "path": [
+                                "public",
+                                "PDF.co"
+                            ]
+                        },
+                        "destination": {
+                            "label": "My Drive"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            },
+                            "label": "My Google Restricted"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google-restricted",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Enter a Folder ID",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "value"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "type": "text",
+                        "label": "New File Name"
+                    },
+                    {
+                        "name": "filename",
+                        "type": "filename",
+                        "label": "File Name",
+                        "required": true
+                    },
+                    {
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Data",
+                        "required": true
+                    },
+                    {
+                        "name": "convert",
+                        "type": "boolean",
+                        "label": "Convert a File",
+                        "required": true
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "New Drive Location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "New Folder Location",
+                        "required": true
+                    },
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Enter a Folder ID",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "value"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "type": "text",
+                        "label": "New File Name"
+                    },
+                    {
+                        "name": "filename",
+                        "type": "filename",
+                        "label": "File Name",
+                        "required": true
+                    },
+                    {
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Data",
+                        "required": true
+                    },
+                    {
+                        "name": "convert",
+                        "type": "boolean",
+                        "label": "Convert a File",
+                        "required": true
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "New Drive Location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "New Folder Location",
+                        "required": true
+                    },
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Enter a Folder ID",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "value"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "type": "text",
+                        "label": "New File Name"
+                    },
+                    {
+                        "name": "filename",
+                        "type": "filename",
+                        "label": "File Name",
+                        "required": true
+                    },
+                    {
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Data",
+                        "required": true
+                    },
+                    {
+                        "name": "convert",
+                        "type": "boolean",
+                        "label": "Convert a File",
+                        "required": true
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "New Drive Location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "New Folder Location",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "email:ActionSendEmail",
+            "version": 7,
+            "parameters": {
+                "account": 24540,
+                "saveAfterSent": false
+            },
+            "mapper": {
+                "cc": [],
+                "to": [
+                    "{{3.email}}"
+                ],
+                "bcc": [],
+                "from": "",
+                "text": "Hi {{3.full_name}},\n\nHere's the link to your certificate.\n{{5.webContentLink}}\n\nRegards,\nYour teacher",
+                "sender": "",
+                "headers": [],
+                "replyTo": "",
+                "subject": "Your certificate!",
+                "priority": "normal",
+                "inReplyTo": "",
+                "references": [],
+                "attachments": [],
+                "contentType": "text"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "cc": {
+                            "mode": "chose"
+                        },
+                        "to": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        },
+                        "bcc": {
+                            "mode": "chose"
+                        },
+                        "priority": {
+                            "label": "Normal"
+                        },
+                        "references": {
+                            "mode": "chose"
+                        },
+                        "attachments": {
+                            "mode": "chose"
+                        },
+                        "contentType": {
+                            "label": "Plaintext"
+                        }
+                    },
+                    "parameters": {
+                        "account": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            },
+                            "label": "Google Workspace"
+                        },
+                        "saveAfterSent": {
+                            "label": "No"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "account",
+                        "type": "account:smtp,google-restricted",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "saveAfterSent",
+                        "type": "select",
+                        "label": "Save message after sending",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "to",
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address",
+                            "required": true
+                        },
+                        "type": "array",
+                        "label": "To",
+                        "required": true
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject"
+                    },
+                    {
+                        "name": "contentType",
+                        "type": "select",
+                        "label": "Content Type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "html",
+                                "text"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "attachments",
+                        "spec": [
+                            {
+                                "name": "fileName",
+                                "type": "filename",
+                                "label": "File name",
+                                "required": true,
+                                "semantic": "file:name"
+                            },
+                            {
+                                "name": "data",
+                                "type": "buffer",
+                                "label": "Data",
+                                "required": true,
+                                "semantic": "file:data"
+                            },
+                            {
+                                "name": "cid",
+                                "type": "text",
+                                "label": "Content-ID"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Attachments"
+                    },
+                    {
+                        "name": "cc",
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
+                        },
+                        "type": "array",
+                        "label": "Copy recipient"
+                    },
+                    {
+                        "name": "bcc",
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
+                        },
+                        "type": "array",
+                        "label": "Blind copy recipient"
+                    },
+                    {
+                        "name": "from",
+                        "type": "text",
+                        "label": "From"
+                    },
+                    {
+                        "name": "sender",
+                        "type": "text",
+                        "label": "Sender"
+                    },
+                    {
+                        "name": "replyTo",
+                        "type": "text",
+                        "label": "Reply-To"
+                    },
+                    {
+                        "name": "inReplyTo",
+                        "type": "text",
+                        "label": "In-Reply-To"
+                    },
+                    {
+                        "name": "references",
+                        "spec": {
+                            "name": "value",
+                            "type": "text",
+                            "label": "Reference",
+                            "required": true
+                        },
+                        "type": "array",
+                        "label": "References"
+                    },
+                    {
+                        "name": "priority",
+                        "type": "select",
+                        "label": "Priority",
+                        "validate": {
+                            "enum": [
+                                "high",
+                                "normal",
+                                "low"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Headers"
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Content"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}
