@@ -1,5 +1,5 @@
 {
-    "name": "業務委託契約書のPDF発行（パスワード付き）",
+    "name": "Contract generator with password protection",
     "flow": [
         {
             "id": 1,
@@ -15,21 +15,21 @@
                 },
                 "formula": "",
                 "maxRecords": 10,
-                "__IMTCONN__": 1305361
+                "__IMTCONN__": 2058
             },
             "mapper": {},
             "metadata": {
                 "designer": {
                     "x": 0,
                     "y": 0,
-                    "name": "情報の取得"
+                    "name": "get data from form"
                 },
                 "restore": {
                     "base": {
                         "label": "Contract"
                     },
                     "view": {
-                        "label": "業務委託契約書の発行"
+                        "label": "software development"
                     },
                     "table": {
                         "label": "Issues"
@@ -178,62 +178,70 @@
             "module": "google-docs:createADocumentFromTemplate",
             "version": 1,
             "parameters": {
-                "__IMTCONN__": 1120045
+                "__IMTCONN__": 2038
             },
             "mapper": {
-                "from": "drive",
-                "name": "業務委託契約書_{{1.Customer}}_{{1.Provider}}_{{formatDate(1.Created; \"YYYYMMDD\")}}",
                 "select": "dropdown",
+                "name": "contract_{{1.Customer}}_{{1.Provider}}_{{formatDate(1.Created; \"YYYYMMDD\")}}",
+                "destination": "drive",
+                "from": "drive",
                 "document": "",
-                "folderId": "",
                 "requests": {
                     "customer": "{{1.Customer}}",
                     "provider": "{{1.Provider}}",
-                    "issue_date": "{{formatDate(1.Issue_Date; \"YYYY年MM月DD日\")}}",
+                    "issue_date": "{{formatDate(1.Issue_Date; \"YYYY-MM-DD\")}}",
                     "customer_name": "{{1.Customer_Name}}",
-                    "provider_name": "{{1.Provider_Name}}",
                     "customer_address": "{{1.Customer_Address}}",
+                    "provider_name": "{{1.Provider_Name}}",
                     "provider_address": "{{1.Provider_Address}}"
                 },
-                "destination": "drive"
+                "folderId": ""
             },
             "metadata": {
                 "designer": {
                     "x": 300,
                     "y": 0,
-                    "name": "書類の作成"
+                    "name": "generate doc"
                 },
                 "restore": {
-                    "from": {
-                        "label": "My Drive"
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Ethical Works",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            }
+                        }
                     },
-                    "select": {
-                        "label": "By Dropdown"
-                    },
-                    "document": {
-                        "path": [
-                            "Public",
-                            "Integromat",
-                            "業務委託契約書テンプレート"
-                        ]
-                    },
-                    "folderId": {
-                        "mode": "chose",
-                        "path": [
-                            "Integromat"
-                        ]
-                    },
-                    "__IMTCONN__": {
-                        "label": ""
-                    },
-                    "destination": {
-                        "label": "My Drive"
+                    "expect": {
+                        "select": {
+                            "label": "By Dropdown"
+                        },
+                        "destination": {
+                            "label": "My Drive"
+                        },
+                        "from": {
+                            "label": "My Drive"
+                        },
+                        "document": {
+                            "path": [
+                                "Public",
+                                "Make",
+                                "Template for software development"
+                            ]
+                        },
+                        "folderId": {
+                            "mode": "chose",
+                            "path": [
+                                "Make"
+                            ]
+                        }
                     }
                 },
                 "parameters": [
                     {
                         "name": "__IMTCONN__",
-                        "type": "account",
+                        "type": "account:google",
                         "label": "Connection",
                         "required": true
                     }
@@ -284,12 +292,6 @@
                         }
                     },
                     {
-                        "name": "folderId",
-                        "type": "folder",
-                        "label": "New Document's Location",
-                        "required": true
-                    },
-                    {
                         "name": "document",
                         "type": "file",
                         "label": "Document ID",
@@ -297,6 +299,8 @@
                     },
                     {
                         "name": "requests",
+                        "type": "collection",
+                        "label": "Values",
                         "spec": [
                             {
                                 "name": "customer",
@@ -326,9 +330,13 @@
                                 "name": "provider_address",
                                 "type": "any"
                             }
-                        ],
-                        "type": "collection",
-                        "label": "Values"
+                        ]
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "New Document's Location",
+                        "required": true
                     }
                 ]
             }
@@ -338,7 +346,7 @@
             "module": "google-docs:exportADocument",
             "version": 1,
             "parameters": {
-                "__IMTCONN__": 1120045
+                "__IMTCONN__": 2038
             },
             "mapper": {
                 "document": "{{2.id}}",
@@ -349,7 +357,7 @@
                 "designer": {
                     "x": 600,
                     "y": 0,
-                    "name": "PDF取得"
+                    "name": "download PDF"
                 },
                 "restore": {
                     "document": {
@@ -361,7 +369,7 @@
                         "label": "PDF Document (.pdf)"
                     },
                     "__IMTCONN__": {
-                        "label": ""
+                        "label": "Ethical Works"
                     },
                     "destination": {
                         "label": "My Drive"
@@ -420,7 +428,7 @@
             "module": "pdf-co:AddSecurityToPDF",
             "version": 1,
             "parameters": {
-                "__IMTCONN__": 2973242
+                "__IMTCONN__": 2047
             },
             "mapper": {
                 "async": 15000,
@@ -448,7 +456,7 @@
                 "designer": {
                     "x": 900,
                     "y": 0,
-                    "name": "パスワード付与"
+                    "name": "add password"
                 },
                 "restore": {
                     "async": {
@@ -657,7 +665,7 @@
             "module": "google-drive:uploadAFile",
             "version": 4,
             "parameters": {
-                "__IMTCONN__": 1763449
+                "__IMTCONN__": 2037
             },
             "mapper": {
                 "data": "{{7.data}}",
@@ -670,9 +678,9 @@
             },
             "metadata": {
                 "designer": {
-                    "x": 1200,
-                    "y": 0,
-                    "name": "ファイルの登録"
+                    "x": 697,
+                    "y": 352,
+                    "name": "upload protected file"
                 },
                 "restore": {
                     "select": {
@@ -685,7 +693,7 @@
                         ]
                     },
                     "__IMTCONN__": {
-                        "label": ""
+                        "label": "Google"
                     },
                     "destination": {
                         "label": "My Drive"
@@ -765,52 +773,60 @@
             "module": "google-drive:shareAFileFolder",
             "version": 4,
             "parameters": {
-                "__IMTCONN__": 1763449
+                "__IMTCONN__": 2037
             },
             "mapper": {
-                "file": "{{5.id}}",
+                "destination": "drive",
+                "select": "file",
                 "role": "reader",
                 "type": "anyone",
-                "select": "file",
-                "destination": "drive",
+                "file": "{{5.id}}",
                 "allowFileDiscovery": false
             },
             "metadata": {
                 "designer": {
-                    "x": 1500,
-                    "y": 0,
-                    "name": "権限の変更"
+                    "x": 1075,
+                    "y": 346,
+                    "name": "get share link"
                 },
                 "restore": {
-                    "file": {
-                        "mode": "edit",
-                        "path": []
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Google",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            }
+                        }
                     },
-                    "role": {
-                        "mode": "chose",
-                        "label": "Reader"
-                    },
-                    "type": {
-                        "mode": "chose",
-                        "label": "Anyone"
-                    },
-                    "select": {
-                        "label": "File"
-                    },
-                    "__IMTCONN__": {
-                        "label": ""
-                    },
-                    "destination": {
-                        "label": "My Drive"
-                    },
-                    "allowFileDiscovery": {
-                        "mode": "chose"
+                    "expect": {
+                        "destination": {
+                            "label": "My Drive"
+                        },
+                        "select": {
+                            "label": "File"
+                        },
+                        "role": {
+                            "mode": "chose",
+                            "label": "Reader"
+                        },
+                        "type": {
+                            "mode": "chose",
+                            "label": "Anyone"
+                        },
+                        "file": {
+                            "mode": "edit",
+                            "path": []
+                        },
+                        "allowFileDiscovery": {
+                            "mode": "chose"
+                        }
                     }
                 },
                 "parameters": [
                     {
                         "name": "__IMTCONN__",
-                        "type": "account",
+                        "type": "account:google-restricted",
                         "label": "Connection",
                         "required": true
                     }
@@ -869,10 +885,10 @@
                         }
                     },
                     {
-                        "mode": "edit",
                         "name": "file",
                         "type": "file",
                         "label": "File ID",
+                        "mode": "edit",
                         "required": true
                     },
                     {
@@ -1016,74 +1032,72 @@
             "module": "email:ActionSendEmail",
             "version": 7,
             "parameters": {
-                "account": 1763439,
+                "account": 2042,
                 "saveAfterSent": false
             },
             "mapper": {
-                "cc": [],
                 "to": "{{1.Email}}",
+                "subject": "Ethical Works - Software Development Contract",
+                "contentType": "text",
+                "attachments": [],
+                "cc": [],
                 "bcc": [],
                 "from": "",
-                "text": "{{1.Provider}}\n{{1.Provider_Name}}さま、\n\n業務委託契約書がPDF化されました。\n以下のリンクからダウンロードいただけます。\n\n{{10.filename}}\n{{11.shareLink}}\n\nPDFのパスワードは、フォームにご入力されたものです。\nシステムは把握しておりませんので、ご注意ください。\n\nリンクの有効期限は今から12時間となっております。\nお早めに取得いただけますよう、よろしくお願いいたします。\n\nエシカルワークス\n自動化ロボット\nsupport@ethical.works",
                 "sender": "",
-                "headers": [],
                 "replyTo": "",
-                "subject": "業務委託契約書PDFファイルの送付",
-                "priority": "normal",
                 "inReplyTo": "",
                 "references": [],
-                "attachments": [],
-                "contentType": "text"
+                "priority": "normal",
+                "headers": [],
+                "text": "Dear {{1.Provider_Name}},\n\nHope all is well!\n\nPlease download the contract file from the link below.\n\n{{10.filename}}\n{{11.shareLink}}\n\nThe password of the file is the password that you entered in the form and we don't acknowledge it.\n\nBest regards,\nMana from Ethical Works"
             },
             "metadata": {
                 "designer": {
-                    "x": 1800,
-                    "y": 0,
-                    "name": "メールの送信"
+                    "x": 826,
+                    "y": 734,
+                    "name": "send email"
                 },
                 "restore": {
-                    "cc": {
-                        "mode": "chose",
-                        "items": []
+                    "parameters": {
+                        "account": {
+                            "label": "Google",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            }
+                        },
+                        "saveAfterSent": {
+                            "label": "No"
+                        }
                     },
-                    "to": {
-                        "mode": "edit"
-                    },
-                    "bcc": {
-                        "mode": "chose",
-                        "items": []
-                    },
-                    "folder": {
-                        "label": "INBOX"
-                    },
-                    "account": {
-                        "label": ""
-                    },
-                    "headers": {
-                        "items": []
-                    },
-                    "priority": {
-                        "label": "Normal"
-                    },
-                    "references": {
-                        "mode": "chose",
-                        "items": []
-                    },
-                    "attachments": {
-                        "mode": "chose",
-                        "items": []
-                    },
-                    "contentType": {
-                        "label": "Plaintext"
-                    },
-                    "saveAfterSent": {
-                        "label": "No"
+                    "expect": {
+                        "to": {
+                            "mode": "edit"
+                        },
+                        "contentType": {
+                            "label": "Plaintext"
+                        },
+                        "attachments": {
+                            "mode": "chose"
+                        },
+                        "cc": {
+                            "mode": "chose"
+                        },
+                        "bcc": {
+                            "mode": "chose"
+                        },
+                        "references": {
+                            "mode": "chose"
+                        },
+                        "priority": {
+                            "label": "Normal"
+                        }
                     }
                 },
                 "parameters": [
                     {
                         "name": "account",
-                        "type": "account",
+                        "type": "account:smtp,google-restricted",
                         "label": "Connection",
                         "required": true
                     },
@@ -1103,19 +1117,15 @@
                 "expect": [
                     {
                         "name": "to",
+                        "type": "array",
+                        "label": "To",
+                        "required": true,
                         "spec": {
-                            "name": "email",
+                            "name": "value",
                             "type": "email",
                             "label": "Email address",
                             "required": true
-                        },
-                        "type": "array",
-                        "label": "To",
-                        "labels": {
-                            "add": "Add a recipient",
-                            "edit": "Edit a recipient"
-                        },
-                        "required": true
+                        }
                     },
                     {
                         "name": "subject",
@@ -1136,60 +1146,48 @@
                     },
                     {
                         "name": "attachments",
+                        "type": "array",
+                        "label": "Attachments",
                         "spec": [
                             {
                                 "name": "fileName",
-                                "type": "filename",
                                 "label": "File name",
+                                "type": "filename",
                                 "required": true,
                                 "semantic": "file:name"
                             },
                             {
                                 "name": "data",
-                                "type": "buffer",
                                 "label": "Data",
+                                "type": "buffer",
                                 "required": true,
                                 "semantic": "file:data"
                             },
                             {
                                 "name": "cid",
-                                "type": "text",
-                                "label": "Content-ID"
+                                "label": "Content-ID",
+                                "type": "text"
                             }
-                        ],
-                        "type": "array",
-                        "label": "Attachments",
-                        "labels": {
-                            "add": "Add an attachment",
-                            "edit": "Edit an attachment"
-                        }
+                        ]
                     },
                     {
                         "name": "cc",
-                        "spec": {
-                            "name": "email",
-                            "type": "email",
-                            "label": "Email address"
-                        },
                         "type": "array",
                         "label": "Copy recipient",
-                        "labels": {
-                            "add": "Add a copy recipient",
-                            "edit": "Edit a copy recipient"
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
                         }
                     },
                     {
                         "name": "bcc",
-                        "spec": {
-                            "name": "email",
-                            "type": "email",
-                            "label": "Email address"
-                        },
                         "type": "array",
                         "label": "Blind copy recipient",
-                        "labels": {
-                            "add": "Add a blind copy recipient",
-                            "edit": "Edit a blind copy recipient"
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
                         }
                     },
                     {
@@ -1214,13 +1212,14 @@
                     },
                     {
                         "name": "references",
+                        "type": "array",
+                        "label": "References",
                         "spec": {
                             "type": "text",
                             "label": "Reference",
-                            "required": true
-                        },
-                        "type": "array",
-                        "label": "References"
+                            "required": true,
+                            "name": "value"
+                        }
                     },
                     {
                         "name": "priority",
@@ -1236,22 +1235,22 @@
                     },
                     {
                         "name": "headers",
+                        "type": "array",
+                        "label": "Headers",
                         "spec": [
                             {
                                 "name": "key",
-                                "type": "text",
                                 "label": "Key",
+                                "type": "text",
                                 "required": true
                             },
                             {
                                 "name": "value",
-                                "type": "text",
                                 "label": "Value",
+                                "type": "text",
                                 "required": true
                             }
-                        ],
-                        "type": "array",
-                        "label": "Headers"
+                        ]
                     },
                     {
                         "name": "text",
@@ -1267,7 +1266,7 @@
             "module": "airtable:ActionUpdateRecords",
             "version": 3,
             "parameters": {
-                "__IMTCONN__": 1305361
+                "__IMTCONN__": 2058
             },
             "mapper": {
                 "id": "{{1.id}}",
@@ -1280,9 +1279,9 @@
             },
             "metadata": {
                 "designer": {
-                    "x": 2100,
-                    "y": 0,
-                    "name": "パスワードの消去"
+                    "x": 1334,
+                    "y": 734,
+                    "name": "delete password"
                 },
                 "restore": {
                     "base": {
@@ -1335,48 +1334,48 @@
                         "name": "record",
                         "spec": [
                             {
-                                "name": "fldNJ3c8AY2Epnds4",
+                                "name": "",
                                 "type": "text",
                                 "label": "Email"
                             },
                             {
-                                "name": "fldth0N95BrdkXxwJ",
+                                "name": "",
                                 "type": "text",
                                 "label": "Provider"
                             },
                             {
-                                "name": "fld66SaLGkmiFzc09",
+                                "name": "",
                                 "type": "text",
                                 "label": "Provider_Name"
                             },
                             {
-                                "name": "fldYvOlDngHG2pDyP",
+                                "name": "",
                                 "type": "text",
                                 "label": "Provider_Address"
                             },
                             {
-                                "name": "flddI1mjoOEa4of75",
+                                "name": "",
                                 "type": "text",
                                 "label": "Customer"
                             },
                             {
-                                "name": "fldpQwpfiWPPLrfQv",
+                                "name": "",
                                 "type": "text",
                                 "label": "Customer_Name"
                             },
                             {
-                                "name": "fldqWGKygBHLWE3xr",
+                                "name": "",
                                 "type": "text",
                                 "label": "Customer_Address"
                             },
                             {
-                                "name": "fldwnf0AwceDPq1E5",
+                                "name": "",
                                 "time": false,
                                 "type": "date",
                                 "label": "Issue_Date"
                             },
                             {
-                                "name": "fldkLorHs6txaM2Yz",
+                                "name": "",
                                 "type": "text",
                                 "label": "Password"
                             }
@@ -1455,7 +1454,7 @@
             "module": "google-drive:deleteAFile",
             "version": 4,
             "parameters": {
-                "__IMTCONN__": 1763449
+                "__IMTCONN__": 2037
             },
             "mapper": {
                 "file": "{{2.id}}",
@@ -1464,9 +1463,9 @@
             },
             "metadata": {
                 "designer": {
-                    "x": 2400,
-                    "y": 0,
-                    "name": "元ファイルの削除"
+                    "x": 1335,
+                    "y": -5,
+                    "name": "delete unprotected file"
                 },
                 "restore": {
                     "select": {
@@ -1476,7 +1475,7 @@
                         "label": "File"
                     },
                     "__IMTCONN__": {
-                        "label": ""
+                        "label": "Google"
                     }
                 },
                 "parameters": [
@@ -1523,12 +1522,13 @@
         }
     ],
     "metadata": {
+        "instant": false,
         "version": 1,
         "scenario": {
             "roundtrips": 1,
-            "shatter": false,
             "maxErrors": 3,
             "autoCommit": false,
+            "autoCommitTriggerLast": true,
             "sequential": false,
             "confidential": false,
             "dataloss": false,
@@ -1537,6 +1537,6 @@
         "designer": {
             "orphans": []
         },
-        "zone": "eu1.integromat.com"
+        "zone": "us1.make.com"
     }
 }
