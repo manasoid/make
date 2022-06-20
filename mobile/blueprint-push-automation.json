@@ -1,24 +1,30 @@
 {
-    "name": "スマホのボタンが押されたら遅刻メールを送信！",
+    "name": "push automation for sending email",
     "flow": [
         {
             "id": 4,
             "module": "ios:ButtonPressed",
             "version": 1,
             "parameters": {
-                "button": "mobile-trigger",
-                "device": 534265
+                "device": 000000,
+                "button": "running-late",
+                "scope": "button:running-late"
             },
             "mapper": {},
             "metadata": {
                 "designer": {
                     "x": 0,
                     "y": 0,
-                    "name": "トリガーオン！"
+                    "name": "push the button!"
                 },
                 "restore": {
-                    "device": {
-                        "label": "Ethical Works"
+                    "parameters": {
+                        "device": {
+                            "label": "Ethical Works",
+                            "data": {
+                                "editable": "undefined"
+                            }
+                        }
                     }
                 },
                 "parameters": [
@@ -44,27 +50,29 @@
             "parameters": {},
             "mapper": {
                 "input": "{{formatDate(now; \"Hmm\") <= 2130}}",
+                "useRegExpMatch": true,
                 "casesTable": [
                     {
-                        "output": "{{true}}",
-                        "pattern": "^true$"
+                        "pattern": "^true$",
+                        "output": "{{true}}"
                     }
                 ],
-                "elseOutput": "遅れます、ごめんなさい〜（泣）",
-                "useRegExpMatch": true
+                "elseOutput": "Sorry, I'm running late!"
             },
             "metadata": {
                 "designer": {
                     "x": 300,
                     "y": 0,
-                    "name": "遅刻の判断"
+                    "name": "check if you're running late"
                 },
                 "restore": {
-                    "casesTable": {
-                        "mode": "chose",
-                        "items": [
-                            "undefined"
-                        ]
+                    "expect": {
+                        "casesTable": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        }
                     }
                 },
                 "expect": [
@@ -81,21 +89,21 @@
                     },
                     {
                         "name": "casesTable",
+                        "type": "array",
+                        "label": "Cases",
+                        "required": true,
                         "spec": [
                             {
                                 "name": "pattern",
-                                "type": "text",
-                                "label": "Pattern"
+                                "label": "Pattern",
+                                "type": "text"
                             },
                             {
                                 "name": "output",
-                                "type": "any",
-                                "label": "Output"
+                                "label": "Output",
+                                "type": "any"
                             }
-                        ],
-                        "type": "array",
-                        "label": "Cases",
-                        "required": true
+                        ]
                     },
                     {
                         "name": "elseOutput",
@@ -110,88 +118,89 @@
             "module": "email:ActionSendEmail",
             "version": 7,
             "parameters": {
-                "account": 1763449,
+                "account": 2037,
                 "saveAfterSent": false
             },
             "filter": {
-                "name": "遅刻のみ",
+                "name": "late?",
                 "conditions": [
                     [
                         {
                             "a": "{{10.output}}",
-                            "b": "{{true}}",
-                            "o": "text:notequal"
+                            "o": "text:notequal",
+                            "b": "{{true}}"
                         }
                     ]
                 ]
             },
             "mapper": {
-                "cc": [],
                 "to": [
                     "mana@ethical.works"
                 ],
+                "subject": "Sorry, I'm running late!",
+                "contentType": "html",
+                "attachments": [],
+                "cc": [],
                 "bcc": [],
                 "from": "",
-                "html": "<h1>すいませ〜ん</h1>\n<p>{{10.output}}</p>",
                 "sender": "",
-                "headers": [],
                 "replyTo": "",
-                "subject": "マナ、遅刻です",
-                "priority": "normal",
                 "inReplyTo": "",
                 "references": [],
-                "attachments": [],
-                "contentType": "html"
+                "priority": "normal",
+                "headers": [],
+                "html": "<h1>Terribly sorry...!</h1>\n<p>{{10.output}}</p>"
             },
             "metadata": {
                 "designer": {
                     "x": 600,
                     "y": 0,
-                    "name": "旋空弧月！"
+                    "name": "send an email"
                 },
                 "restore": {
-                    "cc": {
-                        "mode": "chose",
-                        "items": []
+                    "parameters": {
+                        "account": {
+                            "label": "Google",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            }
+                        },
+                        "saveAfterSent": {
+                            "label": "No"
+                        }
                     },
-                    "to": {
-                        "mode": "chose",
-                        "items": [
-                            "undefined"
-                        ]
-                    },
-                    "bcc": {
-                        "mode": "chose",
-                        "items": []
-                    },
-                    "account": {
-                        "label": ""
-                    },
-                    "headers": {
-                        "items": []
-                    },
-                    "priority": {
-                        "label": "Normal"
-                    },
-                    "references": {
-                        "mode": "chose",
-                        "items": []
-                    },
-                    "attachments": {
-                        "mode": "chose",
-                        "items": []
-                    },
-                    "contentType": {
-                        "label": "HTML"
-                    },
-                    "saveAfterSent": {
-                        "label": "No"
+                    "expect": {
+                        "to": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        },
+                        "contentType": {
+                            "label": "HTML"
+                        },
+                        "attachments": {
+                            "mode": "chose"
+                        },
+                        "cc": {
+                            "mode": "chose"
+                        },
+                        "bcc": {
+                            "mode": "chose"
+                        },
+                        "references": {
+                            "mode": "chose"
+                        },
+                        "priority": {
+                            "label": "Normal"
+                        }
                     }
                 },
                 "parameters": [
                     {
                         "name": "account",
-                        "type": "account",
+                        "type": "account:smtp,google-restricted",
                         "label": "Connection",
                         "required": true
                     },
@@ -211,19 +220,15 @@
                 "expect": [
                     {
                         "name": "to",
+                        "type": "array",
+                        "label": "To",
+                        "required": true,
                         "spec": {
-                            "name": "email",
+                            "name": "value",
                             "type": "email",
                             "label": "Email address",
                             "required": true
-                        },
-                        "type": "array",
-                        "label": "To",
-                        "labels": {
-                            "add": "Add a recipient",
-                            "edit": "Edit a recipient"
-                        },
-                        "required": true
+                        }
                     },
                     {
                         "name": "subject",
@@ -244,60 +249,48 @@
                     },
                     {
                         "name": "attachments",
+                        "type": "array",
+                        "label": "Attachments",
                         "spec": [
                             {
                                 "name": "fileName",
-                                "type": "filename",
                                 "label": "File name",
+                                "type": "filename",
                                 "required": true,
                                 "semantic": "file:name"
                             },
                             {
                                 "name": "data",
-                                "type": "buffer",
                                 "label": "Data",
+                                "type": "buffer",
                                 "required": true,
                                 "semantic": "file:data"
                             },
                             {
                                 "name": "cid",
-                                "type": "text",
-                                "label": "Content-ID"
+                                "label": "Content-ID",
+                                "type": "text"
                             }
-                        ],
-                        "type": "array",
-                        "label": "Attachments",
-                        "labels": {
-                            "add": "Add an attachment",
-                            "edit": "Edit an attachment"
-                        }
+                        ]
                     },
                     {
                         "name": "cc",
-                        "spec": {
-                            "name": "email",
-                            "type": "email",
-                            "label": "Email address"
-                        },
                         "type": "array",
                         "label": "Copy recipient",
-                        "labels": {
-                            "add": "Add a copy recipient",
-                            "edit": "Edit a copy recipient"
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
                         }
                     },
                     {
                         "name": "bcc",
-                        "spec": {
-                            "name": "email",
-                            "type": "email",
-                            "label": "Email address"
-                        },
                         "type": "array",
                         "label": "Blind copy recipient",
-                        "labels": {
-                            "add": "Add a blind copy recipient",
-                            "edit": "Edit a blind copy recipient"
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
                         }
                     },
                     {
@@ -322,13 +315,14 @@
                     },
                     {
                         "name": "references",
+                        "type": "array",
+                        "label": "References",
                         "spec": {
                             "type": "text",
                             "label": "Reference",
-                            "required": true
-                        },
-                        "type": "array",
-                        "label": "References"
+                            "required": true,
+                            "name": "value"
+                        }
                     },
                     {
                         "name": "priority",
@@ -344,22 +338,22 @@
                     },
                     {
                         "name": "headers",
+                        "type": "array",
+                        "label": "Headers",
                         "spec": [
                             {
                                 "name": "key",
-                                "type": "text",
                                 "label": "Key",
+                                "type": "text",
                                 "required": true
                             },
                             {
                                 "name": "value",
-                                "type": "text",
                                 "label": "Value",
+                                "type": "text",
                                 "required": true
                             }
-                        ],
-                        "type": "array",
-                        "label": "Headers"
+                        ]
                     },
                     {
                         "name": "html",
@@ -371,12 +365,13 @@
         }
     ],
     "metadata": {
+        "instant": true,
         "version": 1,
         "scenario": {
             "roundtrips": 1,
-            "shatter": false,
             "maxErrors": 3,
             "autoCommit": false,
+            "autoCommitTriggerLast": true,
             "sequential": false,
             "confidential": false,
             "dataloss": false,
@@ -385,6 +380,6 @@
         "designer": {
             "orphans": []
         },
-        "zone": "eu1.integromat.com"
+        "zone": "us1.make.com"
     }
 }
