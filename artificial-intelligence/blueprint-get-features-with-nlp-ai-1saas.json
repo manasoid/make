@@ -1,0 +1,483 @@
+{
+    "name": "Get features from text with 1SaaS.co",
+    "flow": [
+        {
+            "id": 2,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "text",
+                "scope": "roundtrip",
+                "value": "We can detect the language for the recipient to understand using AI and our selected language with the L.P detection module.I have a support team and how can I detect the urgent people list? One way to do this is to use a mood detection system. The platform can detect whether a person is positive, negative or neutral. The best way to do this is to use 1Saas' automated Mood Detection API platform. This tool can automatically detect the mood of the text.How to translate a text and still detect something of importance in the text.Example: I have a text in another language and I know that the main subject of the text is about cars, I would like to translate the text in addition to detecting which brands of cars are being spoken in the text. And all this in an automated way. All we have to do is use the 1Saas platform translation API.Let's say I have a wrong email address and I want to fix it in my emails, you can check and correct emails using the 1Saas platform with Email validation and correction.What to do to recover the original content of the image, what the image contains and the text contained in the image? This can be solved with an AI. On the 1Saas platform, it is possible to send the URL of an image and receive all information from the image back.I need to decrease the size of my codes, because of memory or just for organization. With the 1Saas platform, it is possible to pin the JavaScript code, this can reduce the size of the codes and make your organization easier.How to detect holidays and weekends or working days? I would like to send automated emails only on holidays and weekends to people on my list. Using the 1Saas platform, I can use an automated tool to detect these days and send emails only on selected dates."
+            },
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "text"
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "text",
+                        "type": "any",
+                        "label": "text"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "onesaas:aientitydetection",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 139255
+            },
+            "mapper": {
+                "text": "{{2.text}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            },
+                            "label": "1SaaS ver. 2"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 19,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 3
+            },
+            "mapper": {
+                "text": "{{3.text}}",
+                "category": "{{3.category}}",
+                "confidenceScore": "{{3.confidenceScore}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0,
+                    "name": "aggregate data"
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "1SaaS.co - Get Text entities with NLP AI [3]"
+                        },
+                        "target": {
+                            "label": "Custom"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 21,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "arr_keywords",
+                "scope": "roundtrip",
+                "value": "{{deduplicate(map(19.array; \"text\"))}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0,
+                    "name": "keyword array"
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "arr_keywords",
+                        "type": "any",
+                        "label": "arr_keywords"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 22,
+            "module": "builtin:BasicFeeder",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "array": "{{21.arr_keywords}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "array": {
+                            "mode": "edit"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "array",
+                        "spec": [],
+                        "type": "array",
+                        "label": "Array"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 27,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                    {
+                        "name": "arr_confidence",
+                        "value": "{{map(19.array; \"confidenceScore\"; \"text\"; 22.value)}}"
+                    },
+                    {
+                        "name": "keyword",
+                        "value": "{{22.value}}"
+                    },
+                    {
+                        "name": "category",
+                        "value": "{{join(deduplicate(map(19.array; \"category\"; \"text\"; 22.value)); emptystring)}}"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1500,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        },
+                        "variables": {
+                            "items": [
+                                null,
+                                null,
+                                null
+                            ]
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Variable name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Variable value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Variables"
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "arr_confidence",
+                        "type": "any",
+                        "label": "arr_confidence"
+                    },
+                    {
+                        "name": "keyword",
+                        "type": "any",
+                        "label": "keyword"
+                    },
+                    {
+                        "name": "category",
+                        "type": "any",
+                        "label": "category"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 26,
+            "module": "datastore:AddRecord",
+            "version": 1,
+            "parameters": {
+                "datastore": 5424
+            },
+            "mapper": {
+                "key": "",
+                "data": {
+                    "count": "{{length(27.arr_confidence)}}",
+                    "keyword": "{{27.keyword}}",
+                    "category": "{{27.category}}",
+                    "confidence": "{{27.arr_confidence}}"
+                },
+                "overwrite": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1800,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "data": {
+                            "nested": {
+                                "confidence": {
+                                    "mode": "edit"
+                                }
+                            }
+                        },
+                        "overwrite": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "datastore": {
+                            "label": "nlp-text-entities",
+                            "nested": [
+                                {
+                                    "help": "You assign a unique key that can be used later to retrieve the record. If you leave this field blank, a key will be generated.",
+                                    "name": "key",
+                                    "type": "text",
+                                    "label": "Key"
+                                },
+                                {
+                                    "help": "This option is only effective if you specify a custom key under which the record shall be saved.",
+                                    "name": "overwrite",
+                                    "type": "boolean",
+                                    "label": "Overwrite an existing record",
+                                    "default": false,
+                                    "required": true
+                                },
+                                {
+                                    "name": "data",
+                                    "spec": [
+                                        {
+                                            "name": "keyword",
+                                            "type": "text",
+                                            "label": null,
+                                            "required": false,
+                                            "multiline": false
+                                        },
+                                        {
+                                            "name": "category",
+                                            "type": "text",
+                                            "label": null,
+                                            "required": false,
+                                            "multiline": false
+                                        },
+                                        {
+                                            "name": "confidence",
+                                            "spec": {
+                                                "type": "number",
+                                                "default": null,
+                                                "required": false
+                                            },
+                                            "type": "array",
+                                            "label": null,
+                                            "required": false
+                                        },
+                                        {
+                                            "name": "count",
+                                            "type": "number",
+                                            "label": null,
+                                            "required": false
+                                        }
+                                    ],
+                                    "type": "collection",
+                                    "label": "Record"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "datastore",
+                        "type": "datastore",
+                        "label": "Data store",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "key",
+                        "type": "text",
+                        "label": "Key"
+                    },
+                    {
+                        "name": "overwrite",
+                        "type": "boolean",
+                        "label": "Overwrite an existing record",
+                        "required": true
+                    },
+                    {
+                        "name": "data",
+                        "spec": [
+                            {
+                                "name": "keyword",
+                                "type": "text",
+                                "label": null
+                            },
+                            {
+                                "name": "category",
+                                "type": "text",
+                                "label": null
+                            },
+                            {
+                                "name": "confidence",
+                                "spec": {
+                                    "name": "value",
+                                    "type": "number"
+                                },
+                                "type": "array",
+                                "label": null
+                            },
+                            {
+                                "name": "count",
+                                "type": "number",
+                                "label": null
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Record"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}
