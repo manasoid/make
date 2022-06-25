@@ -1,8 +1,7 @@
-# make automation templates for your healthy lifestyle
-Share the automation scenarios we made with Make/Integromat
+# automation templates for your effortless life
+you don't necessarily have to work harder to get the optimal result. instead, you can reduce stresses and workloads with appropriate automation.  we share the automation template made with Make/Integromat for you!
 
 ## project info
-
 this is the open-sourse project based on donations and sponsorships. your support is highly appreciated!
 
 - [Buy me a coffee](https://www.buymeacoffee.com/ethicalworks)
