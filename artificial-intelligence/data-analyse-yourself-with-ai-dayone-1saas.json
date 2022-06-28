@@ -1,0 +1,17 @@
+{
+   "str_mood":"positive",
+   "str_text":"this is the text you write with Day One app.",
+   "arr_keywords":[
+      {
+         "arr_scores":[
+            0.91,
+            0.7
+         ],
+         "str_keyword":"software",
+         "str_category":"Skill"
+      }
+   ],
+   "date_created":"2022-06-27T01:37:18.000Z",
+   "date_modified":"2022-06-27T02:10:11.000Z",
+   "num_editing_time":820.1673059463501
+}

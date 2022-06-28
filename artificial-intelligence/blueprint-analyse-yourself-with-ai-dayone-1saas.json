@@ -1,0 +1,903 @@
+{
+    "name": "analyse my journals with AI",
+    "flow": [
+        {
+            "id": 1,
+            "module": "google-drive:watchFilesInAFolder",
+            "version": 4,
+            "parameters": {
+                "limit": 1,
+                "select": "create",
+                "folderId": "",
+                "mimeType": "all",
+                "__IMTCONN__": 2042,
+                "destination": "drive"
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "watch a zip"
+                },
+                "restore": {
+                    "parameters": {
+                        "select": {
+                            "label": "By Created Time"
+                        },
+                        "folderId": {
+                            "path": [
+                                "make.com",
+                                "journals"
+                            ]
+                        },
+                        "mimeType": {
+                            "label": "All"
+                        },
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            },
+                            "label": "Google"
+                        },
+                        "destination": {
+                            "label": "My Drive"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google-restricted",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Watch Files",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "create",
+                                "modify"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "Choose a Drive",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "mimeType",
+                        "type": "select",
+                        "label": "File Types to Watch",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "all",
+                                "document",
+                                "spreadsheet",
+                                "slide",
+                                "drawing"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit",
+                        "required": true
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "Select the Folder to be Watched",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "google-drive:getAFile",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 2042
+            },
+            "mapper": {
+                "file": "{{1.id}}",
+                "select": "map",
+                "formatDrawings": "image/jpeg",
+                "formatDocuments": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "formatSpreadsheets": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "formatPresentations": "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "get a zip"
+                },
+                "restore": {
+                    "expect": {
+                        "select": {
+                            "label": "Enter manually"
+                        },
+                        "formatDrawings": {
+                            "label": "JPEG"
+                        },
+                        "formatDocuments": {
+                            "label": "MS Word Document"
+                        },
+                        "formatSpreadsheets": {
+                            "label": "MS Excel"
+                        },
+                        "formatPresentations": {
+                            "label": "MS PowerPoint"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            },
+                            "label": "Google"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google-restricted",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Enter a File ID",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "value"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "formatDocuments",
+                        "type": "select",
+                        "label": "Convert Google Documents Files to Format",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                                "application/pdf",
+                                "application/vnd.oasis.opendocument.text",
+                                "text/html",
+                                "text/plain",
+                                "application/rtf"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "formatSpreadsheets",
+                        "type": "select",
+                        "label": "Convert Google Spreadsheets Files to Format",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                "application/x-vnd.oasis.opendocument.spreadsheet",
+                                "application/pdf"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "formatPresentations",
+                        "type": "select",
+                        "label": "Convert Google Slides Files to Format",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                                "application/pdf"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "formatDrawings",
+                        "type": "select",
+                        "label": "Convert Google Drawings Files to Format",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "image/jpeg",
+                                "image/png",
+                                "image/svg+xml",
+                                "application/pdf"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "file",
+                        "type": "text",
+                        "label": "File ID",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "archive:UnpackAction",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "data": "{{3.data}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0,
+                    "name": "get a json"
+                },
+                "restore": {},
+                "expect": [
+                    {
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Data",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "json:ParseJSON",
+            "version": 1,
+            "parameters": {
+                "type": ""
+            },
+            "mapper": {
+                "json": "{{2.data}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {},
+                "parameters": [
+                    {
+                        "name": "type",
+                        "type": "udt",
+                        "label": "Data structure"
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "json",
+                        "type": "text",
+                        "label": "JSON string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "str_data",
+                "scope": "roundtrip",
+                "value": "{{replace(4.entries[].text; \"\\\"; emptystring)}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0,
+                    "name": "correct text"
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "str_data",
+                        "type": "any",
+                        "label": "str_data"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "onesaas:aimooddetection",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 139255
+            },
+            "mapper": {
+                "text": "{{7.str_data}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 718,
+                    "y": 368,
+                    "name": "get mood"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            },
+                            "label": "1SaaS ver. 2"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "onesaas:aientitydetection",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 139255
+            },
+            "mapper": {
+                "text": "{{7.str_data}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1018,
+                    "y": 368,
+                    "name": "analyse text"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            },
+                            "label": "1SaaS ver. 2"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 6
+            },
+            "mapper": {
+                "text": "{{6.text}}",
+                "category": "{{6.category}}",
+                "confidenceScore": "{{6.confidenceScore}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1318,
+                    "y": 368,
+                    "name": "get results"
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "analyse text - Get Text entities with NLP AI [6]"
+                        },
+                        "target": {
+                            "label": "Custom"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 9,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "arr_keywords",
+                "scope": "roundtrip",
+                "value": "{{deduplicate(map(8.array; \"text\"))}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 251,
+                    "y": 765,
+                    "name": "get keywords"
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "arr_keywords",
+                        "type": "any",
+                        "label": "arr_keywords"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 10,
+            "module": "builtin:BasicFeeder",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "array": "{{9.arr_keywords}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 551,
+                    "y": 765,
+                    "name": "get analysis"
+                },
+                "restore": {
+                    "expect": {
+                        "array": {
+                            "mode": "edit"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "array",
+                        "spec": [],
+                        "type": "array",
+                        "label": "Array"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 11,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                    {
+                        "name": "str_category",
+                        "value": "{{join(deduplicate(map(8.array; \"category\"; \"text\"; 10.value)); emptystring)}}"
+                    },
+                    {
+                        "name": "num_score",
+                        "value": "{{map(8.array; \"confidenceScore\"; \"text\"; 10.value)}}"
+                    },
+                    {
+                        "name": "str_keyword",
+                        "value": "{{10.value}}"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 851,
+                    "y": 765,
+                    "name": "organise data"
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        },
+                        "variables": {
+                            "items": [
+                                null,
+                                null,
+                                null
+                            ]
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Variable name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Variable value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Variables"
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "str_category",
+                        "type": "any",
+                        "label": "str_category"
+                    },
+                    {
+                        "name": "num_score",
+                        "type": "any",
+                        "label": "num_score"
+                    },
+                    {
+                        "name": "str_keyword",
+                        "type": "any",
+                        "label": "str_keyword"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 13,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 10
+            },
+            "mapper": {
+                "num_score": "{{11.num_score}}",
+                "str_keyword": "{{11.str_keyword}}",
+                "str_category": "{{11.str_category}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1151,
+                    "y": 765,
+                    "name": "get results"
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "get analysis [10]"
+                        },
+                        "target": {
+                            "label": "Custom"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 14,
+            "module": "mongodb:InsertRecord",
+            "version": 2,
+            "parameters": {
+                "account": 000000,
+                "collection": "dayone",
+                "type": 15923
+            },
+            "mapper": {
+                "str_text": "{{7.str_data}}",
+                "str_mood": "{{5.moodOverall}}",
+                "arr_keywords": "{{13.array}}",
+                "num_editing_time": "{{4.entries[].editingTime}}",
+                "date_created": "{{4.entries[].creationDate}}",
+                "date_modified": "{{4.entries[].modifiedDate}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1451,
+                    "y": 765,
+                    "name": "store the data"
+                },
+                "restore": {
+                    "parameters": {
+                        "account": {
+                            "label": "Cluster 0 (journals)",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "mongodb"
+                            }
+                        },
+                        "type": {
+                            "nested": [
+                                {
+                                    "name": "str_text",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "str_mood",
+                                    "label": null,
+                                    "type": "text",
+                                    "default": null,
+                                    "required": false,
+                                    "multiline": false
+                                },
+                                {
+                                    "name": "arr_keywords",
+                                    "label": null,
+                                    "type": "array",
+                                    "spec": {
+                                        "type": "collection",
+                                        "spec": [
+                                            {
+                                                "name": "str_keyword",
+                                                "label": null,
+                                                "type": "text",
+                                                "default": null,
+                                                "required": false,
+                                                "multiline": false
+                                            },
+                                            {
+                                                "name": "str_category",
+                                                "label": null,
+                                                "type": "text",
+                                                "default": null,
+                                                "required": false,
+                                                "multiline": false
+                                            },
+                                            {
+                                                "name": "arr_scores",
+                                                "label": null,
+                                                "type": "array",
+                                                "spec": {
+                                                    "type": "number",
+                                                    "default": null,
+                                                    "required": false
+                                                }
+                                            }
+                                        ],
+                                        "name": "value"
+                                    }
+                                },
+                                {
+                                    "name": "num_editing_time",
+                                    "label": null,
+                                    "type": "number",
+                                    "default": null,
+                                    "required": false
+                                },
+                                {
+                                    "name": "date_created",
+                                    "label": null,
+                                    "type": "date"
+                                },
+                                {
+                                    "name": "date_modified",
+                                    "label": null,
+                                    "type": "date"
+                                }
+                            ],
+                            "label": "nlp-dayone-journals"
+                        }
+                    },
+                    "expect": {
+                        "arr_keywords": {
+                            "mode": "edit"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "account",
+                        "type": "account:mongodb",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "collection",
+                        "type": "text",
+                        "label": "Collection",
+                        "required": true
+                    },
+                    {
+                        "name": "type",
+                        "type": "udt",
+                        "label": "Data structure",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "str_text",
+                        "type": "text",
+                        "label": null
+                    },
+                    {
+                        "name": "str_mood",
+                        "type": "text",
+                        "label": null
+                    },
+                    {
+                        "name": "arr_keywords",
+                        "type": "array",
+                        "label": null,
+                        "spec": {
+                            "type": "collection",
+                            "spec": [
+                                {
+                                    "name": "str_keyword",
+                                    "label": null,
+                                    "type": "text"
+                                },
+                                {
+                                    "name": "str_category",
+                                    "label": null,
+                                    "type": "text"
+                                },
+                                {
+                                    "name": "arr_scores",
+                                    "label": null,
+                                    "type": "array",
+                                    "spec": {
+                                        "type": "number"
+                                    }
+                                }
+                            ],
+                            "name": "value"
+                        }
+                    },
+                    {
+                        "name": "num_editing_time",
+                        "type": "number",
+                        "label": null
+                    },
+                    {
+                        "name": "date_created",
+                        "type": "date",
+                        "label": null
+                    },
+                    {
+                        "name": "date_modified",
+                        "type": "date",
+                        "label": null
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}
