@@ -59,7 +59,7 @@
                     [
                         {
                             "a": "{{1.text}}",
-                            "b": "投稿！",
+                            "b": "post::",
                             "o": "text:startwith"
                         }
                     ]
@@ -128,7 +128,7 @@
             },
             "mapper": {
                 "select": "image",
-                "status": "{{replace(1.text; \"投稿！\"; emptystring)}}",
+                "status": "{{replace(1.text; \"post::\"; emptystring)}}",
                 "attachments": [
                     {
                         "data": "{{5.data}}",
@@ -271,7 +271,7 @@
                 "__IMTCONN__": 1120039
             },
             "mapper": {
-                "text": "Tweeted!\nhttps://twitter.com/アカウント名/status/{{2.id_str}}",
+                "text": "Tweeted!\nhttps://twitter.com/ACCOUNT_NAME/status/{{2.id_str}}",
                 "parse": false,
                 "mrkdwn": true,
                 "channel": "{{1.user}}",

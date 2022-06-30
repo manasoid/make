@@ -11,7 +11,7 @@
             "mapper": {
                 "geo": {},
                 "limit": "50",
-                "search": "ノーコード",
+                "search": "NoCode",
                 "fulltext": false,
                 "result_type": "recent",
                 "include_entities": false
@@ -31,7 +31,7 @@
                         }
                     },
                     "__IMTCONN__": {
-                        "label": "Twitter for YouTube (Ethical Works)"
+                        "label": "Twitter"
                     },
                     "result_type": {
                         "mode": "chose",
@@ -206,7 +206,7 @@
                 "__IMTCONN__": 1120039
             },
             "mapper": {
-                "text": "キーワード「ノーコード」の検索結果です！\n\n{{2.text}}",
+                "text": "Search result:\n\n{{2.text}}",
                 "parse": false,
                 "mrkdwn": true,
                 "channel": "",
@@ -236,7 +236,7 @@
                         "mode": "chose"
                     },
                     "__IMTCONN__": {
-                        "label": "My Slack connection (manas)"
+                        "label": "Slack"
                     },
                     "attachments": {
                         "mode": "chose",
@@ -482,11 +482,11 @@
                 ],
                 "bcc": [],
                 "from": "",
-                "text": "キーワード「ノーコード」のまとめです！\n\n{{2.text}}",
+                "text": "Digest for NoCode\n\n{{2.text}}",
                 "sender": "",
                 "headers": [],
                 "replyTo": "",
-                "subject": "ツイートまとめ",
+                "subject": "Digest for NoCode",
                 "priority": "normal",
                 "inReplyTo": "",
                 "references": [],

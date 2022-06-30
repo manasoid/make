@@ -57,7 +57,7 @@
                     [
                         {
                             "a": "{{1.text}}",
-                            "b": "切り抜き！",
+                            "b": "remove::",
                             "o": "text:equal"
                         },
                         {
@@ -320,7 +320,7 @@
                         "path": [
                             "Public",
                             "Integromat",
-                            "ダウンロード"
+                            "Download"
                         ]
                     },
                     "__IMTCONN__": {
@@ -406,7 +406,7 @@
                 "__IMTCONN__": 1120039
             },
             "mapper": {
-                "text": "切り抜きました（プレビュー版なので小さいです）\n{{8.webContentLink}}",
+                "text": "Removed BG!\n{{8.webContentLink}}",
                 "parse": false,
                 "mrkdwn": true,
                 "channel": "{{1.user}}",
