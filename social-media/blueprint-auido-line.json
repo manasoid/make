@@ -58,7 +58,7 @@
                 "headers": [
                     {
                         "name": "Authorization",
-                        "value": "Bearer ここにキーを入れてください"
+                        "value": "Bearer YOUR-BEARER-TOKEN"
                     }
                 ],
                 "timeout": "",
@@ -395,7 +395,7 @@
             "mapper": {
                 "messages": [
                     {
-                        "text": "録音されたオーディオです！",
+                        "text": "This is the recorded audio.",
                         "type": "text"
                     },
                     {
