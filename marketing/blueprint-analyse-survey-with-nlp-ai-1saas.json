@@ -1,0 +1,658 @@
+{
+    "name": "Analyse survey",
+    "flow": [
+        {
+            "id": 1,
+            "module": "airtable:ActionSearchRecords",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 2058
+            },
+            "mapper": {
+                "base": "",
+                "view": "",
+                "table": "Survey",
+                "formula": "{your} = query-here",
+                "maxRecords": "1700",
+                "useColumnId": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "get a survey"
+                },
+                "restore": {
+                    "expect": {
+                        "base": {
+                            "mode": "chose",
+                            "label": "Metrics"
+                        },
+                        "sort": {
+                            "mode": "chose"
+                        },
+                        "view": {
+                            "mode": "chose",
+                            "label": "your-view-name"
+                        },
+                        "table": {
+                            "mode": "chose",
+                            "label": "Survey"
+                        },
+                        "useColumnId": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "airtable2"
+                            },
+                            "label": "Airtable"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:airtable2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "required": true
+                    },
+                    {
+                        "name": "useColumnId",
+                        "type": "boolean",
+                        "label": "Use Column ID",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "formula",
+                        "type": "text",
+                        "label": "Formula"
+                    },
+                    {
+                        "name": "maxRecords",
+                        "type": "integer",
+                        "label": "Limit"
+                    },
+                    {
+                        "name": "sort",
+                        "spec": [
+                            {
+                                "name": "field",
+                                "type": "select",
+                                "label": "Field",
+                                "dynamic": true,
+                                "options": []
+                            },
+                            {
+                                "name": "direction",
+                                "type": "select",
+                                "label": "Direction",
+                                "options": [
+                                    {
+                                        "label": "Descending",
+                                        "value": "desc"
+                                    },
+                                    {
+                                        "label": "Ascending",
+                                        "value": "asc"
+                                    }
+                                ]
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Sort"
+                    },
+                    {
+                        "name": "view",
+                        "type": "select",
+                        "label": "View"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "__IMTLENGTH__",
+                        "label": "Total number of bundles",
+                        "type": "uinteger"
+                    },
+                    {
+                        "name": "__IMTINDEX__",
+                        "label": "Bundle order position",
+                        "type": "uinteger"
+                    },
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created Time"
+                    },
+                    {
+                        "name": "reason",
+                        "type": "text",
+                        "label": "reason"
+                    },
+                    {
+                        "name": "where",
+                        "type": "text",
+                        "label": "where"
+                    },
+                    {
+                        "name": "gender",
+                        "type": "text",
+                        "label": "gender"
+                    },
+                    {
+                        "name": "age",
+                        "type": "number",
+                        "label": "age"
+                    },
+                    {
+                        "name": "freq",
+                        "type": "text",
+                        "label": "freq"
+                    },
+                    {
+                        "name": "if_freq",
+                        "type": "text",
+                        "label": "if_freq"
+                    },
+                    {
+                        "name": "if_ad",
+                        "type": "text",
+                        "label": "if_ad"
+                    },
+                    {
+                        "name": "if_gen",
+                        "type": "text",
+                        "label": "if_gen"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 1
+            },
+            "mapper": {
+                "reason": "{{1.reason}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "Airtable - Search Records"
+                        },
+                        "target": {
+                            "label": "Custom"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 15,
+            "module": "builtin:BasicFeeder",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "array": "{{2.array}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 53,
+                    "y": 292
+                },
+                "restore": {
+                    "expect": {
+                        "array": {
+                            "mode": "edit"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "array",
+                        "spec": [],
+                        "type": "array",
+                        "label": "Array"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 22,
+            "module": "onesaas:aitranslate",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 139255
+            },
+            "mapper": {
+                "textToTranslate": "{{15.reason}}",
+                "resultLang": "en"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 353,
+                    "y": 292,
+                    "name": "jp to en"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "1SaaS ver. 2",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "resultLang": {
+                            "mode": "chose",
+                            "label": "English"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "textToTranslate",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    },
+                    {
+                        "name": "resultLang",
+                        "type": "select",
+                        "label": "Result Language",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "onesaas:aientitydetection",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 139255
+            },
+            "mapper": {
+                "text": "{{22.translation}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 653,
+                    "y": 292,
+                    "name": "AI analysis"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "1SaaS ver. 2",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 5
+            },
+            "mapper": {
+                "text": "{{5.text}}",
+                "category": "{{5.category}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 953,
+                    "y": 292
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "1SaaS.co - Get Text entities with NLP AI"
+                        },
+                        "target": {
+                            "label": "Custom"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 9,
+            "module": "builtin:BasicFeeder",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "array": "{{7.array}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 441,
+                    "y": -196
+                },
+                "restore": {
+                    "expect": {
+                        "array": {
+                            "mode": "edit"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "array",
+                        "spec": [],
+                        "type": "array",
+                        "label": "Array"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 23,
+            "module": "onesaas:aitranslate",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 139255
+            },
+            "filter": {
+                "name": "exists?",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{9.text}}",
+                            "o": "exist"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "textToTranslate": "{{9.text}}",
+                "resultLang": "ja"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 741,
+                    "y": -196,
+                    "name": "en to ja"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "1SaaS ver. 2",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "resultLang": {
+                            "mode": "chose",
+                            "label": "Japanese"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "textToTranslate",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    },
+                    {
+                        "name": "resultLang",
+                        "type": "select",
+                        "label": "Result Language",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 17,
+            "module": "airtable:ActionCreateRecord",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 2058
+            },
+            "mapper": {
+                "base": "app1rmdFG7JVotGlg",
+                "typecast": false,
+                "useColumnId": false,
+                "table": "Survay_Results",
+                "record": {
+                    "fldJyNEcUT60Ov7be": "{{23.translation}}",
+                    "fldWVDzbDjGzYWNIj": "{{9.category}}",
+                    "fldDtScJw3MGqhcYb": "{{15.`__IMTINDEX__`}}"
+                }
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1041,
+                    "y": -196,
+                    "name": "add results"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Airtable",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "airtable2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "base": {
+                            "label": "Metrics"
+                        },
+                        "typecast": {
+                            "mode": "chose"
+                        },
+                        "useColumnId": {
+                            "mode": "chose"
+                        },
+                        "table": {
+                            "nested": [
+                                {
+                                    "name": "record",
+                                    "spec": [
+                                        {
+                                            "name": "",
+                                            "type": "text",
+                                            "label": "keyword"
+                                        },
+                                        {
+                                            "name": "",
+                                            "type": "text",
+                                            "label": "category"
+                                        },
+                                        {
+                                            "name": "",
+                                            "type": "number",
+                                            "label": "bundle"
+                                        }
+                                    ],
+                                    "type": "collection",
+                                    "label": "Record"
+                                }
+                            ],
+                            "label": "Survay_Results"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:airtable2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "required": true
+                    },
+                    {
+                        "name": "typecast",
+                        "type": "boolean",
+                        "label": "Smart links",
+                        "required": true
+                    },
+                    {
+                        "name": "useColumnId",
+                        "type": "boolean",
+                        "label": "Use Column ID",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "record",
+                        "type": "collection",
+                        "label": "Record",
+                        "spec": [
+                            {
+                                "name": "",
+                                "type": "text",
+                                "label": "keyword"
+                            },
+                            {
+                                "name": "",
+                                "type": "text",
+                                "label": "category"
+                            },
+                            {
+                                "name": "",
+                                "type": "number",
+                                "label": "bundle"
+                            }
+                        ]
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created Time"
+                    },
+                    {
+                        "name": "keyword",
+                        "label": "keyword",
+                        "type": "text"
+                    },
+                    {
+                        "name": "category",
+                        "label": "category",
+                        "type": "text"
+                    },
+                    {
+                        "name": "bundle",
+                        "label": "bundle",
+                        "type": "number"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}
