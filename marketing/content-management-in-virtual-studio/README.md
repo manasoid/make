@@ -1,4 +1,4 @@
-# the steps to adding contents with a task automatically
+## the steps to adding contents with a task automatically
 
 1. create a zip file to upload
 2. make sure the zip file named correctly according to the specification (see below)
@@ -7,7 +7,7 @@
 
 
 ## the naming specification
-PROJECT__TYPE__DUE.zip
-e.g. project-arcturus__youtube__2022-07-07.zip
+- PROJECT__TYPE__DUE.zip
+- e.g. project-arcturus__youtube__2022-07-07.zip
 
 if you have any questions, please feel free to use [the Discussions section](https://github.com/manasoid/make/discussions) on GitHub
