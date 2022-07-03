@@ -894,7 +894,7 @@
                                                         "scoped": "true",
                                                         "connection": "slack2"
                                                     },
-                                                    "label": "Slack"
+                                                    "label": "Slack (ain soph) (mana)"
                                                 }
                                             }
                                         },
@@ -1017,8 +1017,8 @@
                                     [
                                         {
                                             "a": "{{15.is_deleted}}",
-                                            "o": "number:notequal",
-                                            "b": "0"
+                                            "b": "false",
+                                            "o": "text:equal"
                                         }
                                     ]
                                 ]
