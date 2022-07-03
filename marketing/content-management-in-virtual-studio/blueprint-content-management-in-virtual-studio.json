@@ -1,0 +1,1128 @@
+{
+    "name": "content management in virtual studio",
+    "flow": [
+        {
+            "id": 2,
+            "module": "box:newFolderEvent",
+            "version": 3,
+            "parameters": {
+                "__IMTHOOK__": 134644
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 300,
+                    "name": "event in todo folder"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTHOOK__": {
+                            "data": {
+                                "editable": "false"
+                            },
+                            "label": "BP - virtual content production"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTHOOK__",
+                        "type": "hook:box3",
+                        "label": "Webhook",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 300
+                }
+            },
+            "routes": [
+                {
+                    "flow": [
+                        {
+                            "id": 6,
+                            "module": "util:SetVariable2",
+                            "version": 1,
+                            "parameters": {},
+                            "filter": {
+                                "name": "new?",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{2.trigger}}",
+                                            "b": "UPLOADED",
+                                            "o": "text:contain"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "name": "arr_meta",
+                                "scope": "roundtrip",
+                                "value": "{{split(replace(2.source.name; \".zip\"; emptystring); \"__\")}}"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 600,
+                                    "y": 0,
+                                    "name": "meta from file name"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "scope": {
+                                            "label": "One cycle"
+                                        }
+                                    }
+                                },
+                                "expect": [
+                                    {
+                                        "name": "name",
+                                        "type": "text",
+                                        "label": "Variable name",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "scope",
+                                        "type": "select",
+                                        "label": "Variable lifetime",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "roundtrip",
+                                                "execution"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "any",
+                                        "label": "Variable value"
+                                    }
+                                ],
+                                "interface": [
+                                    {
+                                        "name": "arr_meta",
+                                        "type": "any",
+                                        "label": "arr_meta"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 5,
+                            "module": "todoist:CreateItem",
+                            "version": 2,
+                            "parameters": {
+                                "__IMTCONN__": 98788
+                            },
+                            "mapper": {
+                                "due": {
+                                    "date": "{{get(6.arr_meta; 3)}}",
+                                    "type": "date"
+                                },
+                                "content": "{{get(6.arr_meta; 1)}} ({{get(6.arr_meta; 3)}})",
+                                "project_id": 0000000000,
+                                "section_id": 00000000,
+                                "description": "Project: {{get(6.arr_meta; 1)}}\nType: {{get(6.arr_meta; 2)}}\nID: {{2.source.id}}"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 900,
+                                    "y": 0,
+                                    "name": "new task in todo section"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "due": {
+                                            "nested": {
+                                                "type": {
+                                                    "mode": "chose",
+                                                    "label": "Only date"
+                                                },
+                                                "is_recurring": {
+                                                    "mode": "chose"
+                                                }
+                                            }
+                                        },
+                                        "labels": {
+                                            "mode": "chose",
+                                            "collapsed": true
+                                        },
+                                        "priority": {
+                                            "mode": "chose",
+                                            "label": "Empty"
+                                        },
+                                        "project_id": {
+                                            "mode": "chose",
+                                            "label": "Demo - content management"
+                                        },
+                                        "section_id": {
+                                            "mode": "chose",
+                                            "label": "Todo"
+                                        },
+                                        "auto_reminder": {
+                                            "mode": "chose"
+                                        },
+                                        "assigned_by_uid": {
+                                            "mode": "chose"
+                                        },
+                                        "responsible_uid": {
+                                            "mode": "chose"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "todoist"
+                                            },
+                                            "label": "Todoist EW"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:todoist",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "content",
+                                        "type": "text",
+                                        "label": "Content",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "description",
+                                        "type": "text",
+                                        "label": "Description"
+                                    },
+                                    {
+                                        "name": "project_id",
+                                        "type": "select",
+                                        "label": "Project"
+                                    },
+                                    {
+                                        "name": "labels",
+                                        "type": "select",
+                                        "label": "Labels",
+                                        "multiple": true
+                                    },
+                                    {
+                                        "name": "due",
+                                        "spec": [
+                                            {
+                                                "name": "type",
+                                                "type": "select",
+                                                "label": "Format",
+                                                "validate": {
+                                                    "enum": [
+                                                        "date",
+                                                        "datetime"
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "name": "date",
+                                                "type": "date",
+                                                "label": "Date"
+                                            },
+                                            {
+                                                "name": "string",
+                                                "type": "text",
+                                                "label": "Human-readable representation of due date"
+                                            },
+                                            {
+                                                "name": "is_recurring",
+                                                "type": "boolean",
+                                                "label": "Is recurring"
+                                            }
+                                        ],
+                                        "type": "collection",
+                                        "label": "Due date"
+                                    },
+                                    {
+                                        "name": "priority",
+                                        "type": "select",
+                                        "label": "Priority",
+                                        "validate": {
+                                            "enum": [
+                                                4,
+                                                3,
+                                                2,
+                                                1
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "parent_id",
+                                        "type": "text",
+                                        "label": "Parent ID"
+                                    },
+                                    {
+                                        "name": "responsible_uid",
+                                        "type": "select",
+                                        "label": "Responsible"
+                                    },
+                                    {
+                                        "name": "assigned_by_uid",
+                                        "type": "select",
+                                        "label": "Assigned by"
+                                    },
+                                    {
+                                        "name": "auto_reminder",
+                                        "type": "boolean",
+                                        "label": "Auto reminder"
+                                    },
+                                    {
+                                        "name": "section_id",
+                                        "type": "select",
+                                        "label": "Section"
+                                    }
+                                ],
+                                "advanced": true
+                            }
+                        },
+                        {
+                            "id": 11,
+                            "module": "datastore:AddRecord",
+                            "version": 1,
+                            "parameters": {
+                                "datastore": 5814
+                            },
+                            "mapper": {
+                                "key": "{{5.id}}",
+                                "data": {
+                                    "id_file": "{{2.source.id}}",
+                                    "str_file": "{{2.source.name}}"
+                                },
+                                "overwrite": false
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1200,
+                                    "y": 0,
+                                    "name": "map task and file"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "overwrite": {
+                                            "mode": "chose"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "datastore": {
+                                            "label": "template-content-management-in-virtual-studio",
+                                            "nested": [
+                                                {
+                                                    "help": "You assign a unique key that can be used later to retrieve the record. If you leave this field blank, a key will be generated.",
+                                                    "name": "key",
+                                                    "type": "text",
+                                                    "label": "Key"
+                                                },
+                                                {
+                                                    "help": "This option is only effective if you specify a custom key under which the record shall be saved.",
+                                                    "name": "overwrite",
+                                                    "type": "boolean",
+                                                    "label": "Overwrite an existing record",
+                                                    "default": false,
+                                                    "required": true
+                                                },
+                                                {
+                                                    "name": "data",
+                                                    "spec": [
+                                                        {
+                                                            "name": "id_file",
+                                                            "type": "text",
+                                                            "label": null,
+                                                            "required": false,
+                                                            "multiline": false
+                                                        },
+                                                        {
+                                                            "name": "str_file",
+                                                            "type": "text",
+                                                            "label": null,
+                                                            "required": false,
+                                                            "multiline": false
+                                                        }
+                                                    ],
+                                                    "type": "collection",
+                                                    "label": "Record"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "datastore",
+                                        "type": "datastore",
+                                        "label": "Data store",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "key",
+                                        "type": "text",
+                                        "label": "Key"
+                                    },
+                                    {
+                                        "name": "overwrite",
+                                        "type": "boolean",
+                                        "label": "Overwrite an existing record",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "data",
+                                        "spec": [
+                                            {
+                                                "name": "id_file",
+                                                "type": "text",
+                                                "label": null
+                                            },
+                                            {
+                                                "name": "str_file",
+                                                "type": "text",
+                                                "label": null
+                                            }
+                                        ],
+                                        "type": "collection",
+                                        "label": "Record"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 17,
+                            "module": "box:addSharedLinkToFile",
+                            "version": 3,
+                            "parameters": {
+                                "__IMTCONN__": 186417
+                            },
+                            "mapper": {
+                                "access": "collaborators",
+                                "fileId": "{{2.source.id}}"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1500,
+                                    "y": 0,
+                                    "name": "shared link"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "access": {
+                                            "mode": "chose",
+                                            "label": "Collaborators"
+                                        },
+                                        "fileId": {
+                                            "mode": "edit",
+                                            "path": []
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "box2"
+                                            },
+                                            "label": "Box Personal"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:box2",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "fileId",
+                                        "type": "file",
+                                        "label": "File",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "access",
+                                        "type": "select",
+                                        "label": "Access",
+                                        "validate": {
+                                            "enum": [
+                                                "open",
+                                                "company",
+                                                "collaborators"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "unshared_at",
+                                        "type": "date",
+                                        "label": "Unshared at"
+                                    },
+                                    {
+                                        "name": "vanity_name",
+                                        "type": "text",
+                                        "label": "Vanity Name"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 16,
+                            "module": "slack:CreateMessage",
+                            "version": 4,
+                            "parameters": {
+                                "__IMTCONN__": 2043
+                            },
+                            "mapper": {
+                                "text": "New content and task are added!\n\nProject: {{get(6.arr_meta; 1)}}\nType: {{get(6.arr_meta; 2)}}\nDue: {{get(6.arr_meta; 3)}}\nFile: {{17.shared_link.url}}",
+                                "mrkdwn": true,
+                                "channel": "C000000000K",
+                                "channelType": "public",
+                                "channelWType": "list"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1800,
+                                    "y": 0
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "parse": {
+                                            "mode": "chose"
+                                        },
+                                        "mrkdwn": {
+                                            "mode": "chose"
+                                        },
+                                        "channel": {
+                                            "mode": "chose",
+                                            "label": "proj-github"
+                                        },
+                                        "link_names": {
+                                            "mode": "chose"
+                                        },
+                                        "channelType": {
+                                            "label": "Public channel"
+                                        },
+                                        "channelWType": {
+                                            "label": "Select from the list"
+                                        },
+                                        "unfurl_links": {
+                                            "mode": "chose"
+                                        },
+                                        "unfurl_media": {
+                                            "mode": "chose"
+                                        },
+                                        "reply_broadcast": {
+                                            "mode": "chose"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "slack2"
+                                            },
+                                            "label": "Slack"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:slack2,slack3",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "channelWType",
+                                        "type": "select",
+                                        "label": "Enter a channel ID or name",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "manualy",
+                                                "list"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "blocks",
+                                        "type": "text",
+                                        "label": "Blocks"
+                                    },
+                                    {
+                                        "name": "thread_ts",
+                                        "type": "text",
+                                        "label": "Thread message ID (time stamp)"
+                                    },
+                                    {
+                                        "name": "reply_broadcast",
+                                        "type": "boolean",
+                                        "label": "Reply broadcast"
+                                    },
+                                    {
+                                        "name": "link_names",
+                                        "type": "boolean",
+                                        "label": "Link names"
+                                    },
+                                    {
+                                        "name": "parse",
+                                        "type": "boolean",
+                                        "label": "Parse message text"
+                                    },
+                                    {
+                                        "name": "mrkdwn",
+                                        "type": "boolean",
+                                        "label": "Use markdown"
+                                    },
+                                    {
+                                        "name": "unfurl_links",
+                                        "type": "boolean",
+                                        "label": "Unfurl primarily text-based content"
+                                    },
+                                    {
+                                        "name": "unfurl_media",
+                                        "type": "boolean",
+                                        "label": "Unfurl media content"
+                                    },
+                                    {
+                                        "name": "icon_emoji",
+                                        "type": "text",
+                                        "label": "Icon emoji"
+                                    },
+                                    {
+                                        "name": "icon_url",
+                                        "type": "url",
+                                        "label": "Icon url"
+                                    },
+                                    {
+                                        "name": "username",
+                                        "type": "text",
+                                        "label": "User name"
+                                    },
+                                    {
+                                        "name": "channelType",
+                                        "type": "select",
+                                        "label": "Channel type",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "public",
+                                                "private",
+                                                "im",
+                                                "mpim"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "channel",
+                                        "type": "select",
+                                        "label": "Public channel",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 12,
+                            "module": "datastore:SearchRecord",
+                            "version": 1,
+                            "parameters": {
+                                "limit": null,
+                                "datastore": 5814
+                            },
+                            "filter": {
+                                "name": "trashed?",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{2.trigger}}",
+                                            "b": "TRASHED",
+                                            "o": "text:contain"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "sort": [],
+                                "filter": [
+                                    [
+                                        {
+                                            "a": "id_file",
+                                            "b": "{{2.source.id}}",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 600,
+                                    "y": 450,
+                                    "name": "search task"
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "datastore": {
+                                            "label": "template-content-management-in-virtual-studio"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "datastore",
+                                        "type": "datastore",
+                                        "label": "Data store",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "limit",
+                                        "type": "uinteger",
+                                        "label": "Limit"
+                                    },
+                                    {
+                                        "name": "continueWhenNoRes",
+                                        "type": "boolean",
+                                        "label": "Continue the execution of the route even if the module returns no results"
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "filter",
+                                        "type": "filter",
+                                        "label": "Filter",
+                                        "options": "rpc://datastore/1.8.2/RpcGetUDTKeys",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "sort",
+                                        "spec": [
+                                            {
+                                                "name": "key",
+                                                "type": "select",
+                                                "label": "Key",
+                                                "dynamic": true,
+                                                "options": [],
+                                                "required": true
+                                            },
+                                            {
+                                                "name": "order",
+                                                "type": "select",
+                                                "label": "Order",
+                                                "options": [
+                                                    {
+                                                        "label": "Ascending",
+                                                        "value": 1
+                                                    },
+                                                    {
+                                                        "label": "Descending",
+                                                        "value": -1
+                                                    }
+                                                ],
+                                                "required": true
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Sort"
+                                    }
+                                ],
+                                "interface": [
+                                    {
+                                        "name": "key",
+                                        "type": "text",
+                                        "label": "Key"
+                                    },
+                                    {
+                                        "name": "data",
+                                        "spec": [
+                                            {
+                                                "name": "id_file",
+                                                "type": "text",
+                                                "label": null,
+                                                "default": null,
+                                                "required": false,
+                                                "multiline": false
+                                            },
+                                            {
+                                                "name": "str_file",
+                                                "type": "text",
+                                                "label": null,
+                                                "default": null,
+                                                "required": false,
+                                                "multiline": false
+                                            }
+                                        ],
+                                        "type": "collection",
+                                        "label": "Record"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 15,
+                            "module": "todoist:GetItem",
+                            "version": 2,
+                            "parameters": {
+                                "__IMTCONN__": 98788
+                            },
+                            "mapper": {
+                                "id": "{{12.key}}"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 900,
+                                    "y": 450,
+                                    "name": "check task"
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "todoist"
+                                            },
+                                            "label": "Todoist EW"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:todoist",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "id",
+                                        "type": "number",
+                                        "label": "Task ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "id",
+                                        "type": "number",
+                                        "label": "Task ID",
+                                        "required": true
+                                    }
+                                ]
+                            },
+                            "onerror": [
+                                {
+                                    "id": 18,
+                                    "module": "slack:CreateMessage",
+                                    "version": 4,
+                                    "parameters": {
+                                        "__IMTCONN__": 2043
+                                    },
+                                    "mapper": {
+                                        "text": "*Error has occurred*\n{{15.error.type}}\n{{15.error.message}}",
+                                        "mrkdwn": true,
+                                        "channel": "C000000000K",
+                                        "channelType": "public",
+                                        "channelWType": "list"
+                                    },
+                                    "metadata": {
+                                        "designer": {
+                                            "x": 1200,
+                                            "y": 600
+                                        },
+                                        "restore": {
+                                            "expect": {
+                                                "parse": {
+                                                    "mode": "chose"
+                                                },
+                                                "mrkdwn": {
+                                                    "mode": "chose"
+                                                },
+                                                "channel": {
+                                                    "mode": "chose",
+                                                    "label": "proj-github"
+                                                },
+                                                "link_names": {
+                                                    "mode": "chose"
+                                                },
+                                                "channelType": {
+                                                    "label": "Public channel"
+                                                },
+                                                "channelWType": {
+                                                    "label": "Select from the list"
+                                                },
+                                                "unfurl_links": {
+                                                    "mode": "chose"
+                                                },
+                                                "unfurl_media": {
+                                                    "mode": "chose"
+                                                },
+                                                "reply_broadcast": {
+                                                    "mode": "chose"
+                                                }
+                                            },
+                                            "parameters": {
+                                                "__IMTCONN__": {
+                                                    "data": {
+                                                        "scoped": "true",
+                                                        "connection": "slack2"
+                                                    },
+                                                    "label": "Slack"
+                                                }
+                                            }
+                                        },
+                                        "parameters": [
+                                            {
+                                                "name": "__IMTCONN__",
+                                                "type": "account:slack2,slack3",
+                                                "label": "Connection",
+                                                "required": true
+                                            }
+                                        ],
+                                        "expect": [
+                                            {
+                                                "name": "channelWType",
+                                                "type": "select",
+                                                "label": "Enter a channel ID or name",
+                                                "required": true,
+                                                "validate": {
+                                                    "enum": [
+                                                        "manualy",
+                                                        "list"
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "name": "text",
+                                                "type": "text",
+                                                "label": "Text"
+                                            },
+                                            {
+                                                "name": "blocks",
+                                                "type": "text",
+                                                "label": "Blocks"
+                                            },
+                                            {
+                                                "name": "thread_ts",
+                                                "type": "text",
+                                                "label": "Thread message ID (time stamp)"
+                                            },
+                                            {
+                                                "name": "reply_broadcast",
+                                                "type": "boolean",
+                                                "label": "Reply broadcast"
+                                            },
+                                            {
+                                                "name": "link_names",
+                                                "type": "boolean",
+                                                "label": "Link names"
+                                            },
+                                            {
+                                                "name": "parse",
+                                                "type": "boolean",
+                                                "label": "Parse message text"
+                                            },
+                                            {
+                                                "name": "mrkdwn",
+                                                "type": "boolean",
+                                                "label": "Use markdown"
+                                            },
+                                            {
+                                                "name": "unfurl_links",
+                                                "type": "boolean",
+                                                "label": "Unfurl primarily text-based content"
+                                            },
+                                            {
+                                                "name": "unfurl_media",
+                                                "type": "boolean",
+                                                "label": "Unfurl media content"
+                                            },
+                                            {
+                                                "name": "icon_emoji",
+                                                "type": "text",
+                                                "label": "Icon emoji"
+                                            },
+                                            {
+                                                "name": "icon_url",
+                                                "type": "url",
+                                                "label": "Icon url"
+                                            },
+                                            {
+                                                "name": "username",
+                                                "type": "text",
+                                                "label": "User name"
+                                            },
+                                            {
+                                                "name": "channelType",
+                                                "type": "select",
+                                                "label": "Channel type",
+                                                "required": true,
+                                                "validate": {
+                                                    "enum": [
+                                                        "public",
+                                                        "private",
+                                                        "im",
+                                                        "mpim"
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "name": "channel",
+                                                "type": "select",
+                                                "label": "Public channel",
+                                                "required": true
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": 13,
+                            "module": "todoist:DeleteItem",
+                            "version": 2,
+                            "parameters": {
+                                "__IMTCONN__": 98788
+                            },
+                            "filter": {
+                                "name": "exists?",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{15.is_deleted}}",
+                                            "o": "number:notequal",
+                                            "b": "0"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "id": "{{12.key}}"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1200,
+                                    "y": 300,
+                                    "name": "delete task"
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "todoist"
+                                            },
+                                            "label": "Todoist EW"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:todoist",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "id",
+                                        "type": "uinteger",
+                                        "label": "Task ID",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 14,
+                            "module": "datastore:DeleteRecord",
+                            "version": 1,
+                            "parameters": {
+                                "datastore": 5814
+                            },
+                            "mapper": {
+                                "key": "{{12.key}}"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1500,
+                                    "y": 300,
+                                    "name": "delete map"
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "datastore": {
+                                            "label": "template-content-management-in-virtual-studio"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "datastore",
+                                        "type": "datastore",
+                                        "label": "Data store",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "key",
+                                        "type": "text",
+                                        "label": "Key",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}
