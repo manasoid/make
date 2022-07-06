@@ -1,11 +1,11 @@
-# automation templates for your effortless life
+# templates for your fully automated business
 you don't necessarily have to work harder to get the optimal result. instead, you can reduce stresses and workloads with appropriate automation.  we share the automation template made with Make/Integromat for you!
 
-## project info
-this is the open-sourse project based on donations and sponsorships. your support is highly appreciated!
+## about this project
+this is the open-sourse project based on donations. your support is highly appreciated!
 
 - [Buy me a coffee](https://www.buymeacoffee.com/ethicalworks)
-- [Open Collective](https://opencollective.com/automation)
+- [PayPal](https://www.paypal.com/paypalme/manasoid)
 
 ## steps to import the scenarios
 
