@@ -1,0 +1,517 @@
+{
+    "name": "send email from instagram",
+    "flow": [
+        {
+            "id": 8,
+            "module": "instagram:WatchMedia",
+            "version": 4,
+            "parameters": {
+                "limit": 1,
+                "__IMTCONN__": 263279
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "instagram2"
+                            },
+                            "label": "mana-art (mannaoid)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:instagram2",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 11,
+            "module": "instagram:DownloadMedia",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 263279
+            },
+            "mapper": {
+                "id": "{{8.id}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "instagram2"
+                            },
+                            "label": "mana-art (mannaoid)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:instagram2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "Media ID",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 14,
+            "module": "google-drive:uploadAFile",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 24540
+            },
+            "mapper": {
+                "data": "{{11.data}}",
+                "select": "value",
+                "convert": false,
+                "filename": "{{11.filename}}",
+                "folderId": "",
+                "destination": "drive"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "select": {
+                            "label": "Select from the list"
+                        },
+                        "folderId": {
+                            "mode": "chose",
+                            "path": [
+                                "public"
+                            ]
+                        },
+                        "destination": {
+                            "label": "My Drive"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            },
+                            "label": "Google Workspace"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google-restricted",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Enter a Folder ID",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "value"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "type": "text",
+                        "label": "New File Name"
+                    },
+                    {
+                        "name": "filename",
+                        "type": "filename",
+                        "label": "File Name",
+                        "required": true
+                    },
+                    {
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Data",
+                        "required": true
+                    },
+                    {
+                        "name": "convert",
+                        "type": "boolean",
+                        "label": "Convert a File",
+                        "required": true
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "New Drive Location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "folderId",
+                        "type": "folder",
+                        "label": "New Folder Location",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 17,
+            "module": "handlebars:Compile",
+            "version": 1,
+            "parameters": {
+                "mode": "",
+                "template": "<!doctype html>\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\n</html>"
+            },
+            "mapper": {
+                "variables": [
+                    {
+                        "key": "str_title",
+                        "value": "What message have you got from my artwork?"
+                    },
+                    {
+                        "key": "link_artwork",
+                        "value": "{{replace(14.webContentLink; \"&export=download\"; emptystring)}}"
+                    },
+                    {
+                        "key": "str_caption",
+                        "value": "{{8.caption}}"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "variables": {
+                            "mode": "chose",
+                            "items": [
+                                null,
+                                null,
+                                null
+                            ]
+                        }
+                    },
+                    "parameters": {
+                        "mode": {
+                            "label": "Non-mappable"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "mode",
+                        "type": "select",
+                        "label": "Template mode",
+                        "validate": {
+                            "enum": [
+                                "mappable"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "template",
+                        "type": "text",
+                        "label": "Template",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Variables"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 10,
+            "module": "mailchimp:createACampaign",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 263283
+            },
+            "mapper": {
+                "list": "f000000000",
+                "title": "My Latest Artwork",
+                "select": "html",
+                "segment": 00000000,
+                "to_name": "Art lovers",
+                "reply_to": "your-email-address-here",
+                "from_name": "Central Race",
+                "preview_text": "{{substring(8.caption; 0; 50)}}",
+                "segment_text": "{{17.data}}",
+                "subject_line": "From Central Race to You!",
+                "use_conversation": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "list": {
+                            "mode": "chose",
+                            "label": "ethical works"
+                        },
+                        "folder": {
+                            "mode": "chose"
+                        },
+                        "select": {
+                            "label": "By HTML Format Text"
+                        },
+                        "segment": {
+                            "mode": "chose",
+                            "label": "dev-ethical"
+                        },
+                        "use_conversation": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "mailchimp"
+                            },
+                            "label": "Your Mailchimp"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:mailchimp",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "title",
+                        "type": "text",
+                        "label": "Campaign Title",
+                        "required": true
+                    },
+                    {
+                        "name": "list",
+                        "type": "select",
+                        "label": "List (Audience) ID",
+                        "required": true
+                    },
+                    {
+                        "name": "subject_line",
+                        "type": "text",
+                        "label": "Subject Line",
+                        "required": true
+                    },
+                    {
+                        "name": "preview_text",
+                        "type": "text",
+                        "label": "Preview Text"
+                    },
+                    {
+                        "name": "from_name",
+                        "type": "text",
+                        "label": "From Name",
+                        "required": true
+                    },
+                    {
+                        "name": "reply_to",
+                        "type": "email",
+                        "label": "From Email Address",
+                        "required": true
+                    },
+                    {
+                        "name": "to_name",
+                        "type": "text",
+                        "label": "To Name"
+                    },
+                    {
+                        "name": "use_conversation",
+                        "type": "boolean",
+                        "label": "Use Conversation",
+                        "required": true
+                    },
+                    {
+                        "name": "folder",
+                        "type": "select",
+                        "label": "Folder ID"
+                    },
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Fill the Body Content",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "template",
+                                "html"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "segment",
+                        "type": "select",
+                        "label": "Segment (Tag) ID"
+                    },
+                    {
+                        "name": "segment_text",
+                        "type": "text",
+                        "label": "HTML Content"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 15,
+            "module": "mailchimp:performACampaignAction",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 263283
+            },
+            "mapper": {
+                "action": "send",
+                "campaign": "{{10.id}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1500,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "action": {
+                            "label": "Send a campaign"
+                        },
+                        "campaign": {
+                            "mode": "edit"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "mailchimp"
+                            },
+                            "label": "Your Mailchimp"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:mailchimp",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "campaign",
+                        "type": "select",
+                        "label": "Campaign ID",
+                        "required": true
+                    },
+                    {
+                        "name": "action",
+                        "type": "select",
+                        "label": "Action",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "cancel-send",
+                                "send",
+                                "schedule",
+                                "unschedule",
+                                "pause",
+                                "resume",
+                                "replicate",
+                                "test",
+                                "create-resend"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}
