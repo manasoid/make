@@ -1,0 +1,1021 @@
+{
+    "name": "Daily digest",
+    "flow": [
+        {
+            "id": 3,
+            "module": "slack:SearchMessages",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 137270
+            },
+            "mapper": {
+                "sort": "timestamp",
+                "limit": "30",
+                "query": "in:#general in:#random in:#tech in:#samples in:#jobs before:{{formatDate(now; \"YYYY-MM-DD\")}} after:{{formatDate(addDays(now; -2); \"YYYY-MM-DD\")}}",
+                "sort_dir": "asc"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "sort": {
+                            "mode": "chose",
+                            "label": "Timestamp"
+                        },
+                        "sort_dir": {
+                            "mode": "chose",
+                            "label": "Ascending"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "slack2"
+                            },
+                            "label": "Slack"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:slack2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "query",
+                        "type": "text",
+                        "label": "Query",
+                        "required": true
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit",
+                        "required": true
+                    },
+                    {
+                        "name": "sort",
+                        "type": "select",
+                        "label": "Sort by",
+                        "validate": {
+                            "enum": [
+                                "score",
+                                "timestamp"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_dir",
+                        "type": "select",
+                        "label": "Direction",
+                        "validate": {
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 3
+            },
+            "mapper": {
+                "ts": "{{3.ts}}",
+                "text": "{{3.text}}",
+                "channel": "{{3.channel}}",
+                "permalink": "{{3.permalink}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "Slack - Search for Message"
+                        },
+                        "target": {
+                            "label": "Custom"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 5,
+            "module": "builtin:BasicFeeder",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "array": "{{4.array}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 77,
+                    "y": 346
+                },
+                "restore": {
+                    "expect": {
+                        "array": {
+                            "mode": "edit"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "array",
+                        "spec": [],
+                        "type": "array",
+                        "label": "Array"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "regexp:Parser",
+            "version": 1,
+            "parameters": {
+                "global": false,
+                "pattern": "(thread_ts=)([0-9]{10}\\.[0-9]{6})",
+                "multiline": false,
+                "sensitive": false,
+                "singleline": true,
+                "continueWhenNoRes": true
+            },
+            "filter": {
+                "name": "threaded?",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{5.permalink}}",
+                            "b": "thread_ts",
+                            "o": "text:contain"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "text": "{{5.permalink}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 377,
+                    "y": 346
+                },
+                "restore": {},
+                "parameters": [
+                    {
+                        "name": "pattern",
+                        "type": "text",
+                        "label": "Pattern",
+                        "required": true
+                    },
+                    {
+                        "name": "global",
+                        "type": "boolean",
+                        "label": "Global match",
+                        "required": true
+                    },
+                    {
+                        "name": "sensitive",
+                        "type": "boolean",
+                        "label": "Case sensitive",
+                        "required": true
+                    },
+                    {
+                        "name": "multiline",
+                        "type": "boolean",
+                        "label": "Multiline",
+                        "required": true
+                    },
+                    {
+                        "name": "singleline",
+                        "type": "boolean",
+                        "label": "Singleline",
+                        "required": true
+                    },
+                    {
+                        "name": "continueWhenNoRes",
+                        "type": "boolean",
+                        "label": "Continue the execution of the route even if the module finds no matches",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "$1",
+                        "type": "text",
+                        "label": "$1"
+                    },
+                    {
+                        "name": "$2",
+                        "type": "text",
+                        "label": "$2"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                    {
+                        "name": "id_channel",
+                        "value": "{{5.channel.id}}"
+                    },
+                    {
+                        "name": "str_channel",
+                        "value": "{{5.channel.name}}"
+                    },
+                    {
+                        "name": "str_text",
+                        "value": "{{5.text}}"
+                    },
+                    {
+                        "name": "link_text",
+                        "value": "{{5.permalink}}"
+                    },
+                    {
+                        "name": "str_thread",
+                        "value": "{{7.`$2`}}"
+                    },
+                    {
+                        "name": "date_ts",
+                        "value": "{{formatDate(parseDate(5.ts); \"YYYY-MM-DD HH:mm\")}}"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 677,
+                    "y": 346
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        },
+                        "variables": {
+                            "items": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                            ]
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Variable name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Variable value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Variables"
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id_channel",
+                        "type": "any",
+                        "label": "id_channel"
+                    },
+                    {
+                        "name": "str_channel",
+                        "type": "any",
+                        "label": "str_channel"
+                    },
+                    {
+                        "name": "str_text",
+                        "type": "any",
+                        "label": "str_text"
+                    },
+                    {
+                        "name": "link_text",
+                        "type": "any",
+                        "label": "link_text"
+                    },
+                    {
+                        "name": "str_thread",
+                        "type": "any",
+                        "label": "str_thread"
+                    },
+                    {
+                        "name": "date_ts",
+                        "type": "any",
+                        "label": "date_ts"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 11,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 5
+            },
+            "mapper": {
+                "date_ts": "{{8.date_ts}}",
+                "str_text": "{{8.str_text}}",
+                "link_text": "{{8.link_text}}",
+                "id_channel": "{{8.id_channel}}",
+                "str_thread": "{{8.str_thread}}",
+                "str_channel": "{{8.str_channel}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 977,
+                    "y": 346
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "Iterator"
+                        },
+                        "target": {
+                            "label": "Custom"
+                        }
+                    }
+                },
+                "advanced": true
+            },
+            "flags": {
+                "groupBy": "{{8.str_thread}}"
+            }
+        },
+        {
+            "id": 28,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 11
+            },
+            "filter": {
+                "name": "comments?",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{11.array}}",
+                            "b": "2",
+                            "o": "array:greaterorequal"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "array": "{{11.array}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1277,
+                    "y": 346
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "Array aggregator"
+                        },
+                        "target": {
+                            "label": "Custom"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 29,
+            "module": "builtin:BasicFeeder",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "array": "{{28.array}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 825,
+                    "y": -7
+                },
+                "restore": {
+                    "expect": {
+                        "array": {
+                            "mode": "edit"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "array",
+                        "spec": [],
+                        "type": "array",
+                        "label": "Array"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 17,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                    {
+                        "name": "num_comments",
+                        "value": "{{length(29.array)}}"
+                    },
+                    {
+                        "name": "str_post",
+                        "value": "{{29.array[].str_text}}"
+                    },
+                    {
+                        "name": "link_post",
+                        "value": "{{29.array[].link_text}}"
+                    },
+                    {
+                        "name": "date_ts",
+                        "value": "{{29.array[].date_ts}}"
+                    },
+                    {
+                        "name": "str_channel",
+                        "value": "{{29.array[].str_channel}}"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1125,
+                    "y": -7
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        },
+                        "variables": {
+                            "items": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                            ]
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Variable name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Variable value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Variables"
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "num_comments",
+                        "type": "any",
+                        "label": "num_comments"
+                    },
+                    {
+                        "name": "str_post",
+                        "type": "any",
+                        "label": "str_post"
+                    },
+                    {
+                        "name": "link_post",
+                        "type": "any",
+                        "label": "link_post"
+                    },
+                    {
+                        "name": "date_ts",
+                        "type": "any",
+                        "label": "date_ts"
+                    },
+                    {
+                        "name": "str_channel",
+                        "type": "any",
+                        "label": "str_channel"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 25,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 29
+            },
+            "mapper": {
+                "date_ts": "{{17.date_ts}}",
+                "str_post": "{{17.str_post}}",
+                "link_post": "{{17.link_post}}",
+                "str_channel": "{{17.str_channel}}",
+                "num_comments": "{{17.num_comments}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1425,
+                    "y": -7
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "Iterator"
+                        },
+                        "target": {
+                            "label": "Custom"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 24,
+            "module": "builtin:BasicFeeder",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "array": "{{25.array}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 941,
+                    "y": -393
+                },
+                "restore": {
+                    "expect": {
+                        "array": {
+                            "mode": "edit"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "array",
+                        "spec": [],
+                        "type": "array",
+                        "label": "Array"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 22,
+            "module": "util:Switcher",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "input": "{{get(split(24.str_post; newline); 1)}}",
+                "casesTable": [
+                    {
+                        "output": "{{get(split(24.str_post; newline); 2)}}",
+                        "pattern": "^<@.*>$"
+                    }
+                ],
+                "elseOutput": "{{get(split(24.str_post; newline); 1)}}",
+                "useRegExpMatch": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1241,
+                    "y": -393
+                },
+                "restore": {
+                    "expect": {
+                        "casesTable": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "input",
+                        "type": "text",
+                        "label": "Input"
+                    },
+                    {
+                        "name": "useRegExpMatch",
+                        "type": "boolean",
+                        "label": "Use regular expressions to match",
+                        "required": true
+                    },
+                    {
+                        "name": "casesTable",
+                        "spec": [
+                            {
+                                "name": "pattern",
+                                "type": "text",
+                                "label": "Pattern"
+                            },
+                            {
+                                "name": "output",
+                                "type": "any",
+                                "label": "Output"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Cases",
+                        "required": true
+                    },
+                    {
+                        "name": "elseOutput",
+                        "type": "any",
+                        "label": "Else"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 18,
+            "module": "util:TextAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 24,
+                "rowSeparator": "\n"
+            },
+            "mapper": {
+                "value": "<p>{{22.output}}<br>\n<a href=\"{{24.link_post}}\">{{24.str_channel}}</a><br>\n{{if((parseNumber(24.num_comments) - 1) = 0; emptystring; (24.num_comments) - 1)}} comments</p>"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1541,
+                    "y": -393
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "Iterator"
+                        }
+                    },
+                    "parameters": {
+                        "rowSeparator": {
+                            "label": "New row"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "rowSeparator",
+                        "type": "select",
+                        "label": "Row separator",
+                        "validate": {
+                            "enum": [
+                                "\n",
+                                "\t",
+                                "other"
+                            ]
+                        }
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "value",
+                        "type": "text",
+                        "label": "Text"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 23,
+            "module": "email:ActionSendEmail",
+            "version": 7,
+            "parameters": {
+                "account": 2037,
+                "saveAfterSent": false
+            },
+            "mapper": {
+                "cc": [],
+                "to": [
+                    "mana@ethical.works"
+                ],
+                "bcc": [],
+                "from": "",
+                "html": "{{18.text}}",
+                "sender": "",
+                "headers": [],
+                "replyTo": "",
+                "subject": "Community Weekly Digest",
+                "priority": "normal",
+                "inReplyTo": "",
+                "references": [],
+                "attachments": [],
+                "contentType": "html"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1841,
+                    "y": -393
+                },
+                "restore": {
+                    "expect": {
+                        "cc": {
+                            "mode": "chose"
+                        },
+                        "to": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        },
+                        "bcc": {
+                            "mode": "chose"
+                        },
+                        "priority": {
+                            "label": "Normal"
+                        },
+                        "references": {
+                            "mode": "chose"
+                        },
+                        "attachments": {
+                            "mode": "chose"
+                        },
+                        "contentType": {
+                            "label": "HTML"
+                        }
+                    },
+                    "parameters": {
+                        "account": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google-restricted"
+                            },
+                            "label": "My Google Restricted"
+                        },
+                        "saveAfterSent": {
+                            "label": "No"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "account",
+                        "type": "account:smtp,google-restricted",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "saveAfterSent",
+                        "type": "select",
+                        "label": "Save message after sending",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "to",
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address",
+                            "required": true
+                        },
+                        "type": "array",
+                        "label": "To",
+                        "required": true
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject"
+                    },
+                    {
+                        "name": "contentType",
+                        "type": "select",
+                        "label": "Content Type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "html",
+                                "text"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "attachments",
+                        "spec": [
+                            {
+                                "name": "fileName",
+                                "type": "filename",
+                                "label": "File name",
+                                "required": true,
+                                "semantic": "file:name"
+                            },
+                            {
+                                "name": "data",
+                                "type": "buffer",
+                                "label": "Data",
+                                "required": true,
+                                "semantic": "file:data"
+                            },
+                            {
+                                "name": "cid",
+                                "type": "text",
+                                "label": "Content-ID"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Attachments"
+                    },
+                    {
+                        "name": "cc",
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
+                        },
+                        "type": "array",
+                        "label": "Copy recipient"
+                    },
+                    {
+                        "name": "bcc",
+                        "spec": {
+                            "name": "value",
+                            "type": "email",
+                            "label": "Email address"
+                        },
+                        "type": "array",
+                        "label": "Blind copy recipient"
+                    },
+                    {
+                        "name": "from",
+                        "type": "text",
+                        "label": "From"
+                    },
+                    {
+                        "name": "sender",
+                        "type": "text",
+                        "label": "Sender"
+                    },
+                    {
+                        "name": "replyTo",
+                        "type": "text",
+                        "label": "Reply-To"
+                    },
+                    {
+                        "name": "inReplyTo",
+                        "type": "text",
+                        "label": "In-Reply-To"
+                    },
+                    {
+                        "name": "references",
+                        "spec": {
+                            "name": "value",
+                            "type": "text",
+                            "label": "Reference",
+                            "required": true
+                        },
+                        "type": "array",
+                        "label": "References"
+                    },
+                    {
+                        "name": "priority",
+                        "type": "select",
+                        "label": "Priority",
+                        "validate": {
+                            "enum": [
+                                "high",
+                                "normal",
+                                "low"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Headers"
+                    },
+                    {
+                        "name": "html",
+                        "type": "text",
+                        "label": "Content"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}
