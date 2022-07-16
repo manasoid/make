@@ -28,7 +28,7 @@
                         },
                         "calendar": {
                             "mode": "chose",
-                            "label": "your-calender"
+                            "label": "your-calendar"
                         }
                     },
                     "parameters": {
@@ -37,7 +37,7 @@
                                 "scoped": "true",
                                 "connection": "google"
                             },
-                            "label": "your-calender"
+                            "label": "your-calendar"
                         }
                     }
                 },
@@ -233,7 +233,7 @@
             "mapper": {
                 "cc": [],
                 "to": [
-                    "mana@ethical.works"
+                    "your-email-address"
                 ],
                 "bcc": [],
                 "from": "\"Ethical Works (virtual assistant)\" your-email-address",
