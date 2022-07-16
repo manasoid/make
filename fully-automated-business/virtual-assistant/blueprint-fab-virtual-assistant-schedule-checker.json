@@ -12,7 +12,7 @@
                 "limit": "10",
                 "timeMax": "{{formatDate(addDays(now; 0); \"YYYY-MM-DD 23:59\")}}",
                 "timeMin": "{{formatDate(addDays(now; 0); \"YYYY-MM-DD 00:00\")}}",
-                "calendar": "you-email-address",
+                "calendar": "mana@ethical.works",
                 "singleEvents": false
             },
             "metadata": {
@@ -28,7 +28,7 @@
                         },
                         "calendar": {
                             "mode": "chose",
-                            "label": "your-primary-calender"
+                            "label": "Ethical Works (Primary Calendar)"
                         }
                     },
                     "parameters": {
@@ -37,7 +37,7 @@
                                 "scoped": "true",
                                 "connection": "google"
                             },
-                            "label": "your-google-workspace"
+                            "label": "Ethical Works (mana@ethical.works)"
                         }
                     }
                 },
@@ -105,17 +105,6 @@
             "parameters": {
                 "feeder": 2
             },
-            "filter": {
-                "name": "has schedule",
-                "conditions": [
-                    [
-                        {
-                            "a": "{{2.htmlLink}}",
-                            "o": "exist"
-                        }
-                    ]
-                ]
-            },
             "mapper": {
                 "end": "{{2.end}}",
                 "start": "{{2.start}}",
@@ -144,6 +133,17 @@
             "module": "builtin:BasicFeeder",
             "version": 1,
             "parameters": {},
+            "filter": {
+                "name": "has schedule",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{4.array[].htmlLink}}",
+                            "o": "exist"
+                        }
+                    ]
+                ]
+            },
             "mapper": {
                 "array": "{{sort(4.array; \"desc\"; \"Start\")}}"
             },
@@ -233,11 +233,11 @@
             "mapper": {
                 "cc": [],
                 "to": [
-                    "your-email-address"
+                    "mana@ethical.works"
                 ],
                 "bcc": [],
-                "from": "\"Ethical Works (virtual assistant)\" your-email-address",
-                "html": "<p>Good morning!</p>\n<p>I'm sending your today's schedule and hope you have a wonderful day with the fully automated business!</p>\n{{6.text}}\n<p>Best,<br>Ethical Works - Your virtual assistant</p>",
+                "from": "\"Crystal (virtual assistant)\" info@ethical.works",
+                "html": "<p>Good morning!</p>\n<p>I'm sending your today's schedule and hope you have a wonderful day with the fully automated business!</p>\n{{6.text}}\n<p>Best,<br>Crystal - Your virtual assistant</p>",
                 "sender": "",
                 "headers": [],
                 "replyTo": "",
@@ -286,7 +286,7 @@
                                 "scoped": "true",
                                 "connection": "google-restricted"
                             },
-                            "label": "My Google Restricted"
+                            "label": "My Google Restricted connection (mana@ethical.works)"
                         },
                         "saveAfterSent": {
                             "label": "No"
