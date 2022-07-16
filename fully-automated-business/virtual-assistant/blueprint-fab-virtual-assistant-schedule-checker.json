@@ -12,7 +12,7 @@
                 "limit": "10",
                 "timeMax": "{{formatDate(addDays(now; 0); \"YYYY-MM-DD 23:59\")}}",
                 "timeMin": "{{formatDate(addDays(now; 0); \"YYYY-MM-DD 00:00\")}}",
-                "calendar": "mana@ethical.works",
+                "calendar": "your-email-address",
                 "singleEvents": false
             },
             "metadata": {
@@ -28,7 +28,7 @@
                         },
                         "calendar": {
                             "mode": "chose",
-                            "label": "Ethical Works (Primary Calendar)"
+                            "label": "your-calender"
                         }
                     },
                     "parameters": {
@@ -37,7 +37,7 @@
                                 "scoped": "true",
                                 "connection": "google"
                             },
-                            "label": "Ethical Works (mana@ethical.works)"
+                            "label": "your-calender"
                         }
                     }
                 },
@@ -236,8 +236,8 @@
                     "mana@ethical.works"
                 ],
                 "bcc": [],
-                "from": "\"Crystal (virtual assistant)\" info@ethical.works",
-                "html": "<p>Good morning!</p>\n<p>I'm sending your today's schedule and hope you have a wonderful day with the fully automated business!</p>\n{{6.text}}\n<p>Best,<br>Crystal - Your virtual assistant</p>",
+                "from": "\"Ethical Works (virtual assistant)\" your-email-address",
+                "html": "<p>Good morning!</p>\n<p>I'm sending your today's schedule and hope you have a wonderful day with the fully automated business!</p>\n{{6.text}}\n<p>Best,<br>Ethical Works - Your virtual assistant</p>",
                 "sender": "",
                 "headers": [],
                 "replyTo": "",
@@ -286,7 +286,7 @@
                                 "scoped": "true",
                                 "connection": "google-restricted"
                             },
-                            "label": "My Google Restricted connection (mana@ethical.works)"
+                            "label": "My Google Restricted"
                         },
                         "saveAfterSent": {
                             "label": "No"
