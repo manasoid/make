@@ -145,7 +145,7 @@
                 ]
             },
             "mapper": {
-                "array": "{{sort(4.array; \"desc\"; \"Start\")}}"
+                "array": "{{sort(4.array; \"desc ci\"; \"start\")}}"
             },
             "metadata": {
                 "designer": {
